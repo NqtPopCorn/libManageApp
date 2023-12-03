@@ -33,7 +33,7 @@ public class ReaderDAO extends ConnectDB {
         connectDB.connect();
         if (ConnectDB.conn != null) {
             try {
-                String sql = "SELECT Reader.* FROM Reader where isActive = 1";
+                String sql = "SELECT reader.* FROM Reader where isActive = 1";
                 //Bước 2: tạo đối tượng preparedStatement
                 PreparedStatement stmt = connectDB.conn.prepareStatement(sql);  
 
@@ -68,7 +68,7 @@ public class ReaderDAO extends ConnectDB {
         if (connectDB.conn != null) {
             
             try {
-                String sql = "SELECT Reader.* FROM Reader where isActive =1 AND name LIKE N'%"+Name+"%'";
+                String sql = "SELECT reader.* FROM reader where isActive =1 AND name LIKE N'%"+Name+"%'";
                 
                 //Bước 2: tạo đối tượng preparedStatement
                 PreparedStatement stmt = connectDB.conn.prepareStatement(sql);  
@@ -98,7 +98,7 @@ public class ReaderDAO extends ConnectDB {
         connectDB.connect();
         if(connectDB.conn!=null){
             try{
-                String sql="Insert into Reader(name,tel,address) values (?,?,?)";
+                String sql="Insert into reader(name,tel,address) values (?,?,?)";
                 PreparedStatement preparedStatement= connectDB.conn.prepareStatement(sql);
                 preparedStatement.setString(1, a.getName());
                 preparedStatement.setString(2, a.getTel());
@@ -122,7 +122,7 @@ public class ReaderDAO extends ConnectDB {
             	LocalDate cuDate=LocalDate.now();
             	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 String formattedDate = cuDate.format(formatter);
-            	String sql="update Reader set fineDate=null where fineDate<='"+formattedDate+"'";
+            	String sql="update reader set fineDate=null where fineDate<='"+formattedDate+"'";
             	Statement stm= connectDB.conn.createStatement();
             	stm.executeUpdate(sql);
             }catch(SQLException ex){
@@ -138,7 +138,7 @@ public class ReaderDAO extends ConnectDB {
         connectDB.connect();
     	if( connectDB.conn!=null){
             try{
-            	String sql="select * from Reader where id=?";
+            	String sql="select * from reader where id=?";
             	PreparedStatement preparedStatement= connectDB.conn.prepareStatement(sql);
             	preparedStatement.setInt(1, id);
             	ResultSet rs=preparedStatement.executeQuery();
@@ -162,7 +162,7 @@ public class ReaderDAO extends ConnectDB {
         connectDB.connect();
         if(connectDB.conn!=null){
             try{
-            	String sql="select * from Reader where tel=?";
+            	String sql="select * from reader where tel=?";
             	PreparedStatement preparedStatement= connectDB.conn.prepareStatement(sql);
                 preparedStatement.setString(1, tel);
                 ResultSet rs=preparedStatement.executeQuery();
@@ -183,7 +183,7 @@ public class ReaderDAO extends ConnectDB {
         connectDB.connect();
         if(connectDB.conn!=null){
             try{
-            	String sql="select * from Reader where tel=? and id!=?";
+            	String sql="select * from reader where tel=? and id!=?";
             	PreparedStatement preparedStatement= connectDB.conn.prepareStatement(sql);
                 preparedStatement.setString(1, tel);
                 preparedStatement.setInt(2, id);
@@ -205,7 +205,7 @@ public class ReaderDAO extends ConnectDB {
         connectDB.connect();
         if(connectDB.conn!=null){
             try{
-            	String sql="update Reader set name=? , tel=? , address=? where id=? ";
+            	String sql="update reader set name=? , tel=? , address=? where id=? ";
             	PreparedStatement preparedStatement= connectDB.conn.prepareStatement(sql);
                 preparedStatement.setString(1, a.getName());
                 preparedStatement.setString(2, a.getTel());
@@ -228,7 +228,7 @@ public class ReaderDAO extends ConnectDB {
         connectDB.connect();
         if(connectDB.conn!=null){
             try{
-            	String sql="update Reader set isActive=0 where id=? ";
+            	String sql="update reader set isActive=0 where id=? ";
             	PreparedStatement preparedStatement= connectDB.conn.prepareStatement(sql);
                 preparedStatement.setInt(1, a.getPersonID());
                 if(preparedStatement.executeUpdate()>0){
@@ -249,7 +249,7 @@ public class ReaderDAO extends ConnectDB {
         if(connectDB.conn!=null){
             try{
             	String[] str = fStr.split(" ");
-            	StringBuilder query = new StringBuilder("SELECT * FROM Reader WHERE isActive=1 ");
+            	StringBuilder query = new StringBuilder("SELECT * FROM reader WHERE isActive=1 ");
                 for (int i = 0; i < str.length; i++) {
                 	query.append("AND CONCAT(id, ' ', name, ' ', tel, ' ', address) LIKE CONCAT( '%',?,'%') ");
                 }

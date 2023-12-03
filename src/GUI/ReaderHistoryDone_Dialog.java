@@ -40,7 +40,7 @@ import java.util.Date;
  */
 public class ReaderHistoryDone_Dialog extends javax.swing.JDialog {
     BorrowCardBUS sbc;
-	Vector<BorrowCard> a;
+    Vector<BorrowCard> a;
     /**
      * Creates new form ReaderHistory_Dialog
      */
@@ -48,11 +48,11 @@ public class ReaderHistoryDone_Dialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents(id);
         try {
-			sbc=new BorrowCardBUS();
-			getData(id);
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null,e.getMessage());
-		}
+            sbc=new BorrowCardBUS();
+            getData(id);
+        } catch (Exception e) {
+                JOptionPane.showMessageDialog(null,e.getMessage());
+        }
         spTable.setVerticalScrollBar(new ScrollBar());
         spTable.getVerticalScrollBar().setBackground(Color.WHITE);
         spTable.getViewport().setBackground(Color.WHITE);
