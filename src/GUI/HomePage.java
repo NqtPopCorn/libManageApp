@@ -47,9 +47,9 @@ public class HomePage extends javax.swing.JFrame {
         Menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
             public void selected(int index) {
-                if (index == 0 && hasPermission(0)) {
+                if (index == 0 && hasPermission(1)) {
                     setForm(new Statistic_GUI());
-                } else if (index == 1 && hasPermission(1)) {
+                } else if (index == 1 && hasPermission(2)) {
                     try {
                         setForm(new Borrow_GUI());
                     } catch (ClassNotFoundException ex) {
@@ -61,9 +61,9 @@ public class HomePage extends javax.swing.JFrame {
                     } catch (IOException ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else if (index == 2 && hasPermission(2)) {
+                } else if (index == 2 && hasPermission(3)) {
                     setForm(new Pay_GUI());
-                } else if (index == 3 && hasPermission(3)) {
+                } else if (index == 3 && hasPermission(4)) {
                     try {
                         setForm(new WareHouse_GUI());
                     } catch (SQLException ex) {
@@ -73,7 +73,7 @@ public class HomePage extends javax.swing.JFrame {
                     } catch (ClassNotFoundException ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else if (index == 4 && hasPermission(4)) {
+                } else if (index == 4 && hasPermission(5)) {
                     try {
                         setForm(new Ticket_GUI());
                     } catch (ClassNotFoundException ex) {
@@ -83,19 +83,19 @@ public class HomePage extends javax.swing.JFrame {
                     } catch (IOException ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else if (index == 5 && hasPermission(5)) {
+                } else if (index == 5 && hasPermission(6)) {
                     try {
                         setForm(new Reader_GUI());
                     } catch (Exception ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else if (index == 6 && hasPermission(6)) {
+                } else if (index == 6 && hasPermission(7)) {
                     try {
                         setForm(new Staff_GUI(user.getPersonID(), user.getRoleID()));
                     } catch (Exception ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else if (index == 7 && hasPermission(7)) {
+                } else if (index == 7 && hasPermission(8)) {
                     try {
                         setForm(new More_GUI());
                     } catch (SQLException ex) {
@@ -103,7 +103,7 @@ public class HomePage extends javax.swing.JFrame {
                     } catch (IOException ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else if (index == 8 && hasPermission(8)) {
+                } else if (index == 8 && hasPermission(9)) {
                     try {
                         setForm(new Admin_GUI());
                     } catch (ClassNotFoundException ex) {

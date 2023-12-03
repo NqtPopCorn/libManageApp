@@ -65,6 +65,7 @@ public class Admin_GUI extends javax.swing.JPanel {
         roleBUS = new RoleBUS();
         listRole = roleBUS.getList();
         rolesModel = (DefaultTableModel) tbChucVu.getModel();
+        rolesModel.setRowCount(0);
         int stt = 1;
         String roleID, roleName;
         for (Role role : listRole){
