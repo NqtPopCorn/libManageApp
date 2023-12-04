@@ -31,6 +31,7 @@ import javax.swing.JFrame;
 public class HomePage extends javax.swing.JFrame {
     private RolePermissionBUS homePageBUS;
     private ArrayList<RolePermission> rolePermissions = new ArrayList<>();
+    private Account user;
     /**
      * Creates new form HomePage
      */
@@ -38,20 +39,19 @@ public class HomePage extends javax.swing.JFrame {
         initComponents();
         setBackground(new Color(0,0,0,0));
         initMoving(this);
+        this.user = user;
+        System.out.println(user.getName());        
+        System.out.println(user.getRoleID());
+
         homePageBUS = new RolePermissionBUS();
-        try {
-            rolePermissions = homePageBUS.canAccessForm(user.getRoleID());
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(Login_GUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
         Menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
             public void selected(int index) {
-                if (index == 0 && hasPermission(1)) {
+                if (index == 0 && homePageBUS.hasPerAccess(user.getRoleID(), 1)) {
                     setForm(new Statistic_GUI());
-                } else if (index == 1 && hasPermission(2)) {
+                } else if (index == 1 && homePageBUS.hasPerAccess(user.getRoleID(), 2)) {
                     try {
-                        setForm(new Borrow_GUI());
+                        setForm(new Borrow_GUI(user));
                     } catch (ClassNotFoundException ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (SQLException ex) {
@@ -61,11 +61,11 @@ public class HomePage extends javax.swing.JFrame {
                     } catch (IOException ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else if (index == 2 && hasPermission(3)) {
+                } else if (index == 2 && homePageBUS.hasPerAccess(user.getRoleID(), 3)) {
                     setForm(new Pay_GUI());
-                } else if (index == 3 && hasPermission(4)) {
+                } else if (index == 3 && homePageBUS.hasPerAccess(user.getRoleID(), 4)) {
                     try {
-                        setForm(new WareHouse_GUI());
+                        setForm(new WareHouse_GUI(user));
                     } catch (SQLException ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -73,9 +73,9 @@ public class HomePage extends javax.swing.JFrame {
                     } catch (ClassNotFoundException ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else if (index == 4 && hasPermission(5)) {
+                } else if (index == 4 && homePageBUS.hasPerAccess(user.getRoleID(), 5)) {
                     try {
-                        setForm(new Ticket_GUI());
+                        setForm(new Ticket_GUI(user));
                     } catch (ClassNotFoundException ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (SQLException ex) {
@@ -83,29 +83,29 @@ public class HomePage extends javax.swing.JFrame {
                     } catch (IOException ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else if (index == 5 && hasPermission(6)) {
+                } else if (index == 5 && homePageBUS.hasPerAccess(user.getRoleID(), 6)) {
                     try {
-                        setForm(new Reader_GUI());
+                        setForm(new Reader_GUI(user));
                     } catch (Exception ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else if (index == 6 && hasPermission(7)) {
+                } else if (index == 6 && homePageBUS.hasPerAccess(user.getRoleID(), 7)) {
                     try {
                         setForm(new Staff_GUI(user.getPersonID(), user.getRoleID()));
                     } catch (Exception ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else if (index == 7 && hasPermission(8)) {
+                } else if (index == 7 && homePageBUS.hasPerAccess(user.getRoleID(), 8)) {
                     try {
-                        setForm(new More_GUI());
+                        setForm(new More_GUI(user));
                     } catch (SQLException ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else if (index == 8 && hasPermission(9)) {
+                } else if (index == 8 && homePageBUS.hasPerAccess(user.getRoleID(), 9)) {
                     try {
-                        setForm(new Admin_GUI());
+                        setForm(new Admin_GUI(user));
                     } catch (ClassNotFoundException ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (SQLException ex) {
@@ -127,14 +127,6 @@ public class HomePage extends javax.swing.JFrame {
         setForm(new Statistic_GUI());
 
     }
-    private boolean hasPermission(int permission) {
-        for (RolePermission rolePermission : rolePermissions) {
-            if (permission == rolePermission.getPermissionID() ) {
-                return true;
-            }
-        }
-        return false;
-    }   
   
     private void setForm(JComponent com) {
         mainPanel.removeAll();

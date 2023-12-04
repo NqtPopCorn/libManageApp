@@ -1,8 +1,8 @@
 CREATE DATABASE libManager;
 GO
-USE [libManager]
-
+    USE [libManager]
 GO
+
     /****** Object:  Table [dbo].[Author]    Script Date: 10/22/2023 6:15:33 PM ******/
 SET
     ANSI_NULLS ON
@@ -158,6 +158,12 @@ GO
     CREATE TABLE [dbo].[role_permissions](
         [positionID] [varchar](2) NOT NULL,
         [authorityID] [int] NOT NULL,
+        [Per_access] bit NOT NULL,
+        [Per_create] bit NOT NULL,
+        [Per_view] bit NOT NULL,
+        [Per_edit] bit NOT NULL,
+        [Per_delete] bit NOT NULL,
+        [IsActive] bit,
         PRIMARY KEY CLUSTERED ([positionID] ASC, [authorityID] ASC) WITH (
             PAD_INDEX = OFF,
             STATISTICS_NORECOMPUTE = OFF,

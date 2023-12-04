@@ -294,10 +294,14 @@
                 <Component class="MyDesign.MyTable" name="tbTinhNang">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="3" rowCount="0">
+                      <Table columnCount="7" rowCount="0">
                         <Column editable="false" title="STT" type="java.lang.Object"/>
                         <Column editable="false" title="T&#xed;nh n&#x103;ng" type="java.lang.Object"/>
-                        <Column editable="true" title="&#x110;&#x1b0;&#x1ee3;c ph&#xe9;p" type="java.lang.Boolean"/>
+                        <Column editable="true" title="Truy c&#x1ead;p" type="java.lang.Boolean"/>
+                        <Column editable="true" title="T&#x1ea1;o" type="java.lang.Boolean"/>
+                        <Column editable="true" title="Xem" type="java.lang.Boolean"/>
+                        <Column editable="true" title="S&#x1eed;a" type="java.lang.Boolean"/>
+                        <Column editable="true" title="X&#xf3;a" type="java.lang.Boolean"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -312,7 +316,27 @@
                           <Editor/>
                           <Renderer/>
                         </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                        <Column maxWidth="60" minWidth="60" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="50" minWidth="40" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="50" minWidth="40" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="50" minWidth="40" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="50" minWidth="40" prefWidth="-1" resizable="true">
                           <Title/>
                           <Editor/>
                           <Renderer/>

@@ -7,6 +7,7 @@ package GUI;
 import BUS.PermissionBUS;
 import BUS.RoleBUS;
 import BUS.RolePermissionBUS;
+import DTO.entities.Account;
 import DTO.entities.Permission;
 import DTO.entities.Role;
 import DTO.entities.RolePermission;
@@ -29,20 +30,28 @@ import java.util.logging.Logger;
  */
 public class Admin_GUI extends javax.swing.JPanel {
     private Role role;
+    private Account user;
     private RoleBUS roleBUS;
     private Permission perrmission;
     private PermissionBUS permissionBUS;
     private RolePermission rolePermission;
     private RolePermissionBUS rolePermissionBUS;
     private ArrayList<Role> listRole;
-    private ArrayList<Permission> listPermisson;
+    private ArrayList<Permission> listPermisson;    
+    private ArrayList<RolePermission> listRolePer;
+
     private DefaultTableModel rolesModel;    
     private DefaultTableModel permissionsModel;
+    private String roleIDSelected = null;
 
     /**
      * Creates new form Admin_GUI
      */
-    public Admin_GUI() throws ClassNotFoundException, SQLException, IOException, NoSuchAlgorithmException {
+    public Admin_GUI(Account user) throws ClassNotFoundException, SQLException, IOException, NoSuchAlgorithmException {
+        this.user = user;
+        this.permissionBUS = new PermissionBUS();
+        this.roleBUS = new RoleBUS();
+        this.rolePermissionBUS = new RolePermissionBUS();
         initComponents();
         styles();
         initTableRoles();
@@ -60,40 +69,58 @@ public class Admin_GUI extends javax.swing.JPanel {
         spTable1.getViewport().setBackground(Color.WHITE);
         p.setBackground(Color.WHITE);
         spTable1.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
+        if(rolePermissionBUS.hasPerEdit(this.user.getRoleID(), 9)){
+            btnCapNhat.setEnabled(false);
+        }
+        else btnCapNhat.setEnabled(true);
+        if(rolePermissionBUS.hasPerDelete(this.user.getRoleID(), 9)){
+            btnXoaChucVu.setEnabled(false);
+        }
+        else btnXoaChucVu.setEnabled(true);
+        
     }
     public void initTableRoles() throws ClassNotFoundException, SQLException, IOException, NoSuchAlgorithmException{
-        roleBUS = new RoleBUS();
         listRole = roleBUS.getList();
         rolesModel = (DefaultTableModel) tbChucVu.getModel();
         rolesModel.setRowCount(0);
         int stt = 1;
-        String roleID, roleName;
+        String roleName;
         for (Role role : listRole){
-            roleID = role.getRoleID();
             roleName = role.getRoleName();
-            rolesModel.addRow(new Object[]{stt++,roleName,roleID});
+            rolesModel.addRow(new Object[]{stt++,roleName});
         }
         if (!listRole.isEmpty()) {
             Role firstRole = listRole.get(0);
-            String firstRoleName = firstRole.getRoleName();
-            initTablePermission(firstRoleName); // Initialize the permission table with the first role
+            String roleID = firstRole.getRoleID();
+            System.out.println(roleID);
+            initTablePermission(roleID); 
         }
     }
-    public void initTablePermission(String roleNameSelected) throws ClassNotFoundException, SQLException, IOException, NoSuchAlgorithmException{
-        permissionBUS = new PermissionBUS();
+    public void initTablePermission(String roleID) throws ClassNotFoundException, SQLException, IOException, NoSuchAlgorithmException{
         listPermisson = permissionBUS.getList();
-        rolePermissionBUS = new RolePermissionBUS();
         permissionsModel = (DefaultTableModel) tbTinhNang.getModel();
+        ArrayList<Integer> listPer = new ArrayList<>();
+        listRolePer = rolePermissionBUS.canAccessForm(roleID);
+        for (Role role : listRole){
+            if(role.getRoleID().equals(roleID)) 
+                txtTenChucVu.setText(role.getRoleName());
+        }
+        txtTenChucVu.setEnabled(false);
         permissionsModel.setRowCount(0);
-        txtTenChucVu.setText(roleNameSelected); 
+         
         int stt = 1;
         int permissionID;
         String permissionName;
         for (Permission permission : listPermisson){
             permissionID = permission.getPermissionID();
             permissionName = permission.getPermissionName();
-            boolean permissionCheck = rolePermissionBUS.hasPermission(roleNameSelected,permissionID);
-            permissionsModel.addRow(new Object[]{stt++,permissionName, permissionCheck});
+            listPer  = rolePermissionBUS.hasPermission(permissionID,listRolePer);
+            boolean A = (listPer.get(0) == 1);            
+            boolean C = (listPer.get(1) == 1);
+            boolean R = (listPer.get(2) == 1);
+            boolean U = (listPer.get(3) == 1);
+            boolean D = (listPer.get(4) == 1);
+            permissionsModel.addRow(new Object[]{stt++,permissionName, A,C,R,U,D});
         }
     }
 
@@ -205,14 +232,14 @@ public class Admin_GUI extends javax.swing.JPanel {
 
             },
             new String [] {
-                "STT", "Tính năng", "Được phép"
+                "STT", "Tính năng", "Truy cập", "Tạo", "Xem", "Sửa", "Xóa"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+                java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, true
+                false, false, true, true, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -227,6 +254,16 @@ public class Admin_GUI extends javax.swing.JPanel {
         if (tbTinhNang.getColumnModel().getColumnCount() > 0) {
             tbTinhNang.getColumnModel().getColumn(0).setMinWidth(40);
             tbTinhNang.getColumnModel().getColumn(0).setMaxWidth(50);
+            tbTinhNang.getColumnModel().getColumn(2).setMinWidth(60);
+            tbTinhNang.getColumnModel().getColumn(2).setMaxWidth(60);
+            tbTinhNang.getColumnModel().getColumn(3).setMinWidth(40);
+            tbTinhNang.getColumnModel().getColumn(3).setMaxWidth(50);
+            tbTinhNang.getColumnModel().getColumn(4).setMinWidth(40);
+            tbTinhNang.getColumnModel().getColumn(4).setMaxWidth(50);
+            tbTinhNang.getColumnModel().getColumn(5).setMinWidth(40);
+            tbTinhNang.getColumnModel().getColumn(5).setMaxWidth(50);
+            tbTinhNang.getColumnModel().getColumn(6).setMinWidth(40);
+            tbTinhNang.getColumnModel().getColumn(6).setMaxWidth(50);
         }
 
         btnXoaChucVu.setBackground(new java.awt.Color(255, 241, 241));
@@ -384,7 +421,6 @@ public class Admin_GUI extends javax.swing.JPanel {
             }
         }
         try {
-            rolePermissionBUS = new RolePermissionBUS();
             rolePermissionBUS.updateRolePermissions(dataList, txtTenChucVu.getText());
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);

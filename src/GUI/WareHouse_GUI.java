@@ -37,6 +37,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import BUS.SupplyCardWithStaffBUS;
 import DAO.StaffDAO;
 import DAO.SupplyCardDAO;
+import DTO.entities.Account;
 import DTO.entities.SupplyCardWithStaff;
 
 
@@ -46,10 +47,27 @@ import DTO.entities.SupplyCardWithStaff;
  */
 public class WareHouse_GUI extends javax.swing.JPanel {
     SupplyCardDAO supplyCardDAO;
+    Account user;
     SupplyCardWithStaffBUS supplyCardWithStaffBUS;
 	/**
      * Creates new form WareHouse_GUI
      */
+    public WareHouse_GUI(Account user) throws SQLException, SQLException, IOException, ClassNotFoundException {
+        initComponents();
+        this.user = user;
+        spTable.setVerticalScrollBar(new ScrollBar());
+        spTable.getVerticalScrollBar().setBackground(Color.WHITE);
+        spTable.getViewport().setBackground(Color.WHITE);
+        JPanel p = new JPanel();
+        p.setBackground(Color.WHITE);
+        spTable.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
+        spTable.setViewportView(tbLichSuNhapHang);
+        spTable2.setVerticalScrollBar(new ScrollBar());
+        spTable2.getVerticalScrollBar().setBackground(Color.WHITE);
+        spTable2.getViewport().setBackground(Color.WHITE);
+        p.setBackground(Color.WHITE);
+        spTable2.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
+    }
     public WareHouse_GUI() throws SQLException, SQLException, IOException, ClassNotFoundException {
         initComponents();
         spTable.setVerticalScrollBar(new ScrollBar());

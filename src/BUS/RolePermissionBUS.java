@@ -4,8 +4,10 @@
  */
 package BUS;
 
+import DAO.PermissionDAO;
 import DAO.RoleDAO;
 import DAO.RolePermissionDAO;
+import DTO.entities.Permission;
 import DTO.entities.Role;
 import DTO.entities.RolePermission;
 import java.security.NoSuchAlgorithmException;
@@ -13,23 +15,29 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author WIN 10
  */
 public class RolePermissionBUS {
-    protected static ArrayList<RolePermission> list;
+    protected static ArrayList<RolePermission> list;    
+    protected static ArrayList<Permission> listPer;
+
     protected static RolePermissionDAO rolePermissionDAO;
     protected static RoleDAO roleDAO;
+    protected static PermissionDAO permissionDAO;
+    
     protected static Role role;
     protected static ArrayList<RolePermission> canAccess;
     private static int quantity = 0;
 
     public RolePermissionBUS() throws ClassNotFoundException, SQLException, IOException {
         rolePermissionDAO = new RolePermissionDAO();
+        role = new Role();
+        
+        permissionDAO = new PermissionDAO();
+        roleDAO = new RoleDAO();
         list = new ArrayList<>(rolePermissionDAO.read());
         quantity = list.size();
     }
@@ -42,46 +50,88 @@ public class RolePermissionBUS {
         quantity = list.size();
         return quantity;
     }
-    public boolean hasPermission(String roleName, int permissionID) throws ClassNotFoundException, SQLException, IOException, NoSuchAlgorithmException{
-        try {
-            roleDAO = new RoleDAO();
-        } catch (IOException ex) {
-            Logger.getLogger(RolePermissionBUS.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        role = roleDAO.getRole(roleName);
-        ArrayList<RolePermission> listPermissions = canAccessForm(role.getRoleID());
-        for (RolePermission rolePermission : listPermissions) {
-            if (rolePermission.getPermissionID() == permissionID) {
-                return true; // The role has the permission
-            }
-        }
-        return false;
-    }
+
     public static ArrayList<RolePermission> canAccessForm(String roleID) throws NoSuchAlgorithmException {
         RolePermission temp;
         canAccess= new ArrayList<>();
         for (RolePermission _rolePermission : list) {
             temp = (RolePermission) _rolePermission;
+            System.out.println(roleID);
+            System.out.println(temp.getRoleID());
             if(roleID.equals(temp.getRoleID())){
                 canAccess.add(temp);
             }
         }
         return canAccess;
     }
-    
-    public void updateRolePermissions(List<List<Object>> dataList, String roleName) throws ClassNotFoundException, SQLException, IOException {
-        RolePermissionDAO rolePermissionDAO = null;
-        try {
-                rolePermissionDAO = new RolePermissionDAO();
-                roleDAO = new RoleDAO();
-            } catch (IOException ex) {
-                Logger.getLogger(RolePermissionBUS.class.getName()).log(Level.SEVERE, null, ex);
+    public ArrayList<Integer> hasPermission(int action_ID , ArrayList<RolePermission> canAccess) throws ClassNotFoundException, SQLException, IOException, NoSuchAlgorithmException{
+        ArrayList<Integer> listpermission = new ArrayList<>();
+        for (RolePermission permission : canAccess) {
+            if (permission.getPermissionID() == action_ID){ 
+                listpermission.add(permission.getPerAccess());
+                listpermission.add(permission.getPerCreate());                
+                listpermission.add(permission.getPerView());
+                listpermission.add(permission.getPerEdit());
+                listpermission.add(permission.getPerDelete());
             }
-        role = roleDAO.getRole(roleName);
-        rolePermissionDAO.delete(role.getRoleID());
-        for (List<Object> rowData : dataList) {
-            int permissionID = (int) rowData.get(0);
-            rolePermissionDAO.create(permissionID,role.getRoleID());
         }
+        return listpermission;
+    }    
+    public void updateRolePermissions(List<List<Object>> dataList, String roleName) throws ClassNotFoundException, SQLException, IOException {
+        role = roleDAO.getRole(roleName);
+        listPer = permissionDAO.getList();
+        int stt = 0;
+        for (List<Object> rowData : dataList) {
+              RolePermission per =new RolePermission();
+              per.setRoleID(role.getRoleID());
+              per.setPermissionID(listPer.get(stt).getPermissionID());
+              per.setPerAccess((boolean)rowData.get(0)?1:0);              
+              per.setPerAccess((boolean)rowData.get(1)?1:0);
+              per.setPerAccess((boolean)rowData.get(2)?1:0);
+              per.setPerAccess((boolean)rowData.get(3)?1:0);
+              per.setPerAccess((boolean)rowData.get(4)?1:0);
+              rolePermissionDAO.update(per);
+              stt++;
+        }
+    }
+    public boolean hasPerAccess(String roleID, int action_ID){
+        for(RolePermission permission : list){
+            if(permission.getRoleID().equals(roleID) && permission.getPermissionID() == (action_ID)){
+                return permission.getPerAccess() == 1;
+            }
+        }
+        return false;
+    }
+    public boolean hasPerCreate(String roleID, int action_ID){
+        for(RolePermission permission : list){
+            if(permission.getRoleID().equals(roleID) && permission.getPermissionID() == (action_ID)){
+                return permission.getPerCreate() == 1;
+            }
+        }
+        return false;
+    }
+    public boolean hasPerView(String roleID, int action_ID){
+        for(RolePermission permission : list){
+            if(permission.getRoleID().equals(roleID) && permission.getPermissionID() == (action_ID)){
+                return permission.getPerView() == 1;
+            }
+        }
+        return false;
+    }
+    public boolean hasPerEdit(String roleID, int action_ID){
+        for(RolePermission permission : list){
+            if(permission.getRoleID().equals(roleID) && permission.getPermissionID() == (action_ID)){
+                return permission.getPerEdit() == 1;
+            }
+        }
+        return false;
+    }
+    public boolean hasPerDelete(String roleID, int action_ID){
+        for(RolePermission permission : list){
+            if(permission.getRoleID().equals(roleID) && permission.getPermissionID() == (action_ID)){
+                return permission.getPerDelete()== 1;
+            }
+        }
+        return false;
     }
 }

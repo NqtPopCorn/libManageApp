@@ -9,6 +9,7 @@ import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import BUS.ReaderBUS;
+import DTO.entities.Account;
 import DTO.entities.Reader;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -21,11 +22,13 @@ import javax.swing.JOptionPane;
  */
 public class Reader_GUI extends javax.swing.JPanel {
     ReaderBUS readerBUS;
+    Account user;
     /**
      * Creates new form Reader_GUI
      */
-    public Reader_GUI() throws Exception {
+    public Reader_GUI(Account user) throws Exception {
         initComponents();
+        this.user = user;
         spTable.setVerticalScrollBar(new ScrollBar());
         spTable.getVerticalScrollBar().setBackground(Color.WHITE);
         spTable.getViewport().setBackground(Color.WHITE);

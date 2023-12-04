@@ -27,6 +27,7 @@ import BUS.BookBUS;
 import BUS.DetailBCBUS;
 import BUS.ReaderBUS;
 import BUS.BorrowCardBUS;
+import DTO.entities.Account;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,12 +47,14 @@ public class Borrow_GUI extends javax.swing.JPanel {
     ReaderBUS readerBLL= new ReaderBUS();
     BorrowCardBUS ticketBLL=new BorrowCardBUS();
     DetailBCBUS detailBCBLL= new DetailBCBUS();
+    private Account user;
     
     /**
      * Creates new form Borrow_GUI
      */
-    public Borrow_GUI() throws ClassNotFoundException, SQLException, ParseException, IOException {
+    public Borrow_GUI(Account user) throws ClassNotFoundException, SQLException, ParseException, IOException {
         initComponents();
+        this.user = user;
         spTable.setVerticalScrollBar(new ScrollBar());
         spTable.getVerticalScrollBar().setBackground(Color.WHITE);
         spTable.getViewport().setBackground(Color.WHITE);

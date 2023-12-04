@@ -1,6 +1,5 @@
-use libManager 
-
--- Author
+use libManager -- Author
+SELECT * FROM
 
 INSERT
     [dbo].[author] ([name], [isActive])
@@ -69,9 +68,7 @@ VALUES
 INSERT
     [dbo].[author] ([name], [isActive])
 VALUES
-    (N'Garrett Byrne', 1)
-
-    -- Table: Book
+    (N'Garrett Byrne', 1) -- Table: Book
 INSERT
     [dbo].[book] ([name], [isActive])
 VALUES
@@ -160,10 +157,7 @@ VALUES
 INSERT
     [dbo].[book] ([name], [isActive])
 VALUES
-    (N'BLACK JACK 21', 1)
-
-    -- Table: category
-
+    (N'BLACK JACK 21', 1) -- Table: category
 INSERT
     [dbo].[category] ([name])
 VALUES
@@ -243,10 +237,7 @@ VALUES
 INSERT
     [dbo].[category] ([name])
 VALUES
-    (N'Pháp luật')
-
-    -- Table: publisher
-
+    (N'Pháp luật') -- Table: publisher
 INSERT
     [dbo].[publisher] ([name])
 VALUES
@@ -263,10 +254,8 @@ INSERT
     [dbo].[publisher] ([name])
 VALUES
     (N'NXB Chính trị Quốc gia')
-
 GO
     -- Table: supplier
-
 INSERT
     [dbo].[supplier] ([name])
 VALUES
@@ -283,7 +272,6 @@ INSERT
     [dbo].[supplier] ([name])
 VALUES
     (N'NXB Chính trị Quốc gia')
-
 INSERT
     [dbo].[permissions] ([name])
 VALUES
@@ -319,9 +307,7 @@ VALUES
 INSERT
     [dbo].[permissions] ([name])
 VALUES
-    (N'Quản lý Role Và Quyền')
-
-    -- Table: Roles
+    (N'Quản lý Role Và Quyền') -- Table: Roles
 INSERT
     [dbo].[roles] ([id], [name], [isActive])
 VALUES
@@ -340,97 +326,47 @@ VALUES
     (N'TT', N'Thu Thu', 1)
 GO
     -- Table: role_permissions
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
+INSERT INTO
+    [dbo].[role_permissions] ([positionID], [authorityID], [Per_access], [Per_create], [Per_view], [Per_edit],[Per_delete], [IsActive])
 VALUES
-    (N'AD', 1)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'AD', 2)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'AD', 3)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'AD', 4)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'AD', 5)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'AD', 6)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'AD', 7)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'AD', 8)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'AD', 9)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'QL', 1)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'QL', 2)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'QL', 3)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'QL', 4)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'QL', 5)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'QL', 6)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'QL', 7)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'QL', 8)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'TK', 2)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'TT', 3)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'TT', 4)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'TT', 5)
-INSERT
-    [dbo].[role_permissions] ([positionID], [authorityID])
-VALUES
-    (N'TT', 6)
+    ('AD', '1', '1', '1', '1', '1', '1', 0),
+    ('AD', '2', '1', '1', '1', '1', '1', 0),
+    ('AD', '3', '1', '1', '1', '1', '1', 0),
+    ('AD', '4', '1', '1', '1', '1', '1', 0),
+    ('AD', '5', '1', '1', '1', '1', '1', 0),
+    ('AD', '6', '1', '1', '1', '1', '1', 0),
+    ('AD', '7', '1', '1', '1', '1', '1', 0),
+    ('AD', '8', '1', '1', '1', '1', '1', 0),
+    ('AD', '9', '1', '1', '1', '1', '1', 0),
+    ('QL', '1', '1', '1', '1', '1', '1', 0),
+    ('QL', '2', '1', '0', '1', '0', '0', 0),
+    ('QL', '3', '1', '0', '1', '0', '0', 0),
+    ('QL', '4', '1', '1', '1', '1', '1', 0),
+    ('QL', '5', '1', '1', '1', '1', '1', 0),
+    ('QL', '6', '1', '1', '1', '1', '1', 0),
+    ('QL', '7', '1', '1', '1', '1', '1', 0),
+    ('QL', '8', '1', '1', '1', '1', '1', 0),
+    ('QL', '9', '1', '1', '1', '1', '1', 0),
+    ('TT', '1', '1', '0', '1', '0', '0', 0),
+    ('TT', '2', '1', '0', '1', '0', '0', 0),
+    ('TT', '3', '1', '0', '1', '0', '0', 0),
+    ('TT', '4', '1', '0', '1', '0', '0', 0),
+    ('TT', '5', '1', '0', '1', '0', '0', 0),
+    ('TT', '6', '1', '0', '1', '0', '0', 0),
+    ('TT', '7', '1', '0', '1', '0', '0', 0),
+    ('TT', '8', '1', '0', '1', '0', '0', 0),
+    ('TT', '9', '1', '0', '1', '0', '0', 0),
+    ('TK', '1', '1', '0', '0', '1', '1', 0),
+    ('TK', '2', '0', '0', '0', '0', '0', 0),
+    ('TK', '3', '0', '0', '0', '0', '0', 0),
+    ('TK', '4', '1', '0', '1', '0', '0', 0),
+    ('TK', '5', '1', '0', '1', '0', '0', 0),
+    ('TK', '6', '1', '0', '1', '0', '0', 0),
+    ('TK', '7', '1', '0', '1', '0', '0', 0),
+    ('TK', '8', '1', '0', '0', '0', '0', 0),
+    ('TK', '9', '1', '0', '1', '0', '0', 0)
 GO
     -- Table: staff
-
 INSERT
     [dbo].[staff] (
         [managerID],
@@ -447,7 +383,7 @@ VALUES
     )
 INSERT
     [dbo].[staff] (
-		[managerID],
+        [managerID],
         [name],
         [tel],
         [address]
@@ -682,8 +618,7 @@ VALUES
         N'Lê Thị Ngọc Anh',
         N'0337851032',
         N'209/10 Lê Tấn Bê, Q.Bình Tân, TP.HCM'
-    )
-    -- Table: account -------------------------------------------------------
+    ) -- Table: account -------------------------------------------------------
     -------------------------------------------------------------------------
 INSERT
     [dbo].[account] (
@@ -752,7 +687,6 @@ VALUES
 GO
     -- Table: reader -----------------------------------------------------------
     ----------------------------------------------------------------------------
-
 INSERT
     [dbo].[reader] (
         [name],
@@ -1032,11 +966,8 @@ VALUES
         N'0869086241',
         N'30 Lê Văn Sỹ, P.2, Q.Tân Bình',
         NULL
-    )
-
-    -- Table: borrow_card ------------------------------------------------------
+    ) -- Table: borrow_card ------------------------------------------------------
     ----------------------------------------------------------------------------
-
 INSERT
     [dbo].[borrow_card] (
         [startDate],
@@ -1397,7 +1328,6 @@ VALUES
         1007,
         1003
     )
-
 GO
     -- Table: cp_book -------------------------------------------
     -------------------------------------------------------------
@@ -2003,7 +1933,6 @@ VALUES
 GO
     -- Table: supply_card ----------------------------------------
     --------------------------------------------------------------
-
 INSERT
     [dbo].[supply_card] (
         [supDate],
@@ -2144,9 +2073,8 @@ VALUES
         200000,
         1005
     )
-
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         1,
@@ -2155,7 +2083,7 @@ VALUES
         N'Tình trạng sách:	-TÔI LÀ BÊTÔ: 70%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         1,
@@ -2164,7 +2092,7 @@ VALUES
         N'Tình trạng sách:	-CÁC DANH NHÂN KHOA HỌC: 100%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         2,
@@ -2173,7 +2101,7 @@ VALUES
         N'Tình trạng sách:	-Nghìn lẻ một đêm: 50%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         2,
@@ -2182,7 +2110,7 @@ VALUES
         N'Tình trạng sách:	-Ngôi trường mọi khi: 70%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         2,
@@ -2191,7 +2119,7 @@ VALUES
         N'Tình trạng sách:	-Mùa hè không tên: 90%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         3,
@@ -2200,7 +2128,7 @@ VALUES
         N'Tình trạng sách:	-Gửi lại thời gian: 90%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         3,
@@ -2209,7 +2137,7 @@ VALUES
         N'Tình trạng sách:	-ĐẮC NHÂN TÂM: 60%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         4,
@@ -2218,7 +2146,7 @@ VALUES
         N'Tình trạng sách:	-PHÁP LUẬT ĐẠI CƯƠNG - DÙNG TRONG CÁC TRƯỜNG ĐẠI HỌC, CAO ĐẲNG & TRUNG CẤP: 100%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         4,
@@ -2227,7 +2155,7 @@ VALUES
         N'Tình trạng sách:	-Biển Đông trong tầm nhìn chiến lược: 90%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         5,
@@ -2236,7 +2164,7 @@ VALUES
         N'Tình trạng sách:	-Ngôi trường mọi khi: 100%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         5,
@@ -2245,7 +2173,7 @@ VALUES
         N'Tình trạng sách:	-Gửi lại thời gian: 50%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         5,
@@ -2254,7 +2182,7 @@ VALUES
         N'Tình trạng sách:	-Truyện ngắn hay 2020: 90%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         6,
@@ -2263,7 +2191,7 @@ VALUES
         N'Tình trạng sách:	-CÁC DANH NHÂN KHOA HỌC: 100%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         7,
@@ -2272,7 +2200,7 @@ VALUES
         N'Tình trạng sách:	-PHÒNG CHỐNG UNG THƯ: 100%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         7,
@@ -2281,7 +2209,7 @@ VALUES
         N'Tình trạng sách:	-CÁC DANH NHÂN KHOA HỌC: 90%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         8,
@@ -2290,7 +2218,7 @@ VALUES
         N'Tình trạng sách:	-Biển Đông trong tầm nhìn chiến lược: 90%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         8,
@@ -2299,7 +2227,7 @@ VALUES
         N'Tình trạng sách:	-ĐƯỜNG ĐẾN NHÂN CÁCH: 80%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         8,
@@ -2308,7 +2236,7 @@ VALUES
         N'Tình trạng sách:	-FAUST: 90%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         9,
@@ -2317,7 +2245,7 @@ VALUES
         N'Tình trạng sách:	-PHÁP LUẬT ĐẠI CƯƠNG - DÙNG TRONG CÁC TRƯỜNG ĐẠI HỌC, CAO ĐẲNG & TRUNG CẤP: 70%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         9,
@@ -2326,7 +2254,7 @@ VALUES
         N'Tình trạng sách:	-MỘT NGHỆ THUẬT SỐNG: 100%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         10,
@@ -2335,7 +2263,7 @@ VALUES
         N'Tình trạng sách:	-Mùa hè không tên: 70%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         11,
@@ -2344,7 +2272,7 @@ VALUES
         N'Tình trạng sách:	-BÁC HỒ VỚI VĂN HÓA PHƯƠNG ĐÔNG: 100%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         12,
@@ -2353,7 +2281,7 @@ VALUES
         N'Tình trạng sách:	-Nguyễn Ái Quốc trên đường về nước: 100%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         12,
@@ -2362,7 +2290,7 @@ VALUES
         N'Tình trạng sách:	-BÁC HỒ VỚI VĂN HÓA PHƯƠNG ĐÔNG: 70%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         12,
@@ -2371,7 +2299,7 @@ VALUES
         N'Tình trạng sách:	-Ngôi trường mọi khi: 90%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         12,
@@ -2380,7 +2308,7 @@ VALUES
         N'Tình trạng sách:	-Bác Hồ viết Tuyên Ngôn Độc Lập'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         13,
@@ -2389,7 +2317,7 @@ VALUES
         N'Tình trạng sách:	-CÁC DANH NHÂN KHOA HỌC: 80%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         13,
@@ -2398,7 +2326,7 @@ VALUES
         N'Tình trạng sách		-ĐẮC NHÂN TÂM: 80%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         14,
@@ -2407,7 +2335,7 @@ VALUES
         N'Tình trạng sách:	-Gửi lại thời gian: 90%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         15,
@@ -2416,7 +2344,7 @@ VALUES
         N'Tình trạng sách		-Biển Đông trong tầm nhìn chiến lược: 90%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         15,
@@ -2425,7 +2353,7 @@ VALUES
         N'Tình trạng sách:	-PHÒNG CHỐNG UNG THƯ: 90%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         15,
@@ -2434,7 +2362,7 @@ VALUES
         N'Tình trạng sách:	-TÔI LÀ BÊTÔ: 90%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         16,
@@ -2443,7 +2371,7 @@ VALUES
         N'Tình trạng sách:	-Gửi lại thời gian: 100%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         16,
@@ -2452,7 +2380,7 @@ VALUES
         N'Tình trạng sách:	-Truyện ngắn hay 2020: 90%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         17,
@@ -2461,7 +2389,7 @@ VALUES
         N'Tình trạng sách:	-MỘT NGHỆ THUẬT SỐNG: 100%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         18,
@@ -2470,7 +2398,7 @@ VALUES
         N'Tình trạng sách:	-FAUST: 90%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         18,
@@ -2479,7 +2407,7 @@ VALUES
         N'Tình trạng sách:	-ĐẮC NHÂN TÂM: 100%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         19,
@@ -2488,7 +2416,7 @@ VALUES
         N'Tình trạng sách:	-Nghìn lẻ một đêm: 90%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         19,
@@ -2497,7 +2425,7 @@ VALUES
         N'Tình trạng sách:	-TÔI LÀ BÊTÔ: 80%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         20,
@@ -2506,7 +2434,7 @@ VALUES
         N'Tình trạng sách:	-BLACK JACK 21: 100%'
     )
 INSERT
-    [dbo].[detail_borrow_card] ([bcID],[ISBN], [num], [description])
+    [dbo].[detail_borrow_card] ([bcID], [ISBN], [num], [description])
 VALUES
     (
         20,
