@@ -20,7 +20,7 @@ public class PayBUS {
     
      public Vector<BorrowCard> getAll() throws Exception{
          borrowCardDAO = new BorrowCardDAO();
-    	return borrowCardDAO.getAll();
+    	return borrowCardDAO.getAllBC();
     }
     public long CacluteDate(Date startDate, Date realDate) {
         return TimeUnit.DAYS.convert(realDate.getTime() - startDate.getTime(), TimeUnit.MILLISECONDS);

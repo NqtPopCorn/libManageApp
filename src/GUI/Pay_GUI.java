@@ -26,7 +26,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import org.apache.poi.hssf.record.PageBreakRecord;
 
 /**
  *
@@ -37,9 +40,10 @@ public class Pay_GUI extends javax.swing.JPanel {
     private BookBUS bookBUS;
     DefaultTableModel tableModel;
     private BorrowCard bc;
-    public static Book1 b__static;
+    Vector<BorrowCard> list;
     public static BorrowCard bc__static;     
     public static DetailBC dt__static; 
+    private int n;
 
     /**
      * Creates new form Pay_GUI
@@ -56,6 +60,9 @@ public class Pay_GUI extends javax.swing.JPanel {
         spTable.setVerticalScrollBar(new ScrollBar());
         spTable.getVerticalScrollBar().setBackground(Color.WHITE);
         spTable.getViewport().setBackground(Color.WHITE);
+        spTable1.setVerticalScrollBar(new ScrollBar());
+        spTable1.getVerticalScrollBar().setBackground(Color.WHITE);
+        spTable1.getViewport().setBackground(Color.WHITE);
         JPanel p = new JPanel();
         p.setBackground(Color.WHITE);
         spTable.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
@@ -64,6 +71,7 @@ public class Pay_GUI extends javax.swing.JPanel {
         spTicketDetail.getViewport().setBackground(Color.WHITE);
         p.setBackground(Color.WHITE);
         spTicketDetail.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
+        spTable1.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
     }
     
     private void showAll(){
@@ -85,7 +93,33 @@ public class Pay_GUI extends javax.swing.JPanel {
         } catch (Exception e) {
             e.printStackTrace();
     }}
-
+    
+    public void showBooks(int i) throws ClassNotFoundException, SQLException, IOException, Exception{
+        list = pbus.getAll();
+        String idborrow="#PM"+String.valueOf(tableModel.getValueAt(i,0));
+        lbMaPhieuMuon.setText(idborrow);
+        txtDocGia.setText(tableModel.getValueAt(i, 1).toString());
+        txtNgayMuon.setText(tableModel.getValueAt(i, 2).toString());
+        txtThuKho.setText(tableModel.getValueAt(i, 4).toString());
+        txtTienCoc.setText(String.valueOf(list.get(i).getdeposit())+"đ");
+        Vector<DetailBC> listBook = new Vector<DetailBC>(list.get(i).getListBook());
+        DefaultTableModel Bookmodel = (DefaultTableModel) tbSach.getModel();
+        Bookmodel.setRowCount(0);
+        int dem=1;
+        for(DetailBC obj:listBook){
+            Object[] lost={obj.getISBN()+"         Mất sách"};
+            Bookmodel.addRow(lost);
+            Object[] book={"Tên sách:        "+obj.getBookname()};
+            Bookmodel.addRow(book);
+            Object[] author={"Tác giả:           "+obj.getAuthorname()};
+            Bookmodel.addRow(author);
+            Object[] num={"Số lượng:        "+obj.getNum()};
+            Bookmodel.addRow(num);
+            dem++;
+        }
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -118,16 +152,10 @@ public class Pay_GUI extends javax.swing.JPanel {
         txtThuKho = new javax.swing.JLabel();
         txtTienCoc = new javax.swing.JLabel();
         lbLine = new javax.swing.JLabel();
-        lbBaoMat = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        txtTenSach = new javax.swing.JLabel();
-        txtTacGia = new javax.swing.JLabel();
-        txtSoLuong = new javax.swing.JLabel();
         dtgNgayNhan = new com.toedter.calendar.JDateChooser();
         jLabel24 = new javax.swing.JLabel();
-        cbSach = new javax.swing.JComboBox<>();
+        spTable1 = new javax.swing.JScrollPane();
+        tbSach = new javax.swing.JTable();
         btnChoMuon = new MyDesign.MyButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -263,24 +291,6 @@ public class Pay_GUI extends javax.swing.JPanel {
         lbLine.setForeground(new java.awt.Color(204, 204, 204));
         lbLine.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(204, 204, 204)));
 
-        lbBaoMat.setForeground(new java.awt.Color(127, 127, 127));
-        lbBaoMat.setText("Báo mất");
-        lbBaoMat.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(127, 127, 127)));
-        lbBaoMat.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lbBaoMatMouseClicked(evt);
-            }
-        });
-
-        jLabel9.setFont(new java.awt.Font("SansSerif", 1, 13)); // NOI18N
-        jLabel9.setText("Tên sách");
-
-        jLabel10.setFont(new java.awt.Font("SansSerif", 1, 13)); // NOI18N
-        jLabel10.setText("Tác giả");
-
-        jLabel11.setFont(new java.awt.Font("SansSerif", 1, 13)); // NOI18N
-        jLabel11.setText("Số lượng");
-
         dtgNgayNhan.setToolTipText("");
         dtgNgayNhan.setDateFormatString("yyyy-MM-dd");
         dtgNgayNhan.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
@@ -292,11 +302,20 @@ public class Pay_GUI extends javax.swing.JPanel {
         jLabel24.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel24.setText("Ngày Nhận:");
 
-        cbSach.setBackground(new java.awt.Color(246, 250, 255));
-        cbSach.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-        cbSach.setBorder(null);
-        cbSach.setOpaque(true);
-        cbSach.setPreferredSize(new java.awt.Dimension(77, 28));
+        tbSach.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                ""
+            }
+        ));
+        tbSach.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbSachMouseClicked(evt);
+            }
+        });
+        spTable1.setViewportView(tbSach);
 
         javax.swing.GroupLayout panelBorder2Layout = new javax.swing.GroupLayout(panelBorder2);
         panelBorder2.setLayout(panelBorder2Layout);
@@ -306,48 +325,49 @@ public class Pay_GUI extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtDocGia, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
-                            .addComponent(txtNgayMuon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbMaPhieuMuon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder2Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(109, 109, 109))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder2Layout.createSequentialGroup()
+                                .addComponent(lbLine, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(36, 36, 36))))
                     .addGroup(panelBorder2Layout.createSequentialGroup()
                         .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
-                            .addComponent(jLabel7))
-                        .addGap(48, 48, 48)
-                        .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtThuKho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtTienCoc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(panelBorder2Layout.createSequentialGroup()
-                        .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel11))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtTacGia, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtTenSach, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(panelBorder2Layout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addComponent(txtSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(dtgNgayNhan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(panelBorder2Layout.createSequentialGroup()
-                        .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lbLine, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(panelBorder2Layout.createSequentialGroup()
-                                    .addComponent(cbSach, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(lbBaoMat))
-                                .addComponent(jLabel2)
-                                .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 6, Short.MAX_VALUE)))
+                            .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dtgNgayNhan, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelBorder2Layout.createSequentialGroup()
+                                    .addComponent(jLabel7)
+                                    .addGap(26, 26, 26)
+                                    .addComponent(txtTienCoc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lbMaPhieuMuon, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(panelBorder2Layout.createSequentialGroup()
+                                        .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel4))
+                                        .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(panelBorder2Layout.createSequentialGroup()
+                                                .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addGroup(panelBorder2Layout.createSequentialGroup()
+                                                        .addGap(8, 8, 8)
+                                                        .addComponent(txtDocGia, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                    .addGroup(panelBorder2Layout.createSequentialGroup()
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(txtNgayMuon, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addGap(20, 20, 20))
+                                            .addGroup(panelBorder2Layout.createSequentialGroup()
+                                                .addGap(6, 6, 6)
+                                                .addComponent(txtThuKho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(panelBorder2Layout.createSequentialGroup()
+                .addComponent(spTable1, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         panelBorder2Layout.setVerticalGroup(
             panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -376,23 +396,9 @@ public class Pay_GUI extends javax.swing.JPanel {
                     .addComponent(txtTienCoc))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbLine, javax.swing.GroupLayout.PREFERRED_SIZE, 7, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbBaoMat)
-                    .addComponent(cbSach, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(11, 11, 11)
-                .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(txtTenSach))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(txtTacGia))
-                .addGap(11, 11, 11)
-                .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(txtSoLuong))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 119, Short.MAX_VALUE)
+                .addComponent(spTable1, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel24)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(dtgNgayNhan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -423,9 +429,12 @@ public class Pay_GUI extends javax.swing.JPanel {
                 .addComponent(panelBorder1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnChoMuon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(spTicketDetail))
-                .addGap(15, 15, 15))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(spTicketDetail)
+                        .addGap(15, 15, 15))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnChoMuon, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -445,27 +454,20 @@ public class Pay_GUI extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 724, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 545, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnChoMuonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnChoMuonMouseClicked
         // TODO add your handling code here:
-        Vector<BorrowCard> list;
         try {
             list = pbus.getAll();
             int n= tbSachKhaDung.getSelectedRow();
@@ -509,77 +511,24 @@ public class Pay_GUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnChoMuonMouseClicked
 
-    private void tbSachKhaDungMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbSachKhaDungMouseClicked
-
-        // TODO add your handling code here:
-        Vector<BorrowCard> list;
+    private void dtgNgayNhanPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dtgNgayNhanPropertyChange
         try {
-            list = pbus.getAll();
-            int n = tbSachKhaDung.getSelectedRow();
-            int selectedId = (int) tbSachKhaDung.getValueAt(n, 0);
-            bc = new BorrowCard();
-            for (BorrowCard card : list) {
-                if (card.getID() == selectedId) {
-                    bc = card;
-                    break;
-                }
+
+            // TODO add your handling code here:
+            if ("date".equals(evt.getPropertyName())) {
+                java.util.Date utilDate = dtgNgayNhan.getDate();
+                java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+                pbus = new PayBUS();
+                pbus.getRealDate(bc__static.getID(), sqlDate);
             }
-
-            bc__static = bc;
-            System.out.print(bc);
-            lbMaPhieuMuon.setText("#PM"+bc.getID());
-            txtDocGia.setText(bc.getReadername());
-            txtNgayMuon.setText(String.valueOf(bc.getStartDate()));
-            txtThuKho.setText(bc.getStaffname());
-            txtTienCoc.setText(String.valueOf(bc.getdeposit())+"đ");
-            dtgNgayNhan.setDate(bc.getRealReDate());
-            txtTenSach.setText("");
-            txtTacGia.setText("");
-            txtSoLuong.setText("");
-            cbSach.removeAllItems();
-
-            for (DetailBC bs : bc.getListBook()) {
-                cbSach.addItem(bs.getBookname());
-            }
-
-            if (!bc.getListBook().isEmpty()) {
-                bookBUS = new BookBUS();
-                DetailBC fB = bc.getListBook().get(0);
-                b__static = bookBUS.getBookByISBN(fB.getISBN());
-                txtTenSach.setText(fB.getBookname());
-                String author ="";
-                for (Iterator<String> it = fB.getAuthorname().iterator(); it.hasNext();) {
-                    author = author + it.next();
-                }
-                txtTacGia.setText(author);
-                txtSoLuong.setText(String.valueOf((char) fB.getNum()));
-            }
-
-            cbSach.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String selectedBookName = (String) cbSach.getSelectedItem();
-                    DetailBC selectedBook = null;
-                    for (DetailBC bs : bc.getListBook()) {
-                        if (bs.getBookname().equals(selectedBookName)) {
-                            dt__static = bs;
-                            selectedBook = bs;
-                            txtTenSach.setText(selectedBook.getBookname());
-                            String author ="";
-                            for (Iterator<String> it = bs.getAuthorname().iterator(); it.hasNext();) {
-                                author = author + it.next();
-                            }
-
-                            txtTacGia.setText(author);
-                            txtSoLuong.setText(String.valueOf(selectedBook.getNum()));
-                        }
-                    }
-                }
-            });
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Pay_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Pay_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Pay_GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_tbSachKhaDungMouseClicked
+    }//GEN-LAST:event_dtgNgayNhanPropertyChange
 
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
         // TODO add your handling code here:
@@ -611,42 +560,62 @@ public class Pay_GUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_txtSearchKeyReleased
 
-    private void lbBaoMatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbBaoMatMouseClicked
+    private void tbSachKhaDungMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbSachKhaDungMouseClicked
+
         // TODO add your handling code here:
-        Component source = (Component) evt.getSource();
-        JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(source);
-
-        PayReport_Dialog payReportDialog = new PayReport_Dialog(parent, true);
-        payReportDialog.setVisible(true);
-    }//GEN-LAST:event_lbBaoMatMouseClicked
-
-    private void dtgNgayNhanPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dtgNgayNhanPropertyChange
+        Vector<BorrowCard> list;
         try {
-
-            // TODO add your handling code here:
-            if ("date".equals(evt.getPropertyName())) {
-                java.util.Date utilDate = dtgNgayNhan.getDate();
-                java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-                pbus = new PayBUS();
-                pbus.getRealDate(bc__static.getID(), sqlDate);
+            list = pbus.getAll();
+            n = tbSachKhaDung.getSelectedRow();
+            int selectedId = (int) tbSachKhaDung.getValueAt(n, 0);
+            bc = new BorrowCard();
+            for (BorrowCard card : list) {
+                if (card.getID() == selectedId) {
+                    bc = card;
+                    break;
+                }
             }
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Pay_GUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(Pay_GUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+            bc__static = bc;
+
+            showBooks(n);
+                       
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_tbSachKhaDungMouseClicked
+
+    private void tbSachMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbSachMouseClicked
+        try {
+            // TODO add your handling code here:
+            list = pbus.getAll();
+            Vector<DetailBC> listBook = new Vector<DetailBC>(list.get(n).getListBook());
+            
+            int selectedRow = tbSach.getSelectedRow();
+            if (selectedRow >= 0) {
+                String cellValue = tbSach.getValueAt(selectedRow, 0).toString();
+                if (cellValue.contains("Mất sách")) {
+                    String bookName = tbSach.getValueAt(selectedRow + 1, 0).toString().replace("Tên sách:        ", "").trim();
+                    for (DetailBC detailBC : listBook) {
+                        if(detailBC.getBookname().equals(bookName)){
+                            dt__static = detailBC;
+                        }
+                    }
+                    JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+                    
+                    PayReport_Dialog payReportDialog = new PayReport_Dialog(parent, true);
+                    payReportDialog.setVisible(true);
+                }
+            }
+        } catch (Exception ex) {
             Logger.getLogger(Pay_GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_dtgNgayNhanPropertyChange
+    }//GEN-LAST:event_tbSachMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private MyDesign.MyButton btnChoMuon;
-    private javax.swing.JComboBox<String> cbSach;
     private com.toedter.calendar.JDateChooser dtgNgayNhan;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel3;
@@ -655,23 +624,20 @@ public class Pay_GUI extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel lbBaoMat;
     private javax.swing.JLabel lbLine;
     private javax.swing.JLabel lbMaPhieuMuon;
     private MyDesign.PanelBorder panelBorder1;
     private MyDesign.PanelBorder panelBorder2;
     private MyDesign.PanelBorder_Basic panelBorder_Basic1;
     private javax.swing.JScrollPane spTable;
+    private javax.swing.JScrollPane spTable1;
     private javax.swing.JScrollPane spTicketDetail;
+    private javax.swing.JTable tbSach;
     private MyDesign.MyTable tbSachKhaDung;
     private javax.swing.JLabel txtDocGia;
     private javax.swing.JLabel txtNgayMuon;
     private MyDesign.SearchText txtSearch;
-    private javax.swing.JLabel txtSoLuong;
-    private javax.swing.JLabel txtTacGia;
-    private javax.swing.JLabel txtTenSach;
     private javax.swing.JLabel txtThuKho;
     private javax.swing.JLabel txtTienCoc;
     // End of variables declaration//GEN-END:variables

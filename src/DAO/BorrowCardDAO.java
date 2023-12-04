@@ -40,7 +40,7 @@ public class BorrowCardDAO{
                     obj.setstatus(rs.getBoolean("isActive"));
                     listticket.add(obj);
                     for(int i=0;i<listticket.size();i++) {
-             		String tmp="select book.name, detail_borrow_card.num, detail_borrow_card.lost, cp_book.ISBN,  cp_book.Cost\r\n"
+             		String tmp="select book.name, detail_borrow_card.num, detail_borrow_card.lost, cp_book.ISBN,\r\n"
              				+ "from borrow_card join detail_borrow_card on borrow_card.id=detail_borrow_card.bcID \r\n"
              				+ "				join cp_book on detail_borrow_card.ISBN=cp_book.ISBN \r\n"
              				+ "				join book on cp_book.bookID=book.id \r\n"
@@ -55,7 +55,6 @@ public class BorrowCardDAO{
                             b.setNum(rs1.getInt(2));
                             b.setLost(rs1.getInt(3));
                             b.setISBN(rs1.getString(4));
-                            b.setBookCost(rs1.getFloat(5));
                             String t="select author.name\r\n"
                                             + "from cp_book join book_author on cp_book.ISBN=book_author.ISBN \r\n"
                                             + "			join author on book_author.authorID=author.id\r\n"
@@ -207,6 +206,73 @@ public class BorrowCardDAO{
     	return arr;
     }
     
+    
+// ReceiveBook
+    public Vector<BorrowCard> getAllBC() throws ClassNotFoundException, SQLException, IOException{
+        Vector<BorrowCard> listticket=new Vector<BorrowCard>();
+        connectDB.connect();
+        if(connectDB.conn!=null){
+            try{
+                String sql="SELECT borrow_card.*, reader.name AS Readername, staff.name AS Staffname FROM borrow_card, reader, staff WHERE borrow_card.readerID=reader.id AND borrow_card.staffID=staff.id AND borrow_card.isActive = 1";
+                PreparedStatement stmt=connectDB.conn.prepareStatement(sql);
+                ResultSet rs=stmt.executeQuery();
+                while(rs.next()){
+                    BorrowCard obj=new BorrowCard();
+                    obj.setID(rs.getInt("ID"));
+                    obj.setReadername(rs.getNString("Readername"));
+                    obj.setStaffname(rs.getNString("Staffname"));
+                    obj.setStartDate(rs.getDate("startDate"));
+                    obj.setExpReDate(rs.getDate("expReDate"));
+                    obj.setRealReDate(rs.getDate("realReDate"));
+                    obj.setdeposit(rs.getLong("deposit"));
+                    obj.setstatus(rs.getBoolean("isActive"));
+                    listticket.add(obj);
+                    for(int i=0;i<listticket.size();i++) {
+             		String tmp="select book.name, detail_borrow_card.num, detail_borrow_card.lost, cp_book.ISBN,  cp_book.Cost\r\n"
+             				+ "from borrow_card join detail_borrow_card on borrow_card.id=detail_borrow_card.bcID \r\n"
+             				+ "				join cp_book on detail_borrow_card.ISBN=cp_book.ISBN \r\n"
+             				+ "				join book on cp_book.bookID=book.id \r\n"
+             				+ "where borrow_card.id=?";
+             		PreparedStatement prep1= connectDB.conn.prepareStatement(tmp);
+             		prep1.setInt(1, listticket.get(i).getID());
+                 	ResultSet rs1=prep1.executeQuery();
+                 	Vector<DetailBC> sb=new Vector<DetailBC>();
+                 	while(rs1.next()) {
+                            DetailBC b=new DetailBC();
+                            b.setBookname(rs1.getString(1));
+                            b.setNum(rs1.getInt(2));
+                            b.setLost(rs1.getInt(3));
+                            b.setISBN(rs1.getString(4));
+                            b.setBookCost(rs1.getFloat(5));
+                            String t="select author.name\r\n"
+                                            + "from cp_book join book_author on cp_book.ISBN=book_author.ISBN \r\n"
+                                            + "			join author on book_author.authorID=author.id\r\n"
+                                            + "where cp_book.ISBN=?";
+                            PreparedStatement prep2= connectDB.conn.prepareStatement(t);
+                            prep2.setString(1,b.getISBN());
+                            ResultSet rs2=prep2.executeQuery();
+                            Vector<String> au=new Vector<String>();
+                            while(rs2.next()) {
+                                    au.add(rs2.getString(1));
+                            }
+                            b.setAuthorname(au);
+                            sb.add(b);
+                 	}
+                 	listticket.get(i).setNum(sb.size());
+                 	listticket.get(i).setListBook(sb);
+                    }
+                    
+                }
+            }catch(SQLException e){
+                System.out.println(e);
+            }finally{
+                connectDB.disconnect();
+            }
+        }
+        System.out.println(listticket);
+        return listticket;
+    }
+    
     public void RecoverBook(BorrowCard bc) throws ClassNotFoundException, SQLException{
         connectDB.connect();
         if(ConnectDB.conn != null){
@@ -247,6 +313,16 @@ public class BorrowCardDAO{
                 pst.setInt(1, lost);
                 pst.setInt(2, bc.getID());
                 pst.setString(3, ISBN);
+                pst.executeUpdate();
+                
+                String sql1 = "UPDATE detail_borrow_card\n" +
+                                "SET lost = lost + ?\n" +
+                                "FROM detail_borrow_card\n" +
+                                "WHERE ISBN = ? AND bcID = ?";
+                PreparedStatement pst1 = connectDB.conn.prepareCall(sql1);
+                pst1.setInt(1, lost);
+                pst1.setString(2, ISBN);
+                pst1.setInt(3, bc.getID());
                 pst.executeUpdate();
             } catch (Exception e) {
                 e.printStackTrace();
