@@ -170,12 +170,12 @@ public class StatisticsDAO {
                     pst2.setDate(1, (java.sql.Date) time);
                     pst2.setInt(2, num);
                     pst2.executeUpdate();
-                }
+}
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 connectDB.disconnect();
-            }
+}
         }
     }
 }

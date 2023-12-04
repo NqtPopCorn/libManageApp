@@ -8,7 +8,6 @@ import BUS.PayBUS;
 import BUS.StatisticsBUS;
 import DTO.entities.Book1;
 import DTO.entities.DetailBC;
-import static GUI.Pay_GUI.b__static;
 import static GUI.Pay_GUI.bc__static;
 import static GUI.Pay_GUI.dt__static;
 import java.io.IOException;
@@ -20,6 +19,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +29,6 @@ import java.util.logging.Logger;
  * @author QUANG DIEN
  */
 public class PayReport_Dialog extends javax.swing.JDialog {
-    private DetailBC book;
     private StatisticsBUS stt;
 
     /**
@@ -39,16 +38,19 @@ public class PayReport_Dialog extends javax.swing.JDialog {
         super(parent, modal);
         setLocation(600,150);
         initComponents();
-        book = new DetailBC();
-        book = Pay_GUI.dt__static;
-        this.txtTenSach1.setText(book.getBookname());
-        String author ="";
-        for (Iterator<String> it = book.getAuthorname().iterator(); it.hasNext();) {
-                author = author + it.next();
-            }
-        this.txtTacGia1.setText(author);
-        this.txtGiaCuon1.setText(String.valueOf(book.getBookCost()));       
-            
+        
+        txtTenSach1.setText(dt__static.getBookname());
+        
+        Vector<String> s = dt__static.getAuthorname();
+        String authorString = null;
+        for(String i: s){
+            authorString = String.join(", ", i);
+        }
+        txtTacGia1.setText(authorString);
+        
+        txtGiaCuon1.setText(String.valueOf(dt__static.getBookCost()));
+        
+        
         pack();
     }
 
@@ -174,10 +176,10 @@ public class PayReport_Dialog extends javax.swing.JDialog {
                 .addGroup(panelBorder_Basic2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel15)
                     .addComponent(snSoLuongMat1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelBorder_Basic2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtGiaCuon1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel16))
+                .addGap(11, 11, 11)
+                .addGroup(panelBorder_Basic2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(txtGiaCuon1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(lbLine1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -234,7 +236,7 @@ public class PayReport_Dialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void myButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_myButton2MouseClicked
-        // TODO add your handling code here:
+//         TODO add your handling code here:
         try {
 
             int soLuong = (int) snSoLuongMat1.getValue();
@@ -258,9 +260,9 @@ public class PayReport_Dialog extends javax.swing.JDialog {
         // TODO add your handling code here:
         int soLuong = (int) snSoLuongMat1.getValue();
         if(soLuong<0) return;
-        if (soLuong > book.getNum()) {
-        snSoLuongMat1.setValue(book.getNum());
-        soLuong = book.getNum();
+        if (soLuong > dt__static.getNum()) {
+        snSoLuongMat1.setValue(dt__static.getNum());
+        soLuong = dt__static.getNum();
         }
 
         if (dt__static!= null) {

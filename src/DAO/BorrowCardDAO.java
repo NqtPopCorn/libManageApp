@@ -314,6 +314,16 @@ public class BorrowCardDAO{
                 pst.setInt(2, bc.getID());
                 pst.setString(3, ISBN);
                 pst.executeUpdate();
+                
+                String sql1 = "UPDATE detail_borrow_card\n" +
+                                "SET lost = lost + ?\n" +
+                                "FROM detail_borrow_card\n" +
+                                "WHERE ISBN = ? AND bcID = ?";
+                PreparedStatement pst1 = connectDB.conn.prepareCall(sql1);
+                pst1.setInt(1, lost);
+                pst1.setString(2, ISBN);
+                pst1.setInt(3, bc.getID());
+                pst.executeUpdate();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
