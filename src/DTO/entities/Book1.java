@@ -5,6 +5,7 @@
 package DTO.entities;
 
 import java.util.Objects;
+import java.util.Vector;
 
 /**
  *
@@ -14,21 +15,50 @@ public class Book1 {
     private String ISBN;
     private String tenSach;
     private int storeNum;
+    private int borrowNum;
     private String publisher;
-    private String author;
+    private Vector<String> author=new Vector();
     private long Cost;
     private String img;
 
-    public Book1(String ISBN, String tenSach, int storeNum, String publisher, String author, long Cost, String img) {
+    public Book1(String ISBN, String tenSach, int storeNum,int borrowNum, String publisher, long Cost, String img) {
         this.ISBN = ISBN;
         this.tenSach = tenSach;
         this.storeNum = storeNum;
+        this.borrowNum=borrowNum;
         this.publisher = publisher;
-        this.author = author;
         this.Cost = Cost;
         this.img = img;
     }
+     public int getBorrowNum() {
+        return borrowNum;
+    }
 
+    public void setBorrowNum(int borrowNum) {
+        this.borrowNum = borrowNum;
+    }
+
+    public Vector<String> getAuthor() {
+        return author;
+    }
+    public String stringAuthor()
+    {
+        String str="";
+        int i=0;
+        for (String author : author) {
+             if (i==1)
+            {
+                str=str+",";
+            }
+             str=str+author;
+            i=i+1;
+        }
+        return str;
+    }
+    public void setAuthor(String authorName)
+    {
+        author.add(authorName);
+    }
     public Book1() {
         
     }
@@ -65,13 +95,6 @@ public class Book1 {
         this.publisher = publisher;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
 
     public long getCost() {
         return Cost;

@@ -5,9 +5,13 @@
 package GUI;
 
 import BUS.ReaderBUS;
+import DTO.entities.Reader;
 import MyDesign.ScrollBar;
 import java.awt.Color;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -20,13 +24,15 @@ import javax.swing.table.DefaultTableModel;
  * @author QUANG DIEN
  */
 public class BorrowAddReader_Dialog extends javax.swing.JDialog {
-   ReaderBUS readerBLL;
+   ReaderBUS readerBLL=new ReaderBUS();
+   Vector<Reader> readerList;
     /**
      * Creates new form AddReaderBorrow_Dialog
      */
     public BorrowAddReader_Dialog(java.awt.Frame parent, boolean modal) throws ClassNotFoundException, SQLException {
         super(parent, modal);
-        readerBLL= new ReaderBUS();
+        getAllReaderIntoList(readerBLL.getAll());
+         setUndecorated(true);
         initComponents();
         tbDocGia.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         showAvalableReader();
@@ -35,6 +41,7 @@ public class BorrowAddReader_Dialog extends javax.swing.JDialog {
         spTable.getViewport().setBackground(Color.WHITE);
         JPanel p = new JPanel();
         p.setBackground(Color.WHITE);
+        setLocationRelativeTo(null);
     }
    
 
@@ -71,10 +78,19 @@ public class BorrowAddReader_Dialog extends javax.swing.JDialog {
 
         txtDocGia.setBackground(new java.awt.Color(229, 229, 229));
         txtDocGia.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        txtDocGia.setText("  ");
         txtDocGia.setPreferredSize(new java.awt.Dimension(188, 36));
         txtDocGia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtDocGiaActionPerformed(evt);
+            }
+        });
+        txtDocGia.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDocGiaKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDocGiaKeyTyped(evt);
             }
         });
 
@@ -111,14 +127,15 @@ public class BorrowAddReader_Dialog extends javax.swing.JDialog {
             .addGroup(panelBorder_Basic1Layout.createSequentialGroup()
                 .addGroup(panelBorder_Basic1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelBorder_Basic1Layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addGroup(panelBorder_Basic1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtDocGia, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(spTable, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(23, 23, 23)
+                        .addComponent(spTable, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelBorder_Basic1Layout.createSequentialGroup()
                         .addGap(69, 69, 69)
-                        .addComponent(btnChonDocGia, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addComponent(btnChonDocGia, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder_Basic1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(txtDocGia, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelBorder_Basic1Layout.setVerticalGroup(
             panelBorder_Basic1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,46 +188,80 @@ public class BorrowAddReader_Dialog extends javax.swing.JDialog {
       int i=tbDocGia.getSelectedRow();
       if (i>=0)
       {
+          JOptionPane.showMessageDialog(null, "Độc giả đã được chọn !");
           dispose();
       }
       else
       {
-          JOptionPane.showMessageDialog(null, "Vui lòng chọn độc giả !");
+          JOptionPane.showMessageDialog(null, "Độc giả chưa được chọn");
+          dispose();
       }
         
     }//GEN-LAST:event_btnChonDocGiaActionPerformed
 
     private void txtDocGiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDocGiaActionPerformed
-        String name =txtDocGia.getText().trim();
+ 
+    }//GEN-LAST:event_txtDocGiaActionPerformed
+
+    private void txtDocGiaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDocGiaKeyTyped
+       
+    }//GEN-LAST:event_txtDocGiaKeyTyped
+
+    private void txtDocGiaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDocGiaKeyReleased
+    String info =txtDocGia.getText().trim();
         ((DefaultTableModel)tbDocGia.getModel()).setRowCount(0);
        try {
-           for (int i=0;i<readerBLL.getReaderByName(name).size();i++)
+           if (info.matches(".*[0-9].*")==true)
            {
-               tbDocGia.addRow(new Object[]{i+1, readerBLL.getReaderByName(name).get(i).
-                       getPersonID(),readerBLL.getReaderByName(name).get(i).getName()});
-           }  } catch (ClassNotFoundException ex) {
+           int infoID=Integer.parseInt(info);
+           getAllReaderIntoList(readerBLL.getReaderById(infoID));
+           }
+           else
+           getAllReaderIntoList(readerBLL.getReaderByName(info));
+       } catch (ClassNotFoundException ex) {
            Logger.getLogger(BorrowAddReader_Dialog.class.getName()).log(Level.SEVERE, null, ex);
        } catch (SQLException ex) {
            Logger.getLogger(BorrowAddReader_Dialog.class.getName()).log(Level.SEVERE, null, ex);
+       } catch (IOException ex) {
+           Logger.getLogger(BorrowAddReader_Dialog.class.getName()).log(Level.SEVERE, null, ex);
        }
-    }//GEN-LAST:event_txtDocGiaActionPerformed
- public String getNameReader()
+       
+           for (int i=0;i<readerList.size();i++)
+           {
+               tbDocGia.addRow(new Object[]{i+1, readerList.get(i).getPersonID(),readerList.get(i).getName()});
+           }  
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDocGiaKeyReleased
+private void getAllReaderIntoList(Vector<Reader> reader)
+{
+    readerList=reader;
+}
+  
+public String getNameReader()
  {
      int i = tbDocGia.getSelectedRow();
+     if (i>=00)
+     {
      return tbDocGia.getValueAt(i,2 ).toString();
+     }
+     return "Chọn độc giả";
  }
  public int getIDDocGia()
  {
      int i = tbDocGia.getSelectedRow();
+      if (i>=0)
+      {
      int idDocGia = Integer.parseInt(tbDocGia.getValueAt(i,1).toString());
      return idDocGia;
+      }
+      return -1;
  }
     private void showAvalableReader() throws ClassNotFoundException, SQLException
 {
     
-    for (int i=0;i<readerBLL.getAll().size();i++)
+    for (int i=0;i<readerList.size();i++)
     {
-        tbDocGia.addRow(new Object[]{i+1, readerBLL.getAll().get(i).getPersonID(),readerBLL.getAll().get(i).getName()});
+        tbDocGia.addRow(new Object[]{i+1,readerList.get(i).getPersonID(),readerList.get(i).getName()});
     }
 }
     /**

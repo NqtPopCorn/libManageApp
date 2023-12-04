@@ -61,8 +61,33 @@ public class ReaderDAO extends ConnectDB {
         }
         return result;
 }
-      public ArrayList<Reader> getReaderByName(String Name) throws ClassNotFoundException, SQLException, IOException {
-        ArrayList<Reader> result = new ArrayList<>();
+     public Vector<Reader> getReaderById(int id) throws ClassNotFoundException, SQLException {
+        Vector<Reader> result = new Vector<>();
+        connectDB.connect();
+        if (ConnectDB.conn != null) {
+            try {
+                String sql = "SELECT Reader.* FROM Reader where isActive =1 AND id LIKE N'%"+id+"%'";
+                PreparedStatement stmt = ConnectDB.conn.prepareStatement(sql);  
+                ResultSet rs = stmt.executeQuery();
+                while(rs.next()) {
+                    Reader reader = new Reader();
+                    reader.setPersonID(rs.getInt(1));
+                    reader.setName(rs.getString(2));
+                    reader.setTel(rs.getString(3));
+                    reader.setAddress(rs.getString(4));
+                    Date lDate = rs.getDate(5);
+                    result.add(reader);
+                }
+            } catch (SQLException ex) {
+                //Logger.getLogger(ChiTietPhieuNhapDAL.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                 connectDB.disconnect();
+            }
+        }
+        return result;
+}
+      public Vector<Reader> getReaderByName(String Name) throws ClassNotFoundException, SQLException, IOException {
+        Vector<Reader> result = new Vector<>();
         connectDB.connect();
         
         if (connectDB.conn != null) {

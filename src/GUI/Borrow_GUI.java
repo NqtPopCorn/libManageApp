@@ -27,7 +27,6 @@ import BUS.BookBUS;
 import BUS.DetailBCBUS;
 import BUS.ReaderBUS;
 import BUS.BorrowCardBUS;
-import DTO.entities.Account;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,8 +35,13 @@ import javax.swing.text.NumberFormatter;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import DTO.entities.Book1;
+import DTO.entities.Account;
+import java.util.Locale;
+import javax.swing.BorderFactory;
 /**
  *
  * @author QUANG DIEN
@@ -47,28 +51,31 @@ public class Borrow_GUI extends javax.swing.JPanel {
     ReaderBUS readerBLL= new ReaderBUS();
     BorrowCardBUS ticketBLL=new BorrowCardBUS();
     DetailBCBUS detailBCBLL= new DetailBCBUS();
-    private Account user;
+    private BorrowSearch_Dialog brSDialog ;
+    private BorrowAddReader_Dialog BAReaderDialog;
+    private ArrayList<Book1> bookList;
+    private int staffID;
     
     /**
      * Creates new form Borrow_GUI
      */
     public Borrow_GUI(Account user) throws ClassNotFoundException, SQLException, ParseException, IOException {
+        getAllBookIntoList(bookBLL.getAll());
         initComponents();
-        this.user = user;
+        staffID=user.getPersonID();
+        showAvalableBooks();
         spTable.setVerticalScrollBar(new ScrollBar());
         spTable.getVerticalScrollBar().setBackground(Color.WHITE);
         spTable.getViewport().setBackground(Color.WHITE);
         JPanel p = new JPanel();
         p.setBackground(Color.WHITE);
         spTable.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
-        
+
         spTable2.setVerticalScrollBar(new ScrollBar());
         spTable2.getVerticalScrollBar().setBackground(Color.WHITE);
         spTable2.getViewport().setBackground(Color.WHITE);
         p.setBackground(Color.WHITE);
         spTable2.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
-        showAvalableBooks();
-       
         
     }
 
@@ -89,25 +96,23 @@ public class Borrow_GUI extends javax.swing.JPanel {
         spTable2 = new javax.swing.JScrollPane();
         tbSachDaChon = new MyDesign.MyTable();
         panelBorder_Basic1 = new MyDesign.PanelBorder_Basic();
-        
+
         btnTimKiem = new MyDesign.MyButton();
 
         panelBorder2 = new MyDesign.PanelBorder();
         pnImageBook = new MyDesign.PanelBorder_Basic();
         lbImageBook = new javax.swing.JLabel();
-        
-        
+
         lbLine = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        
+
         btnThem = new MyDesign.MyButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         cbDocGia = new javax.swing.JComboBox<>();
         btnThemDocGia = new MyDesign.MyButton();
         btnChoMuon = new MyDesign.MyButton();
-        idDocGia =0 ;
-        
+        idDocGia = -1;
 
         NumberFormat format = NumberFormat.getInstance();
         NumberFormatter formatter = new NumberFormatter(format);
@@ -119,34 +124,28 @@ public class Borrow_GUI extends javax.swing.JPanel {
 
         txtTienCoc = new JFormattedTextField(formatter);
         txtTienCoc.setColumns(9);
-        txtTienCoc.setEditable(false);
-        
+        txtTienCoc.setEditable(true);
+        txtTienCoc.setValue(0);
+
         jLabel6 = new javax.swing.JLabel();
         txtNgayTra = new MyDesign.MyTextField_Basic();
-        tANameBook = new JTextArea(1,10);
-        tANameAuthor = new JTextArea(1,10);
-        panelDetailBC= new MyDesign.PanelBorder();
-        tASoLuong = new JTextArea(1,3);
+        tANameBook = new JTextArea(1, 10);
+        tANameAuthor = new JTextArea(1, 10);
+        panelDetailBC = new MyDesign.PanelBorder();
+        tASoLuong = new JTextArea(1, 3);
         btnSoLuong = new MyDesign.MyButton();
-        btnTruSoLuong =new MyDesign.MyButton();
-        parentWindow = SwingUtilities.windowForComponent(this); 
-        parentFrame = null;
+        btnTruSoLuong = new MyDesign.MyButton();
+      
+        lbNameAuthor = new javax.swing.JLabel();
+        lbISBN = new javax.swing.JLabel();
+        tAISBN = new JTextArea(1, 7);
+        lbPublisher = new javax.swing.JLabel();
+        tAPublisher = new JTextArea(1, 7);
+
+        jCalendarComboBox1 = new JDateChooser();
+
         
-        lbNameAuthor =new javax.swing.JLabel();
-        lbISBN= new javax.swing.JLabel();
-        tAISBN=new JTextArea(1,7);
-        lbPublisher=new javax.swing.JLabel();
-        tAPublisher= new JTextArea(1,7);
-        
-        
-         jCalendarComboBox1 = new JDateChooser();
-        
-        
-        if (parentWindow instanceof Frame ) {
-        parentFrame = (Frame)parentWindow;
-}       
         textField2.setText("textField2");
-        
 
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(732, 532));
@@ -158,21 +157,19 @@ public class Borrow_GUI extends javax.swing.JPanel {
         spTable.setBorder(null);
 
         tbSachKhaDung.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "STT","ISBN","Tên sách", "Tác giả", "Nhà xuất bản", "Còn lại"
-            }
+                new Object[][]{},
+                new String[]{
+                    "STT", "ISBN", "Tên sách", "Tác giả", "Nhà xuất bản", "Còn lại"
+                }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false,false
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
-           
+
         });
         spTable.setViewportView(tbSachKhaDung);
 
@@ -181,11 +178,10 @@ public class Borrow_GUI extends javax.swing.JPanel {
         jLabel7.setText("Sách đã chọn");
 
         spTable2.setBorder(null);
-        
+
         tbSachKhaDung.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tbSachKhaDung.addKeyListener(new KeyAdapter(){
-            public void keyReleased(KeyEvent evt) 
-            {
+        tbSachKhaDung.addKeyListener(new KeyAdapter() {
+            public void keyReleased(KeyEvent evt) {
                 try {
                     tbSachKhaDungSelected();
                 } catch (SQLException ex) {
@@ -197,45 +193,42 @@ public class Borrow_GUI extends javax.swing.JPanel {
                 }
             }
         });
-                
-        
-        tbSachKhaDung.addMouseListener(new MouseAdapter(){
-        @Override
-        public void mouseClicked(MouseEvent evt){
-            try {
-                 tbSachKhaDungSelected();
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(Borrow_GUI.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
-                Logger.getLogger(Borrow_GUI.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(Borrow_GUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }});
-        tbSachDaChon.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
 
-            },
-            new String [] {
-                "STT","ISBN","Tên sách", "Tác giả", "Nhà xuất bản", "Số lượng"
+        tbSachKhaDung.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                try {
+                    tbSachKhaDungSelected();
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Borrow_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Borrow_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Borrow_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
+        });
+
+        tbSachDaChon.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{
+                    "STT", "ISBN", "Tên sách", "Tác giả", "Nhà xuất bản", "Số lượng"
+                }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false,false
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
-           
-  
+
         });
-         tbSachDaChon.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tbSachDaChon.addKeyListener(new KeyAdapter(){
-            public void keyReleased(KeyEvent evt) 
-            {
+        tbSachDaChon.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tbSachDaChon.addKeyListener(new KeyAdapter() {
+            public void keyReleased(KeyEvent evt) {
                 try {
-                     tbSachDaChonSelected();
+                    tbSachDaChonSelected();
                 } catch (SQLException ex) {
                     Logger.getLogger(Borrow_GUI.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
@@ -245,28 +238,27 @@ public class Borrow_GUI extends javax.swing.JPanel {
                 }
             }
         });
-                
-        
-        tbSachDaChon.addMouseListener(new MouseAdapter(){
-        @Override
-        public void mouseClicked(MouseEvent evt){
-            try {
-                 tbSachDaChonSelected();
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(Borrow_GUI.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
-                Logger.getLogger(Borrow_GUI.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(Borrow_GUI.class.getName()).log(Level.SEVERE, null, ex);
+
+        tbSachDaChon.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                try {
+                    tbSachDaChonSelected();
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Borrow_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Borrow_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Borrow_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-}});
-        
-               
+        });
+
         spTable2.setViewportView(tbSachDaChon);
 
         btnTimKiem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/search.png"))); // NOI18N
         btnTimKiem.setBorder(javax.swing.BorderFactory.createMatteBorder(4, 4, 4, 4, new java.awt.Color(246, 250, 255)));
-       
+
         btnTimKiem.setBorderColor(new java.awt.Color(246, 250, 255));
         btnTimKiem.setColor(new java.awt.Color(246, 250, 255));
         btnTimKiem.setColorClick(new java.awt.Color(246, 250, 255));
@@ -287,85 +279,84 @@ public class Borrow_GUI extends javax.swing.JPanel {
         javax.swing.GroupLayout panelBorder_Basic1Layout = new javax.swing.GroupLayout(panelBorder_Basic1);
         panelBorder_Basic1.setLayout(panelBorder_Basic1Layout);
         panelBorder_Basic1Layout.setHorizontalGroup(
-            panelBorder_Basic1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder_Basic1Layout.createSequentialGroup()
-                .addComponent(btnTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            )
+                panelBorder_Basic1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder_Basic1Layout.createSequentialGroup()
+                                .addComponent(btnTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        )
         );
         panelBorder_Basic1Layout.setVerticalGroup(
-            panelBorder_Basic1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBorder_Basic1Layout.createSequentialGroup()
-                .addGroup(panelBorder_Basic1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnTimKiem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            )
+                panelBorder_Basic1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelBorder_Basic1Layout.createSequentialGroup()
+                                .addGroup(panelBorder_Basic1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnTimKiem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        )
         );
 
         javax.swing.GroupLayout panelBorder1Layout = new javax.swing.GroupLayout(panelBorder1);
         panelBorder1.setLayout(panelBorder1Layout);
         panelBorder1Layout.setHorizontalGroup(
-            panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBorder1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelBorder1Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(panelBorder_Basic1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelBorder1Layout.createSequentialGroup()
-                        .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(spTable2, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(spTable, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelBorder1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(panelBorder1Layout.createSequentialGroup()
+                                                .addComponent(jLabel5)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(panelBorder_Basic1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(panelBorder1Layout.createSequentialGroup()
+                                                .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jLabel7)
+                                                        .addComponent(spTable2, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(spTable, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(0, 0, Short.MAX_VALUE)))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelBorder1Layout.setVerticalGroup(
-            panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBorder1Layout.createSequentialGroup()
-                .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelBorder1Layout.createSequentialGroup()
-                        .addGap(13, 13, 13)
-                        .addComponent(jLabel5))
-                    .addGroup(panelBorder1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(panelBorder_Basic1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(spTable, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spTable2, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelBorder1Layout.createSequentialGroup()
+                                .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(panelBorder1Layout.createSequentialGroup()
+                                                .addGap(13, 13, 13)
+                                                .addComponent(jLabel5))
+                                        .addGroup(panelBorder1Layout.createSequentialGroup()
+                                                .addContainerGap()
+                                                .addComponent(panelBorder_Basic1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(spTable, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(spTable2, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())
         );
 
         panelBorder2.setPreferredSize(new java.awt.Dimension(217, 327));
         pnImageBook.setPreferredSize(new java.awt.Dimension(137, 192));
-        
-      
-        
+
         javax.swing.GroupLayout pnImageBookLayout = new javax.swing.GroupLayout(pnImageBook);
         pnImageBook.setLayout(pnImageBookLayout);
         pnImageBookLayout.setAutoCreateGaps(true);
         pnImageBookLayout.setAutoCreateContainerGaps(true);
         pnImageBookLayout.setHorizontalGroup(
-            pnImageBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnImageBookLayout.createSequentialGroup()
-                .addComponent(lbImageBook, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,  javax.swing.GroupLayout.DEFAULT_SIZE)
-               .addContainerGap()   
-            )
+                pnImageBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnImageBookLayout.createSequentialGroup()
+                                .addComponent(lbImageBook, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE)
+                                .addContainerGap()
+                        )
         );
         pnImageBookLayout.setVerticalGroup(
-            pnImageBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnImageBookLayout.createSequentialGroup()
-                .addComponent(lbImageBook, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,  Short.MAX_VALUE)
-             .addContainerGap()
-            )
+                pnImageBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnImageBookLayout.createSequentialGroup()
+                                .addComponent(lbImageBook, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap()
+                        )
         );
-       
+
         tANameBook.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         tANameBook.setEditable(false);
         tANameBook.setBackground(new java.awt.Color(246, 250, 255));
         tANameBook.setText("");
+        tANameBook.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
 
         lbNameAuthor.setFont(new java.awt.Font("SansSerif", 0, 14));
         lbNameAuthor.setBackground(new java.awt.Color(246, 250, 255));
@@ -373,22 +364,24 @@ public class Borrow_GUI extends javax.swing.JPanel {
         tANameAuthor.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         tANameAuthor.setBackground(new java.awt.Color(246, 250, 255));
         tANameAuthor.setEditable(false);
-        
-        
+        tANameAuthor.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+
         lbPublisher.setFont(new java.awt.Font("SansSerif", 0, 14));
         lbPublisher.setBackground(new java.awt.Color(246, 250, 255));
         lbPublisher.setText("Nhà xuất bản :");
         tAPublisher.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         tAPublisher.setBackground(new java.awt.Color(246, 250, 255));
         tAPublisher.setEditable(false);
-        
+        tAPublisher.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+
         lbISBN.setFont(new java.awt.Font("SansSerif", 0, 14));
         lbISBN.setBackground(new java.awt.Color(246, 250, 255));
         lbISBN.setText("ISBN :");
         tAISBN.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         tAISBN.setBackground(new java.awt.Color(246, 250, 255));
         tAISBN.setEditable(false);
-        
+        tAISBN.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+
         tANameBook.setLineWrap(true);
         tANameBook.setWrapStyleWord(true);
         tANameAuthor.setLineWrap(true);
@@ -407,7 +400,7 @@ public class Borrow_GUI extends javax.swing.JPanel {
         tASoLuong.setFont(new java.awt.Font("SansSerif", 1, 13));
         tASoLuong.setText("0");
         tASoLuong.setEditable(false);
-        
+
         btnSoLuong.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         btnSoLuong.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/add.png"))); // NOI18N
         btnSoLuong.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 204, 204)));
@@ -424,8 +417,7 @@ public class Borrow_GUI extends javax.swing.JPanel {
                 }
             }
         });
-        
-       
+
         btnTruSoLuong.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         btnTruSoLuong.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/tru.png"))); // NOI18N
         btnTruSoLuong.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 204, 204)));
@@ -453,88 +445,84 @@ public class Borrow_GUI extends javax.swing.JPanel {
             }
         });
         panelDetailBC.setBorder(null);
-        GroupLayout panelDetailBCLayout= new GroupLayout(panelDetailBC);
+        GroupLayout panelDetailBCLayout = new GroupLayout(panelDetailBC);
         panelDetailBCLayout.setAutoCreateGaps(true);
         panelDetailBCLayout.setAutoCreateContainerGaps(true);
-        JScrollPane scrollPane = new JScrollPane(panelDetailBC) ;
+        JScrollPane scrollPane = new JScrollPane(panelDetailBC);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        
-       scrollPane.setVerticalScrollBar(new ScrollBar());
+
+        scrollPane.setVerticalScrollBar(new ScrollBar());
         scrollPane.getVerticalScrollBar().setBackground(Color.WHITE);
         scrollPane.getViewport().setBackground(Color.WHITE);
         JPanel p1 = new JPanel();
         p1.setBackground(Color.WHITE);
         scrollPane.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p1);
-        
-       scrollPane.setViewportView(panelDetailBC);
-        panelDetailBCLayout.setHorizontalGroup(panelDetailBCLayout.createSequentialGroup()    
-        .addGroup(panelDetailBCLayout.createSequentialGroup()
-        .addGroup(panelDetailBCLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-        .addComponent(pnImageBook)
-        .addComponent(tANameBook)
-        .addGroup(panelDetailBCLayout.createSequentialGroup()
-        .addComponent(lbNameAuthor)
-        .addComponent(tANameAuthor))
-        .addGroup(panelDetailBCLayout.createSequentialGroup()
-        .addComponent(lbPublisher)
-        .addComponent(tAPublisher))
-        .addGroup(panelDetailBCLayout.createSequentialGroup()
-        .addComponent(lbISBN)
-        .addComponent(tAISBN)))));
-        panelDetailBCLayout.setVerticalGroup(panelDetailBCLayout.createSequentialGroup()
-        .addComponent(pnImageBook)
-        .addComponent(tANameBook)
-        .addGroup((panelDetailBCLayout.createParallelGroup())
-                .addComponent(lbNameAuthor)
-                .addComponent(tANameAuthor))
-        .addGroup((panelDetailBCLayout.createParallelGroup()) 
-                .addComponent(lbPublisher)
-                .addComponent(tAPublisher))
-        .addGroup((panelDetailBCLayout.createParallelGroup()) 
-                .addComponent(lbISBN)
-                .addComponent(tAISBN))
-       );
-         panelDetailBC.setLayout(panelDetailBCLayout);
 
-        
+        scrollPane.setViewportView(panelDetailBC);
+        panelDetailBCLayout.setHorizontalGroup(panelDetailBCLayout.createSequentialGroup()
+                .addGroup(panelDetailBCLayout.createSequentialGroup()
+                        .addGroup(panelDetailBCLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(pnImageBook)
+                                .addComponent(tANameBook)
+                                .addGroup(panelDetailBCLayout.createSequentialGroup()
+                                        .addComponent(lbNameAuthor)
+                                        .addComponent(tANameAuthor))
+                                .addGroup(panelDetailBCLayout.createSequentialGroup()
+                                        .addComponent(lbPublisher)
+                                        .addComponent(tAPublisher))
+                                .addGroup(panelDetailBCLayout.createSequentialGroup()
+                                        .addComponent(lbISBN)
+                                        .addComponent(tAISBN)))));
+        panelDetailBCLayout.setVerticalGroup(panelDetailBCLayout.createSequentialGroup()
+                .addComponent(pnImageBook)
+                .addComponent(tANameBook)
+                .addGroup((panelDetailBCLayout.createParallelGroup())
+                        .addComponent(lbNameAuthor)
+                        .addComponent(tANameAuthor))
+                .addGroup((panelDetailBCLayout.createParallelGroup())
+                        .addComponent(lbPublisher)
+                        .addComponent(tAPublisher))
+                .addGroup((panelDetailBCLayout.createParallelGroup())
+                        .addComponent(lbISBN)
+                        .addComponent(tAISBN))
+        );
+        panelDetailBC.setLayout(panelDetailBCLayout);
+
         javax.swing.GroupLayout panelBorder2Layout = new javax.swing.GroupLayout(panelBorder2);
         panelBorder2.setLayout(panelBorder2Layout);
         panelBorder2Layout.setHorizontalGroup(
-            panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder2Layout.createSequentialGroup()
-              
-                .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent( scrollPane)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder2Layout.createSequentialGroup()
-                        .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelBorder2Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(18, 18, 18)
-                                .addComponent(tASoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnSoLuong,javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnTruSoLuong,javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lbLine, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnThem, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(21, 21, 21))))
+                panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder2Layout.createSequentialGroup()
+                                .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(scrollPane)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder2Layout.createSequentialGroup()
+                                                .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelBorder2Layout.createSequentialGroup()
+                                                                .addComponent(jLabel2)
+                                                                .addGap(18, 18, 18)
+                                                                .addComponent(tASoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                .addComponent(btnSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                .addComponent(btnTruSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(lbLine, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(btnThem, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGap(21, 21, 21))))
         );
         panelBorder2Layout.setVerticalGroup(
-            panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBorder2Layout.createSequentialGroup()
-                .addComponent( scrollPane)
-                .addComponent(lbLine)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(tASoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                 .addComponent(btnSoLuong,javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,javax.swing.GroupLayout.PREFERRED_SIZE)
-                 .addComponent(btnTruSoLuong,javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                   
-                  .addGap(21, 21, 21)
-                .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelBorder2Layout.createSequentialGroup()
+                                .addComponent(scrollPane)
+                                .addComponent(lbLine)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel2)
+                                        .addComponent(tASoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnTruSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(21, 21, 21)
+                                .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLabel3.setFont(new java.awt.Font("SansSerif", 1, 13)); // NOI18N
@@ -545,12 +533,12 @@ public class Borrow_GUI extends javax.swing.JPanel {
 
         cbDocGia.setBackground(new java.awt.Color(246, 250, 255));
         cbDocGia.setFont(new java.awt.Font("SansSerif", 0, 10)); // NOI18N
-        cbDocGia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Độc giả" }));
+        cbDocGia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Chọn độc giả"}));
         cbDocGia.setBorder(null);
         cbDocGia.setOpaque(true);
         cbDocGia.setPreferredSize(new java.awt.Dimension(100, 28));
-        
-        comboboxDocGia();
+
+
         btnThemDocGia.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         btnThemDocGia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/add.png"))); // NOI18N
         btnThemDocGia.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 204, 204)));
@@ -565,8 +553,6 @@ public class Borrow_GUI extends javax.swing.JPanel {
                 }
             }
         });
-                    
-      
 
         btnChoMuon.setBackground(new java.awt.Color(22, 113, 221));
         btnChoMuon.setForeground(new java.awt.Color(255, 255, 255));
@@ -597,12 +583,10 @@ public class Borrow_GUI extends javax.swing.JPanel {
                 txtTienCocActionPerformed(evt);
             }
         });
-        
 
         jLabel6.setFont(new java.awt.Font("SansSerif", 1, 13)); // NOI18N
         jLabel6.setText("Ngày trả");
-        
-        
+
         jCalendarComboBox1.setBackground(new java.awt.Color(255, 255, 255));
         jCalendarComboBox1.setForeground(new java.awt.Color(255, 255, 255));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -610,71 +594,70 @@ public class Borrow_GUI extends javax.swing.JPanel {
         Calendar cal = Calendar.getInstance();
         cal.setTime(expMinDate);
         cal.add(Calendar.DATE, 1);
-        expMinDate=cal.getTime();
+        expMinDate = cal.getTime();
         cal.add(Calendar.DATE, 14);
-         Date expMaxDate = new Date();
-        expMaxDate=cal.getTime();
+        Date expMaxDate = new Date();
+        expMaxDate = cal.getTime();
         jCalendarComboBox1.setDateFormatString("yyyy-MM-dd");
         jCalendarComboBox1.setDate(expMinDate);
         jCalendarComboBox1.setMinSelectableDate(expMinDate);
         jCalendarComboBox1.setMaxSelectableDate(expMaxDate);
         JTextFieldDateEditor editor = (JTextFieldDateEditor) jCalendarComboBox1.getDateEditor();
         editor.setEditable(false);
-         jCalendarComboBox1.setPreferredSize(new java.awt.Dimension(100, 28));
-       
+        jCalendarComboBox1.setPreferredSize(new java.awt.Dimension(100, 28));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panelBorder1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(panelBorder2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(5, 5, 5)
-                        .addComponent(cbDocGia, javax.swing.GroupLayout.PREFERRED_SIZE, 112, Short.MAX_VALUE)
-                        .addGap(5, 5, 5)
-                        .addComponent(btnThemDocGia, javax.swing.GroupLayout.PREFERRED_SIZE,javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtTienCoc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(btnChoMuon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCalendarComboBox1,javax.swing.GroupLayout.PREFERRED_SIZE, 112, Short.MAX_VALUE)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(panelBorder1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(panelBorder2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel3)
+                                                .addGap(5, 5, 5)
+                                                .addComponent(cbDocGia, javax.swing.GroupLayout.PREFERRED_SIZE, 112, Short.MAX_VALUE)
+                                                .addGap(5, 5, 5)
+                                                .addComponent(btnThemDocGia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel4)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(txtTienCoc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(btnChoMuon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel6)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jCalendarComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, Short.MAX_VALUE)))
+                                .addContainerGap(15, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelBorder1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(panelBorder2, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnThemDocGia, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel3)
-                                .addComponent(cbDocGia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtTienCoc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jCalendarComboBox1,javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6))
-                        .addGap(9, 9, 9)
-                        .addComponent(btnChoMuon, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(panelBorder1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(panelBorder2, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(btnThemDocGia, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                .addComponent(jLabel3)
+                                                                .addComponent(cbDocGia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(txtTienCoc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(jLabel4))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(jCalendarComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(jLabel6))
+                                                .addGap(9, 9, 9)
+                                                .addComponent(btnChoMuon, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addContainerGap())))
         );
     }
 
@@ -689,72 +672,83 @@ public class Borrow_GUI extends javax.swing.JPanel {
     private void txtTienCocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTienCocActionPerformed
         
     }//GEN-LAST:event_txtTienCocActionPerformed
+  private void getAllBookIntoList(ArrayList<Book1> bookBLL) throws ClassNotFoundException, SQLException
+    {
+        bookList=bookBLL;
+    }  
     private void btnChoMuonActionPerformed(java.awt.event.ActionEvent evt) throws ClassNotFoundException, SQLException, IOException
     {
-        if (cbDocGia.getSelectedItem().equals("Độc giả"))
-        {
-             JOptionPane.showMessageDialog(null,"Vui lòng chọn độc giả mượn sách !");
-        }
-        else if (tbSachDaChon.getRowCount()<=0)
-        {
-             JOptionPane.showMessageDialog(null, "Vui lòng chọn sách cần mượn !");
-        }
-        else
-        {
+         if (idDocGia==-1) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn độc giả mượn sách !");
+        } else if (tbSachDaChon.getRowCount() <= 0) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn sách cần mượn !");
+        } 
+        else {
+            long tienCoc=Long.parseLong(txtTienCoc.getValue().toString());
+            if (tienCoc%1000!=0)
+             {
+                 JOptionPane.showMessageDialog(null, "Tiền cọc phải là bội số của 1000 VND");
+             }
+            else if (tienCoc<tinhTienCoc()||(tienCoc>tinhTongTienSach()))
+             {
+                 NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
+                 String tinhTienCoc =numberFormat.format(tinhTienCoc());
+                String tongTienSach =numberFormat.format(tinhTongTienSach());
+                 JOptionPane.showMessageDialog(null, "Tiền cọc phải >= " + tinhTienCoc + " VNĐ và <= " +tongTienSach+" VNĐ!");
+             }
+                        
+             else
+             {
             Date startDate = new Date();
-            String startDateStr=new SimpleDateFormat("yyyy-MM-dd").format(startDate).trim();
-            String expReDateStr=new SimpleDateFormat("yyyy-MM-dd").format(jCalendarComboBox1.getDate()).trim();
-            int idBC=ticketBLL.addTicket(startDateStr, expReDateStr, tinhTienCoc(), idDocGia, 1000);
+            String startDateStr = new SimpleDateFormat("yyyy-MM-dd").format(startDate).trim();
+            String expReDateStr = new SimpleDateFormat("yyyy-MM-dd").format(jCalendarComboBox1.getDate()).trim();
+            int idBC = ticketBLL.addTicket(startDateStr, expReDateStr, tienCoc, idDocGia, staffID);
             AddDetailBC_SQL(idBC);
-            JOptionPane.showMessageDialog(null, "Phiếu mượn đã được tạo thành công !");
+            getAllBookIntoList(bookBLL.getAll());
+            resetDetailBC();
             resetBC();
+            JOptionPane.showMessageDialog(null, "Phiếu mượn đã được tạo thành công !");
+             }
         }
     }
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         try {
             // TODO add your handling code here:
-             int soLuong=Integer.parseInt(tASoLuong.getText());
+            int soLuong = Integer.parseInt(tASoLuong.getText());
+
             int i = tbSachKhaDung.getSelectedRow();
-             int j = tbSachDaChon.getSelectedRow();
-                
-            if (soLuong==0)
-            {
-                if (tANameBook.getText().equals(""))
-                {
-                    JOptionPane.showMessageDialog(null, "Vui lòng chọn 1 sách khả dụng để thêm !");
+            int j = tbSachDaChon.getSelectedRow();
+
+            if (soLuong == 0) {
+                if (tANameBook.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Vui lòng chọn 1 sách khả dụng để thêm");
+                } else if (!btnThem.getText().equals("Thêm")) {
+
+                    ((DefaultTableModel) tbSachDaChon.getModel()).removeRow(j);
+                    int rowCount = tbSachDaChon.getRowCount();
+                    for (int k = 0; k < rowCount; k++) {
+                        tbSachDaChon.setValueAt(k + 1, k, 0);
+
+                    }
+                   txtTienCoc.setValue(0);
+                    resetDetailBC();
+                    JOptionPane.showMessageDialog(null, "Sách đã được xóa ra khỏi sách đã chọn!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Số lượng sách tối thiểu để mượn là 1");
                 }
-                else if (!btnThem.getText().equals("Thêm"))
-                {
-                     ((DefaultTableModel)tbSachDaChon.getModel()).removeRow(j);
-                       int rowCount =tbSachDaChon.getRowCount();
-                         for (int k=0;k<rowCount;k++)
-                            {
-                                  tbSachDaChon.setValueAt(k+1, k, 0);
- 
-                             }
-                     txtTienCoc.setValue(tinhTienCoc());
-                     resetDetailBC();
-                      JOptionPane.showMessageDialog(null,"Số lượng của sách đã chọn bằng 0 !\n Đã tự động xóa sách đã chọn!");
+
+            } else {
+                if (btnThem.getText().equals("Thêm")) {
+                    if (checkExistTBSachDaChon(i) == false) {
+                        showChooseBooks();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Sách đã tồn tại trong sách đã chọn");
+                    }
+                } else {
+                    suaSoLuongSachDaChon(j, soLuong);
                 }
-                else 
-                {
-                     JOptionPane.showMessageDialog(null, "Số lượng tối thiểu để thêm là 1 !");
-                }
+
             }
-            else 
-            {
-                if (btnThem.getText().equals("Thêm"))
-                {
-                if (checkExistTBSachDaChon(i)==false)
-                    showChooseBooks();
-                    
-                    else JOptionPane.showMessageDialog(null, "Sách đã tồn tại trong sách đã chọn");
-                }
-                else
-                {
-                    suaSoLuongSachDaChon(j,soLuong);
-                }
-            }       
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Borrow_GUI.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
@@ -767,108 +761,118 @@ public class Borrow_GUI extends javax.swing.JPanel {
 private void btnSoLuongActionPerformed(java.awt.event.ActionEvent evt) throws ClassNotFoundException, SQLException, IOException
 {
    
-     if(tANameBook.getText().equals("")==false)
-     {
-    int i = tbSachKhaDung.getSelectedRow();
-    int soLuong=Integer.parseInt(tASoLuong.getText());
-    int soLuongTon = bookBLL.getBookByISBN(tAISBN.getText()).getStoreNum();
-    if (soLuong <soLuongTon)
-    {
-    soLuong=soLuong+1;
-    tASoLuong.setText(""+soLuong);
-    }
-     }
+    if (tANameBook.getText().equals("") == false) {
+            int i = tbSachKhaDung.getSelectedRow();
+            int soLuong = Integer.parseInt(tASoLuong.getText());
+            int soLuongTon = bookBLL.getBookByISBN(tAISBN.getText()).getStoreNum();
+            if (soLuong < soLuongTon) {
+                soLuong = soLuong + 1;
+                tASoLuong.setText("" + soLuong);
+            }
+        }
 }
 private void btnTruSoLuongActionPerformed(java.awt.event.ActionEvent evt) throws ClassNotFoundException, SQLException, IOException
 {
-    if(tANameBook.getText().equals("")==false)
-    {
-        
-    int soLuong=Integer.parseInt(tASoLuong.getText());
-    int i = tbSachKhaDung.getSelectedRow();
-    int soLuongTon = bookBLL.getBookByISBN(tAISBN.getText()).getStoreNum();
-    if (soLuong>0)
-    {
-    soLuong=soLuong-1;
-    tASoLuong.setText(""+soLuong);
-    }
-    }
+    if (tANameBook.getText().equals("") == false) {
+
+            int soLuong = Integer.parseInt(tASoLuong.getText());
+            int i = tbSachKhaDung.getSelectedRow();
+            int soLuongTon = bookBLL.getBookByISBN(tAISBN.getText()).getStoreNum();
+            if (soLuong > 0) {
+                soLuong = soLuong - 1;
+                tASoLuong.setText("" + soLuong);
+            }
+        }
 }
 private void btnTimKiemActionPerformed(java.awt.event.ActionEvent evt) throws ClassNotFoundException, ClassNotFoundException, SQLException, IOException
 {
-    BorrowSearch2_Dialog brSDialog= new BorrowSearch2_Dialog(parentFrame,true);
-    brSDialog.setVisible(true);
-    showBooksByCondition(brSDialog.getTenSach(),brSDialog.getTacGia(),brSDialog.getNhaXuatBan());
+     brSDialog = new BorrowSearch_Dialog(null,true);
+     brSDialog.setVisible(true);
+        getAllBookIntoList(bookBLL.getAllByCondition(brSDialog.getTenSach(), brSDialog.getTacGia(), brSDialog.getNhaXuatBan()));
+        showBooksByCondition();
+        
 }
-    private void showBooksByCondition(String nameBook,String nameAuthor,String namePublisher) throws ClassNotFoundException, SQLException, IOException
+    private void showBooksByCondition() throws ClassNotFoundException, SQLException, IOException
     {
-      ((DefaultTableModel)tbSachKhaDung.getModel()).setRowCount(0);
-        for (int i=0;i<bookBLL.getAllByCondition(nameBook, nameAuthor, namePublisher).size();i++)
-    {
-        tbSachKhaDung.addRow(new Object[]{i+1, bookBLL.getAllByCondition(nameBook, nameAuthor, namePublisher).get(i).getISBN(),bookBLL.getAllByCondition(nameBook, nameAuthor, namePublisher).get(i).getTenSach(),bookBLL.getAllByCondition(nameBook, nameAuthor, namePublisher).get(i).getAuthor(), bookBLL.getAllByCondition(nameBook, nameAuthor, namePublisher).get(i).getPublisher(), bookBLL.getAllByCondition(nameBook, nameAuthor, namePublisher).get(i).getStoreNum()});
-    }
+      ((DefaultTableModel) tbSachKhaDung.getModel()).setRowCount(0);
+        if (bookList!=null)
+        for (int i = 0; i < bookList.size(); i++) {
+            tbSachKhaDung.addRow(new Object[]{i + 1,bookList.get(i).getISBN(), bookList.get(i).getTenSach(), bookList.get(i).stringAuthor(), bookList.get(i).getPublisher(), bookList.get(i).getStoreNum()});
+        }
     }
     private void showAvalableBooks() throws ClassNotFoundException, SQLException, IOException
 {
-    ((DefaultTableModel)tbSachKhaDung.getModel()).setRowCount(0);
-    for (int i=0;i<bookBLL.getAll().size();i++)
-    {
-        tbSachKhaDung.addRow(new Object[]{i+1, bookBLL.getAll().get(i).getISBN(),bookBLL.getAll().get(i).getTenSach(),bookBLL.getAll().get(i).getAuthor(), bookBLL.getAll().get(i).getPublisher(), bookBLL.getAll().get(i).getStoreNum()});
-    }
+     ((DefaultTableModel) tbSachKhaDung.getModel()).setRowCount(0);
+        if (bookList!=null)
+        for (int i = 0; i < bookList.size(); i++) {
+            tbSachKhaDung.addRow(new Object[]{i + 1,bookList.get(i).getISBN(), bookList.get(i).getTenSach(), bookList.get(i).stringAuthor(), bookList.get(i).getPublisher(), bookList.get(i).getStoreNum()});
+        }
 }
     private void showChooseBooks() throws ClassNotFoundException, SQLException, IOException{
-        int i = tbSachKhaDung.getSelectedRow();
-        if (i>=0){
-        int countTB= tbSachDaChon.getRowCount();
-            tbSachDaChon.addRow(new Object[]{countTB+1,tAISBN.getText(),tANameBook.getText(),tANameAuthor.getText(),tAPublisher.getText(),tASoLuong.getText()});
+         int i = tbSachKhaDung.getSelectedRow();
+        if (i >= 0) {
+            int countTB = tbSachDaChon.getRowCount();
+            tbSachDaChon.addRow(new Object[]{countTB + 1, tAISBN.getText(), tANameBook.getText(), tANameAuthor.getText(), tAPublisher.getText(), tASoLuong.getText()});
             tbSachKhaDung.clearSelection();
             resetDetailBC();
-            txtTienCoc.setValue(tinhTienCoc());
-        }    
+           txtTienCoc.setValue(0);
+        }
     }
-       private long tinhTienCoc() throws ClassNotFoundException, SQLException, IOException
-       {
-           long tiencoc=0;
-           int rowCount =tbSachDaChon.getRowCount();
-           for (int i=0;i<rowCount;i++)
-               {
-                   tiencoc=tiencoc+bookBLL.getBookByISBN(tbSachDaChon.getValueAt(i, 1).toString()).getCost() *Integer.parseInt(tbSachDaChon.getValueAt(i,5).toString()) ;
-               }
-           return tiencoc/2;
-       }
+      private long tinhTongTienSach() throws ClassNotFoundException, SQLException, IOException {
+        long tongTien = 0;
+        int rowCount = tbSachDaChon.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            tongTien = tongTien + bookBLL.getBookByISBN(tbSachDaChon.getValueAt(i, 1).toString()).getCost() * Integer.parseInt(tbSachDaChon.getValueAt(i, 5).toString());
+        }
+        return tongTien;
+    }
+      private long tinhTienCoc() throws ClassNotFoundException, SQLException, IOException
+    {
+        return tinhTongTienSach()/3;
+    }
        private void AddDetailBC_SQL(int idBC) throws ClassNotFoundException, SQLException, IOException
        {
-           int rowCount =tbSachDaChon.getRowCount();
-           for (int i=0;i<rowCount;i++)
-               {
-                   detailBCBLL.addDetailBC(idBC,tbSachDaChon.getValueAt(i, 1).toString(),Integer.parseInt(tbSachDaChon.getValueAt(i, 5).toString()));
-               }
+           int rowCount = tbSachDaChon.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            detailBCBLL.addDetailBC(idBC, tbSachDaChon.getValueAt(i, 1).toString(), Integer.parseInt(tbSachDaChon.getValueAt(i, 5).toString()));
+            int storeNum=0;
+            int borrowNum=0;
+            int rowCountSKD = tbSachKhaDung.getRowCount();
+            for (int j = 0; j < rowCountSKD; j++)
+            {
+                if (tbSachKhaDung.getValueAt(j,1).toString().equals(tbSachDaChon.getValueAt(i, 1).toString()))
+                {
+                    storeNum=Integer.parseInt(tbSachKhaDung.getValueAt(j, 5).toString())-Integer.parseInt(tbSachDaChon.getValueAt(i, 5).toString());
+                    borrowNum=Integer.parseInt(tbSachDaChon.getValueAt(i, 5).toString())+bookBLL.getBookByISBN(tbSachKhaDung.getValueAt(j,1).toString()).getBorrowNum();
+                }
+                
+            }
+           
+           
+            bookBLL.updateStoreNumBooks(tbSachDaChon.getValueAt(i, 1).toString(), storeNum, borrowNum);
+        }
        }
        private void suaSoLuongSachDaChon(int selectedBook,int soLuong) throws ClassNotFoundException, SQLException, IOException
        {
            
-        tbSachDaChon.setValueAt(soLuong, selectedBook, 5);
-        JOptionPane.showMessageDialog(null,"Số lượng của sách đã được sửa thành công!");
+         tbSachDaChon.setValueAt(soLuong, selectedBook, 5);
+        JOptionPane.showMessageDialog(null, "Sửa số lượng sách thành công!");
         tbSachDaChon.clearSelection();
-       resetDetailBC();
-         btnThem.setText("Thêm");
-          txtTienCoc.setValue(tinhTienCoc());
+        resetDetailBC();
+        btnThem.setText("Thêm");
+       
         
        }
     private boolean checkExistTBSachDaChon(int selectedRow)       
     {
-       int rowCount = tbSachDaChon.getRowCount();
-       
-       for (int i=0;i<rowCount;i++)
-       {
-           System.out.println(tbSachDaChon.getValueAt(i, 1).toString());
-             System.out.println(tbSachKhaDung.getValueAt(selectedRow, 1).toString());
-           if (tbSachDaChon.getValueAt(i, 1).toString().equals(tbSachKhaDung.getValueAt(selectedRow, 1).toString()))
-           {
-               return true; 
-                       }
-       }
-       return false;
+      int rowCount = tbSachDaChon.getRowCount();
+
+        for (int i = 0; i < rowCount; i++) {
+            if (tbSachDaChon.getValueAt(i, 1).toString().equals(tbSachKhaDung.getValueAt(selectedRow, 1).toString())) {
+                return true;
+            }
+        }
+        return false;
     }
 private void tbSachKhaDungSelected() throws ClassNotFoundException, SQLException, IOException
 {
@@ -927,41 +931,36 @@ private void comboboxDocGia() throws ClassNotFoundException, SQLException
 }
 private void btnThemDocGia() throws ClassNotFoundException, SQLException
 {
-    BorrowAddReader_Dialog BAReaderDialog = new BorrowAddReader_Dialog(parentFrame,true);
-    BAReaderDialog.setVisible(true);
-    String nameReader = BAReaderDialog.getNameReader();
-    idDocGia=BAReaderDialog.getIDDocGia();
-    int i;
-    for (i=0;i<cbDocGia.getItemCount();i++)
-    {    
-        String x =String.valueOf(cbDocGia.getItemAt(i));
-        if (x.equals(nameReader))
-        {
-            break;
-        }
-    }
-    cbDocGia.setSelectedIndex(i);
+   BAReaderDialog = new BorrowAddReader_Dialog(new javax.swing.JFrame(), true);
+        BAReaderDialog.setVisible(true);
+        String nameReader = BAReaderDialog.getNameReader();
+        idDocGia = BAReaderDialog.getIDDocGia();
+         cbDocGia.removeAllItems();
+        cbDocGia.addItem(nameReader);
 }
 private void resetDetailBC()
 {
-     lbImageBook.setIcon(null);
+       lbImageBook.setIcon(null);
         tASoLuong.setText("0");
         tANameBook.setText("");
         tANameAuthor.setText("");
         tAPublisher.setText("");
-         tAISBN.setText("");
+        tAISBN.setText("");
 }
-private void resetBC() throws ClassNotFoundException, SQLException
+private void resetBC() throws ClassNotFoundException, SQLException, IOException
 {
-    ((DefaultTableModel)tbSachDaChon.getModel()).setRowCount(0);
-    txtTienCoc.setValue(0);
-    cbDocGia.setSelectedIndex(0);
-    Date expMinDate = new Date();
-    Calendar cal = Calendar.getInstance();
-    cal.setTime(expMinDate);
-    cal.add(Calendar.DATE, 1);
-     expMinDate=cal.getTime();
-    jCalendarComboBox1.setDate(expMinDate);
+     ((DefaultTableModel) tbSachDaChon.getModel()).setRowCount(0);
+        txtTienCoc.setValue(0);
+        cbDocGia.removeAllItems();
+        cbDocGia.addItem("Chọn Độc Giả");
+        idDocGia=-1;
+        Date expMinDate = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(expMinDate);
+        cal.add(Calendar.DATE, 1);
+        expMinDate = cal.getTime();
+        jCalendarComboBox1.setDate(expMinDate);
+        showAvalableBooks();
     
 }
 

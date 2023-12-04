@@ -37,4 +37,8 @@ public class BookBUS {
         bookDAO = new BookDAO();
         bookDAO.saveInfo(b);
     }
+    public void updateStoreNumBooks(String ISBN,int storeNum,int borrowNum) throws ClassNotFoundException, SQLException
+     {
+         bookDAO.updateStoreNumBooks(ISBN, storeNum, borrowNum);
+     }
 }
