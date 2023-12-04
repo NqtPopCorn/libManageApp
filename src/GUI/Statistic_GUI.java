@@ -41,7 +41,6 @@ public class Statistic_GUI extends javax.swing.JPanel {
         try {
             sBus = new StatisticsBUS();
             ShowAll();
-            sBus.NumberBC();
        } catch (Exception e) {
           e.printStackTrace();
         }
@@ -152,22 +151,26 @@ public class Statistic_GUI extends javax.swing.JPanel {
             int soLuotTra = 0;
             float phanTramTra = 100;
             int soSachMat = 0;
+
             for (StatisticDTO dt : datas) {
-                int thang = dt.getThoiGian().getMonthValue();
-                int nam = dt.getThoiGian().getYear();
-                    if(thang == monthSelection && nam == yearSelection){
-                    soTienThu += dt.getBank();
-                    soLuotMuon += dt.getSoLuotMuonBC();
-                    soLuotTra += dt.getSoLuotTra();
-                    soSachMat += dt.getSoSachHong();     
+                int thang = dt.getThang();
+                int nam = dt.getNam();
+
+                if (thang == monthSelection && nam == yearSelection) {
+                    soTienThu += dt.getTienThu();
+                    soLuotMuon += dt.getTongPhieuMuon();
+                    soLuotTra += dt.getTraDungHan(); // Đổi thành phương thức lấy số lượt trả đúng hạn
+                    soSachMat += dt.getSoSachMat();
                 }
             }
-            if(soLuotMuon !=0){
-                phanTramTra = (soLuotTra*100)/soLuotMuon;
+
+            if (soLuotMuon != 0) {
+                phanTramTra = (soLuotTra * 100) / soLuotMuon;
             }
-            lbKhoangThu.setText(String.valueOf(soTienThu)+"đ");
+
+            lbKhoangThu.setText(String.valueOf(soTienThu) + "đ");
             lbSoLuotMuon.setText(String.valueOf(soLuotMuon));
-            lbTiLeHoanTra.setText(String.valueOf(phanTramTra)+"%");
+            lbTiLeHoanTra.setText(String.valueOf(phanTramTra) + "%");
             lbSoSachMat.setText(String.valueOf(soSachMat));
         } catch (Exception e) {
             e.printStackTrace();
@@ -184,22 +187,29 @@ public class Statistic_GUI extends javax.swing.JPanel {
             int soLuotTra = 0;
             float phanTramTra = 100;
             int soSachMat = 0;
+
             for (StatisticDTO dt : datas) {
-                int thang = dt.getThoiGian().getMonthValue();
-                int nam = dt.getThoiGian().getYear();
-                    if((thang-1)/3+1 == quarterSelection && nam == yearSelection){
-                    soTienThu += dt.getBank();
-                    soLuotMuon += dt.getSoLuotMuonBC();
-                    soLuotTra += dt.getSoLuotTra();
-                    soSachMat += dt.getSoSachHong();     
+                int thang = dt.getThang();
+                int nam = dt.getNam();
+
+                // Tính toán quý dựa trên tháng (1-3: Q1, 4-6: Q2, 7-9: Q3, 10-12: Q4)
+                int quarter = (thang - 1) / 3 + 1;
+
+                if (quarter == quarterSelection && nam == yearSelection) {
+                    soTienThu += dt.getTienThu();
+                    soLuotMuon += dt.getTongPhieuMuon();
+                    soLuotTra += dt.getTraDungHan();
+                    soSachMat += dt.getSoSachMat();
                 }
             }
-            if(soLuotMuon !=0){
-                phanTramTra = (soLuotTra*100)/soLuotMuon;
+
+            if (soLuotMuon != 0) {
+                phanTramTra = (soLuotTra * 100) / soLuotMuon;
             }
-            lbKhoangThu.setText(String.valueOf(soTienThu)+"đ");
+
+            lbKhoangThu.setText(String.valueOf(soTienThu) + "đ");
             lbSoLuotMuon.setText(String.valueOf(soLuotMuon));
-            lbTiLeHoanTra.setText(String.valueOf(phanTramTra)+"%");
+            lbTiLeHoanTra.setText(String.valueOf(phanTramTra) + "%");
             lbSoSachMat.setText(String.valueOf(soSachMat));
         } catch (Exception e) {
             e.printStackTrace();
@@ -216,26 +226,32 @@ public class Statistic_GUI extends javax.swing.JPanel {
             int soLuotTra = 0;
             float phanTramTra = 100;
             int soSachMat = 0;
+
             for (StatisticDTO dt : datas) {
-                int nam = dt.getThoiGian().getYear();
-                    if(nam == yearSelection){
-                    soTienThu += dt.getBank();
-                    soLuotMuon += dt.getSoLuotMuonBC();
-                    soLuotTra += dt.getSoLuotTra();
-                    soSachMat += dt.getSoSachHong();     
+                int nam = dt.getNam();
+
+                // Kiểm tra năm
+                if (nam == yearSelection) {
+                    soTienThu += dt.getTienThu();
+                    soLuotMuon += dt.getTongPhieuMuon();
+                    soLuotTra += dt.getTraDungHan();
+                    soSachMat += dt.getSoSachMat();
                 }
             }
-            if(soLuotMuon !=0){
-                phanTramTra = (soLuotTra*100)/soLuotMuon;
+
+            if (soLuotMuon != 0) {
+                phanTramTra = (soLuotTra * 100) / soLuotMuon;
             }
-            lbKhoangThu.setText(String.valueOf(soTienThu)+"đ");
+
+            lbKhoangThu.setText(String.valueOf(soTienThu) + "đ");
             lbSoLuotMuon.setText(String.valueOf(soLuotMuon));
-            lbTiLeHoanTra.setText(String.valueOf(phanTramTra)+"%");
+            lbTiLeHoanTra.setText(String.valueOf(phanTramTra) + "%");
             lbSoSachMat.setText(String.valueOf(soSachMat));
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
+        }    
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.

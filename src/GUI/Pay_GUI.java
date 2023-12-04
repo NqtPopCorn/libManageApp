@@ -37,7 +37,6 @@ import org.apache.poi.hssf.record.PageBreakRecord;
  */
 public class Pay_GUI extends javax.swing.JPanel {
     private PayBUS pbus;
-    private BookBUS bookBUS;
     DefaultTableModel tableModel;
     private BorrowCard bc;
     Vector<BorrowCard> list;
@@ -105,9 +104,8 @@ public class Pay_GUI extends javax.swing.JPanel {
         Vector<DetailBC> listBook = new Vector<DetailBC>(list.get(i).getListBook());
         DefaultTableModel Bookmodel = (DefaultTableModel) tbSach.getModel();
         Bookmodel.setRowCount(0);
-        int dem=1;
         for(DetailBC obj:listBook){
-            Object[] lost={obj.getISBN()+"         Mất sách"};
+            Object[] lost={"Sách                                      Mất sách"};
             Bookmodel.addRow(lost);
             Object[] book={"Tên sách:        "+obj.getBookname()};
             Bookmodel.addRow(book);
@@ -115,7 +113,6 @@ public class Pay_GUI extends javax.swing.JPanel {
             Bookmodel.addRow(author);
             Object[] num={"Số lượng:        "+obj.getNum()};
             Bookmodel.addRow(num);
-            dem++;
         }
     }
     

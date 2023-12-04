@@ -38,32 +38,4 @@ public class StatisticsBUS {
         return dao.topLuotMuon();
     }
     
-    public void SoTienThu(Date time, float total){
-        try {
-            dao.SoTienThu(time,total);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-    
-    public int allReader() throws ClassNotFoundException, SQLException{
-        Vector<Reader> r = new ReaderBUS().getAll();
-        return  r.size();
-    }
-    
-    public void BooksLost(Date time, int num){
-        try {
-            dao.SoSachMat(time, num);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }   
-    
-    public void NumberBC(){
-        try {
-            dao.SoLuotMuon();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }
