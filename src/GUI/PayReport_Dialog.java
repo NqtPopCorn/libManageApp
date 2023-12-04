@@ -29,7 +29,6 @@ import java.util.logging.Logger;
  * @author QUANG DIEN
  */
 public class PayReport_Dialog extends javax.swing.JDialog {
-    private StatisticsBUS stt;
 
     /**
      * Creates new form PayReport_Dialog
@@ -243,11 +242,8 @@ public class PayReport_Dialog extends javax.swing.JDialog {
             float total = soLuong * dt__static.getBookCost();
 
             PayBUS pbus =new PayBUS();
-            stt = new StatisticsBUS();
 
             pbus.BooksLost(bc__static, soLuong, dt__static.getISBN());
-            stt.BooksLost(bc__static.getRealReDate(), soLuong);
-            stt.SoTienThu( bc__static.getRealReDate(),total);
 
         } catch (Exception e) {
             e.printStackTrace();

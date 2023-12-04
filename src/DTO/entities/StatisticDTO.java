@@ -11,63 +11,72 @@ import java.time.LocalDate;
  * @author Tính
  */
 public class StatisticDTO {
-    public float bank;
-    public int soLuotMuonBC;
-    public int soLuotTra;
-    public int soSachHong;
-    public LocalDate thoiGian;
+    private int nam;
+    private int thang;
+    private int traDungHan;
+    private double tienThu;
+    private int tongPhieuMuon;
+    private int soSachMat;
 
     public StatisticDTO() {
         super();
     }
 
-    public StatisticDTO(float bank, int soLuotMuonBC, int soLuotTra, int soSachHong, LocalDate thoiGian) {
-        this.bank = bank;
-        this.soLuotMuonBC = soLuotMuonBC;
-        this.soLuotTra = soLuotTra;
-        this.soSachHong = soSachHong;
-        this.thoiGian = thoiGian;
+    public StatisticDTO(int nam, int thang, int traDungHan, double tienThu, int tongPhieuMuon, int soSachMat) {
+        this.nam = nam;
+        this.thang = thang;
+        this.traDungHan = traDungHan;
+        this.tienThu = tienThu;
+        this.tongPhieuMuon = tongPhieuMuon;
+        this.soSachMat = soSachMat;
     }
 
-    public float getBank() {
-        return bank;
+    public int getNam() {
+        return nam;
     }
 
-    public void setBank(float bank) {
-        this.bank = bank;
+    public void setNam(int nam) {
+        this.nam = nam;
     }
 
-    public int getSoLuotMuonBC() {
-        return soLuotMuonBC;
+    public int getThang() {
+        return thang;
     }
 
-    public void setSoLuotMuonBC(int soLuotMuonBC) {
-        this.soLuotMuonBC = soLuotMuonBC;
+    public void setThang(int thang) {
+        this.thang = thang;
     }
 
-    public int getSoLuotTra() {
-        return soLuotTra;
+    public int getTraDungHan() {
+        return traDungHan;
     }
 
-    public void setSoLuotTra(int soLuotTra) {
-        this.soLuotTra = soLuotTra;
+    public void setTraDungHan(int traDungHan) {
+        this.traDungHan = traDungHan;
     }
 
-    public int getSoSachHong() {
-        return soSachHong;
+    public double getTienThu() {
+        return tienThu;
     }
 
-    public void setSoSachHong(int soSachHong) {
-        this.soSachHong = soSachHong;
+    public void setTienThu(double tienThu) {
+        this.tienThu = tienThu;
     }
 
-    public LocalDate getThoiGian() {
-        return thoiGian;
+    public int getTongPhieuMuon() {
+        return tongPhieuMuon;
     }
 
-    public void setThoiGian(LocalDate thoiGian) {
-        this.thoiGian = thoiGian;
+    public void setTongPhieuMuon(int tongPhieuMuon) {
+        this.tongPhieuMuon = tongPhieuMuon;
     }
 
-    
+    public int getSoSachMat() {
+        return soSachMat;
+    }
+
+    public void setSoSachMat(int soSachMat) {
+        this.soSachMat = soSachMat;
+    }
+
 }
