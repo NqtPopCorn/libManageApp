@@ -6,6 +6,7 @@ package GUI;
 
 import BUS.AccountBUS;
 import DTO.entities.Account;
+import DTO.entities.Person;
 import java.awt.Color;
 import MyDesign.Login;
 import java.io.IOException;
@@ -25,7 +26,7 @@ public class Login_GUI extends javax.swing.JFrame {
     private AccountBUS userBUS;
     private Account user;
     
-    private ArrayList<Account> accList;
+    private ArrayList<Person> accList;
     private String username = "";
     private String pwd = "";
     /**
@@ -34,6 +35,7 @@ public class Login_GUI extends javax.swing.JFrame {
     public Login_GUI() throws ClassNotFoundException, SQLException, IOException{
         this.user = new Account();
         this.userBUS = new AccountBUS();
+        accList = userBUS.getList();
         initComponents();
         setBackground(new Color(0,0,0,0));
     }
@@ -152,12 +154,14 @@ public class Login_GUI extends javax.swing.JFrame {
         }
         boolean checkUsername = false;        
         boolean checkPwd = false;
-        for(Account acc : accList){
+        String checkPwdHash;
+        for(Person per : accList){
+            Account acc = (Account) per;
             if(acc.getUsername().equals(username)){
                 checkUsername = true;
                 try {
-                    pwd = Account.hashPassword(pwd);
-                    if(acc.getPwd().equals(pwd))
+                    checkPwdHash = Account.hashPassword(pwd);
+                    if(acc.getPwd().equals(checkPwdHash))
                         checkPwd = true;
                 } catch (NoSuchAlgorithmException ex) {
                     Logger.getLogger(Login_GUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -170,14 +174,17 @@ public class Login_GUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (checkUsername == false) {
+        if (checkPwd == false) {
             // Mật khẩu không được để trống
             JOptionPane.showMessageDialog(this, "Mật khẩu không đúng", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
         user = new Account();
         user.setUsername(username);
-        user.setPwd(pwd);     
+        user.setPwd(pwd);
+        System.out.println(user.getUsername());        
+        System.out.println(user.getPwd());
+
         try {   
             user = userBUS.signIn(user);
         } catch (NoSuchAlgorithmException ex) {

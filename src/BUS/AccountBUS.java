@@ -39,7 +39,10 @@ public class AccountBUS {
         Account temp;
         for (Person _user : list) {
             temp = (Account) _user;
+            System.out.println(user.getUsername().equals(temp.getUsername()));
+            System.out.println(user.getPwd().equals(temp.getPwd()));
             if (user.getUsername().equals(temp.getUsername()) && user.getPwd().equals(temp.getPwd())) {
+                
                 System.out.println(temp);
                 return temp;
             }
