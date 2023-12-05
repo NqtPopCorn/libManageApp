@@ -37,7 +37,7 @@ public Vector<StatisticDTO> getAll() throws ClassNotFoundException, SQLException
         try {
             // Truy vấn 1
             String sql1 = "SELECT MONTH(bc.startDate) AS thang, YEAR(bc.startDate) AS nam, " +
-                          "SUM(CASE WHEN DATEDIFF(DAY, bc.startDate, bc.realReDate) <= 14 THEN 1 ELSE 0 END) AS tradunghan " +
+                          "SUM(CASE WHEN DATEDIFF(DAY, bc.startDate, bc.realReDate) <= 14 THEN 1 ELSE 0 END) AS tradunghan, COUNT(*) AS tongphieumuon " +
                           "FROM detail_borrow_card dBC JOIN cp_book cpB ON dBC.ISBN = cpB.ISBN " +
                           "JOIN borrow_card bc ON bc.id = dBC.bcID GROUP BY MONTH(bc.startDate), YEAR(bc.startDate)";
             PreparedStatement pst1 = ConnectDB.conn.prepareStatement(sql1);
@@ -46,20 +46,22 @@ public Vector<StatisticDTO> getAll() throws ClassNotFoundException, SQLException
                 int year = rs1.getInt("nam");
                 int month = rs1.getInt("thang");
                 int traDungHan = rs1.getInt("tradunghan");
+                int tongPhieuMuon = rs1.getInt("tongphieumuon");
 
                 StatisticDTO statisticDTO = checkThang(datas, year, month);
 
                 if (statisticDTO == null) {
-                    statisticDTO = new StatisticDTO(year, month, traDungHan, 0, 0, 0);
+                    statisticDTO = new StatisticDTO(year, month, traDungHan, 0, tongPhieuMuon, 0);
                     datas.add(statisticDTO);
                 } else {
                     statisticDTO.setTraDungHan(traDungHan);
+                    statisticDTO.setTongPhieuMuon(tongPhieuMuon);
                 }
             }
 
             // Truy vấn 2
             String sql2 = "SELECT YEAR(bc.realReDate) AS nam, MONTH(bc.realReDate) AS thang, " +
-                          "SUM(dBC.lost * cpB.Cost) AS tienthu, COUNT(bc.id) AS tongphieumuon, " +
+                          "SUM(dBC.lost * cpB.Cost) AS tienthu, " +
                           "SUM(dBC.lost) AS sosachmat FROM dbo.borrow_card bc JOIN dbo.detail_borrow_card dBC ON dBC.bcID = bc.id " +
                           "JOIN dbo.cp_book cpB ON cpB.ISBN = dBC.ISBN GROUP BY YEAR(bc.realReDate), MONTH(bc.realReDate)";
             PreparedStatement pst2 = ConnectDB.conn.prepareStatement(sql2);
@@ -69,17 +71,15 @@ public Vector<StatisticDTO> getAll() throws ClassNotFoundException, SQLException
                 int year = rs2.getInt("nam");
                 int month = rs2.getInt("thang");
                 double tienThu = rs2.getDouble("tienthu");
-                int tongPhieuMuon = rs2.getInt("tongphieumuon");
                 int lostBooks = rs2.getInt("sosachmat");
 
                 StatisticDTO statisticDTO = checkThang(datas, year, month);
 
                 if (statisticDTO == null) {
-                    statisticDTO = new StatisticDTO(year, month, 0, tienThu, tongPhieuMuon, lostBooks);
+                    statisticDTO = new StatisticDTO(year, month, 0, tienThu, 0, lostBooks);
                     datas.add(statisticDTO);
                 } else {
                     statisticDTO.setTienThu(tienThu);
-                    statisticDTO.setTongPhieuMuon(tongPhieuMuon);
                     statisticDTO.setSoSachMat(lostBooks);
                 }
                 index++;
