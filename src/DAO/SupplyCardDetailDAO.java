@@ -23,7 +23,15 @@ import java.sql.PreparedStatement;
 public class SupplyCardDetailDAO {
     private ConnectDB connectDB;
     public SupplyCardDetailDAO() throws ClassNotFoundException, SQLException, IOException{
-        connectDB = new ConnectDB();
+    	try {
+			this.connectDB = new ConnectDB();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     public void saveInfo(SupplyCardDetail supplyCardDetail){
        String query = "INSERT INTO detail_supply_card (scID, ISBN, num) VALUES (?,?,?)";
@@ -46,5 +54,3 @@ public class SupplyCardDetailDAO {
     }
     
 }
-
-

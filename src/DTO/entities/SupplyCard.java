@@ -11,13 +11,13 @@ import java.sql.Timestamp;
  * @author WIN 10
  */
 public class SupplyCard {
-    private int id;
+        private int id;
 	private Timestamp supDate;
-	private String provider;
+	private int provider;
 	private int staffID;
 	private long tongchi;
 		
-	public SupplyCard(int id, Timestamp supDate, String provider, int staffID, long tongchi) {
+	public SupplyCard(int id, Timestamp supDate, int provider, int staffID, long tongchi) {
 		super();
 		this.id = id;
 		this.supDate = supDate;
@@ -47,11 +47,11 @@ public class SupplyCard {
 		this.supDate = supDate;
 	}
 
-	public String getProvider() {
+	public int getProvider() {
 		return provider;
 	}
 
-	public void setProvider(String provider) {
+	public void setProvider(int provider) {
 		this.provider = provider;
 	}
 

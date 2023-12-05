@@ -12,7 +12,10 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.logging.Level;
+import java.util.ArrayList;
+
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -21,6 +24,8 @@ import java.util.logging.Logger;
 public class Login_GUI extends javax.swing.JFrame {
     private AccountBUS userBUS;
     private Account user;
+    
+    private ArrayList<Account> accList;
     private String username = "";
     private String pwd = "";
     /**
@@ -131,8 +136,45 @@ public class Login_GUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        String username = txtUserName.getText();
+        String username = txtUserName.getText().trim();
         String pwd = String.valueOf(txtPassword.getPassword());
+        if (username.isEmpty()) {
+            // Tên người dùng không được để trống
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên người dùng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Kiểm tra xác thực mật khẩu (password)
+        if (pwd.isEmpty()) {
+            // Mật khẩu không được để trống
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        boolean checkUsername = false;        
+        boolean checkPwd = false;
+        for(Account acc : accList){
+            if(acc.getUsername().equals(username)){
+                checkUsername = true;
+                try {
+                    pwd = Account.hashPassword(pwd);
+                    if(acc.getPwd().equals(pwd))
+                        checkPwd = true;
+                } catch (NoSuchAlgorithmException ex) {
+                    Logger.getLogger(Login_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            }
+        }
+        if (checkUsername == false) {
+            // Mật khẩu không được để trống
+            JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (checkUsername == false) {
+            // Mật khẩu không được để trống
+            JOptionPane.showMessageDialog(this, "Mật khẩu không đúng", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         user = new Account();
         user.setUsername(username);
         user.setPwd(pwd);     

@@ -5,6 +5,7 @@
 package GUI;
 
 import BUS.AccountBUS;
+import BUS.RolePermissionBUS;
 import MyDesign.ScrollBar;
 import java.awt.Color;
 import java.util.Vector;
@@ -29,6 +30,7 @@ public class Staff_GUI extends javax.swing.JPanel {
     int userID;
     String roleID;
     private Account userLogin;
+    private RolePermissionBUS rolePermissionBUS;
     /**
      * Creates new form Staff_GUI
      */
@@ -37,7 +39,7 @@ public class Staff_GUI extends javax.swing.JPanel {
         initComponents();
         this.userID = userLogin.getPersonID();
         this.roleID = userLogin.getRoleID();
-
+        this.rolePermissionBUS = new RolePermissionBUS();
         spTable.setVerticalScrollBar(new ScrollBar());
         spTable.getVerticalScrollBar().setBackground(Color.WHITE);
         spTable.getViewport().setBackground(Color.WHITE);
@@ -55,6 +57,10 @@ public class Staff_GUI extends javax.swing.JPanel {
         JPanel p = new JPanel();
         p.setBackground(Color.WHITE);
         spTable.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
+        if(rolePermissionBUS.hasPerCreate(roleID, 7))
+            btnNhanVienMoi.setEnabled(true);
+        else  btnNhanVienMoi.setEnabled(false);
+        
     }
     
     public void addDefaultAD() throws Exception{
@@ -258,7 +264,7 @@ public class Staff_GUI extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tbDanhSachNhanVienMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbDanhSachNhanVienMouseClicked
-       if (evt.getClickCount() == 2) {
+       if (evt.getClickCount() == 2 && rolePermissionBUS.hasPerView(roleID, 7)) {
             int row = tbDanhSachNhanVien.getSelectedRow();
             if (row >= 0) {
                 String cellValue = tbDanhSachNhanVien.getValueAt(row, 1).toString();
@@ -285,7 +291,7 @@ public class Staff_GUI extends javax.swing.JPanel {
 
     private void btnNhanVienMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhanVienMoiActionPerformed
         try {
-            StaffAdd_Dialog sad=new StaffAdd_Dialog(new javax.swing.JFrame(), true,tbDanhSachNhanVien,userID,roleID);
+            StaffAdd_Dialog sad=new StaffAdd_Dialog(this.userLogin ,new javax.swing.JFrame(), true,tbDanhSachNhanVien);
             sad.setVisible(true);
         } catch (IOException ex) {
             Logger.getLogger(Staff_GUI.class.getName()).log(Level.SEVERE, null, ex);

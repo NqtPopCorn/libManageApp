@@ -148,7 +148,6 @@ public class WarehouseDAO {
         return pubid;
     }
 
-
     public int getByPublisherID(String pub) throws SQLException {
         int pubid = 0;
         String query = "SELECT id FROM publisher WHERE name LIKE ?";

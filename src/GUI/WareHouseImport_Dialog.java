@@ -797,6 +797,20 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 				            model.setValueAt(i + 1, i, 0); // Cập nhật cột "STT" (cột 0)
 				        }
 					}
+					txtTenSach.setEditable(true);
+					txtGia.setEditable(true);
+					txtSoLuong.setEditable(true);
+					txtEdition.setEditable(true);
+					txtISBN.setEditable(true);
+					cbNXB.setEnabled(true);
+					cbTacGia.setEnabled(true);
+					cbTheLoai.setEnabled(true);
+					cbNhaCungCap.setEnabled(true);
+					txtTenSach.setText("");
+					txtGia.setText("");
+					txtSoLuong.setText("");
+					txtEdition.setText("");
+					txtISBN.setText("");
 				}
 			}
 		});
@@ -1074,9 +1088,16 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 		            SupplyCardDetail d = new SupplyCardDetail();
 		            
 		            // TẠO 1 PHIẾU SUPPLYCARD
+					ncc = cbNhaCungCap.getSelectedItem().toString();
+					try {
+						providerID = supplyCard.getByPublisherID(ncc);
+					} catch (SQLException | IOException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
 		            SupplyCard s = new SupplyCard();
 	                s.setSupDate(timestamp);
-	                s.setProvider(String.valueOf(cbNhaCungCap.getSelectedItem()));
+	                s.setProvider(providerID);
 	                s.setTongchi(tongchi);
                     try {
                         scB.saveSC(s);
@@ -1137,6 +1158,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 				         System.out.println(e1);
 					}
 				    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm dữ liệu thành công.", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
+				    tbSachDuocNhap.setRowCount(0);
 				}
 			}
 		});
@@ -1339,6 +1361,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
     private static WarehouseBUS cpBook;
     protected long tongchi = 0;
     private int tongsoluong =0;
+    private int providerID = 0;
     private String gia, soluong;
     private String[] rowdata;
     private String tensach;

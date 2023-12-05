@@ -52,7 +52,7 @@ public class SupplyCardDAO {
                         sc = new SupplyCard();
                         sc.setId(resultSet.getInt("id"));
                         sc.setSupDate(resultSet.getTimestamp("supDate"));
-                        sc.setProvider(resultSet.getString("provider"));
+                        sc.setProvider(resultSet.getInt("provider"));
                         sc.setStaffID(resultSet.getInt("staffID"));
                     }
                 }
@@ -68,6 +68,7 @@ public class SupplyCardDAO {
                       "ORDER BY id DESC";
 
         try {
+            connectDB.connect();
             Connection connection = connectDB.getConnection();
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -89,7 +90,7 @@ public class SupplyCardDAO {
             Connection connection = connectDB.getConnection();
             if (connection != null) {
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                    preparedStatement.setString(1, sc.getProvider());
+                    preparedStatement.setInt(1, sc.getProvider());
                     preparedStatement.executeUpdate();
                 }
             }
@@ -125,7 +126,7 @@ public class SupplyCardDAO {
             if (connection != null) {
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                     preparedStatement.setTimestamp(1, supplyCard.getSupDate());
-                    preparedStatement.setString(2, supplyCard.getProvider());
+                    preparedStatement.setInt(2, supplyCard.getProvider());
                     preparedStatement.setLong(3, supplyCard.getTongchi());
                     preparedStatement.executeUpdate();
                 }
@@ -146,7 +147,7 @@ public class SupplyCardDAO {
                 sc.setId(resultSet.getInt("id"));
                 Timestamp supDate = resultSet.getTimestamp("supDate");
                 sc.setSupDate(supDate);
-                sc.setProvider(resultSet.getString("provider"));
+                sc.setProvider(resultSet.getInt("provider"));
                 sc.setStaffID(resultSet.getInt("staffID"));
                 sc.setTongchi(resultSet.getLong("feePaid"));
                 list.add(sc);
@@ -170,7 +171,7 @@ public class SupplyCardDAO {
             while (resultSet.next()) {
                 SupplyCard supplyCard = new SupplyCard();
                 supplyCard.setSupDate(resultSet.getTimestamp("supDate"));
-                supplyCard.setProvider(resultSet.getString("providerID"));
+                supplyCard.setProvider(resultSet.getInt("providerID"));
                 supplyCard.setTongchi(resultSet.getLong("feePaid"));
 
                 Staff staff = new Staff();
@@ -200,22 +201,6 @@ public class SupplyCardDAO {
         return result;
     }
     
-    public List<SupplyCardWithStaff> searchByProvider(String nameToSearch) {
-        List<SupplyCardWithStaff> result = new ArrayList<>();
-        
-        List<SupplyCardWithStaff> allSupplyCards = getAllSupplyCardWithStaff();
-        
-        for (SupplyCardWithStaff supplyCardWithStaff : allSupplyCards) {
-            String name = supplyCardWithStaff.getSupply_Card().getProvider();
-            if (name.equalsIgnoreCase(nameToSearch)) {
-                result.add(supplyCardWithStaff);
-            }
-        }
-        
-        return result;
-    }
-
-    
     public List<SupplyCardWithStaff> searchByStaff(String nameToSearch) {
         List<SupplyCardWithStaff> result = new ArrayList<>();
         
@@ -240,7 +225,7 @@ public class SupplyCardDAO {
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 SupplyCard sc = new SupplyCard();
-                sc.setProvider(resultSet.getString("providerID"));
+                sc.setProvider(resultSet.getInt("providerID"));
                 list.add(sc);
             }
         } catch (SQLException e) {

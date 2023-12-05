@@ -658,10 +658,10 @@ public class More_GUI extends javax.swing.JPanel {
         supplyCardBUS = new SupplyCardBUS();
         listSupplier = supplyCardBUS.getAllName();
         suppliersModel = (DefaultTableModel) tbNhaCungCap.getModel();
-        String supplierName;
+        int supplierName;
         int stt = 1;
         for(SupplyCard supplier : listSupplier){
-            supplierName=supplier.getProvider();
+            supplierName = supplier.getProvider();
             suppliersModel.addRow(new Object[]{stt++,supplierName});
         }
     }

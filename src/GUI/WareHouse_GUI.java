@@ -249,7 +249,7 @@ public class WareHouse_GUI extends javax.swing.JPanel {
                     	{
                     		if(containsStringIgnoreCase(searchInput, key))
                     		{
-                    			timkiemNCC();
+                    			// timkiemNCC();    
                     		}
                     		else if(containsString(searchInput, keyDate)) {
                     			timkiemSupDate();
@@ -388,34 +388,34 @@ public class WareHouse_GUI extends javax.swing.JPanel {
     public static boolean containsString(String text, String searchString) {
         return text.contains(searchString);
     }
-    public void timkiemNCC() {
-    	DefaultTableModel model = (DefaultTableModel) tbLichSuNhapHang.getModel(); // Lấy model của JTable
-
-        String searchInput = txtTimKiem.getText().trim();
-        try {
-			List<SupplyCardWithStaff> supplyCardWithStaffList = supplyCardDAO.searchByProvider(searchInput);
-			model.setRowCount(0); // Xóa tất cả các hàng hiện tại trong bảng
-
-			for (SupplyCardWithStaff supplyCardWithStaff : supplyCardWithStaffList) {
-			    // Tạo một mảng các Object chứa thông tin cần hiển thị
-			    Object[] rowData = {
-			        (model.getRowCount() + 1),
-			        supplyCardWithStaff.getSupply_Card().getSupDate(),
-			        supplyCardWithStaff.getSupply_Card().getProvider(),
-			        supplyCardWithStaff.getSupply_Card().getTongchi(),
-			        supplyCardWithStaff.getStaff().getName()
-			    };
-			    model.addRow(rowData);
-			}
-			if (supplyCardWithStaffList.isEmpty()) {
-				JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Định dạng tìm kiếm không đúng (ghi rõ NXB_'tên NXB') hoặc dữ liệu đó không tồn tại.","Lỗi",JOptionPane.ERROR_MESSAGE);
-            }
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			System.out.println(e);
-			JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Định dạng tìm kiếm không đúng (ghi rõ NXB_'tên NXB') hoặc dữ liệu đó không tồn tại.","Lỗi",JOptionPane.ERROR_MESSAGE);
-		}
-    }
+//    public void timkiemNCC() {
+//    	DefaultTableModel model = (DefaultTableModel) tbLichSuNhapHang.getModel(); // Lấy model của JTable
+//
+//        String searchInput = txtTimKiem.getText().trim();
+//        try {
+//			List<SupplyCardWithStaff> supplyCardWithStaffList = supplyCardDAO.searchByProvider(searchInput);
+//			model.setRowCount(0); // Xóa tất cả các hàng hiện tại trong bảng
+//
+//			for (SupplyCardWithStaff supplyCardWithStaff : supplyCardWithStaffList) {
+//			    // Tạo một mảng các Object chứa thông tin cần hiển thị
+//			    Object[] rowData = {
+//			        (model.getRowCount() + 1),
+//			        supplyCardWithStaff.getSupply_Card().getSupDate(),
+//			        supplyCardWithStaff.getSupply_Card().getProvider(),
+//			        supplyCardWithStaff.getSupply_Card().getTongchi(),
+//			        supplyCardWithStaff.getStaff().getName()
+//			    };
+//			    model.addRow(rowData);
+//			}
+//			if (supplyCardWithStaffList.isEmpty()) {
+//				JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Định dạng tìm kiếm không đúng (ghi rõ NXB_'tên NXB') hoặc dữ liệu đó không tồn tại.","Lỗi",JOptionPane.ERROR_MESSAGE);
+//            }
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			System.out.println(e);
+//			JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Định dạng tìm kiếm không đúng (ghi rõ NXB_'tên NXB') hoặc dữ liệu đó không tồn tại.","Lỗi",JOptionPane.ERROR_MESSAGE);
+//		}
+//    }
     public void timkiemNameStaff() {
     	DefaultTableModel model = (DefaultTableModel) tbLichSuNhapHang.getModel(); // Lấy model của JTable
 

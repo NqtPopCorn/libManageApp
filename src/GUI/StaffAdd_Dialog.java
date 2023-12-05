@@ -5,17 +5,22 @@
 package GUI;
 
 import BUS.RoleBUS;
+import BUS.RolePermissionBUS;
 import BUS.StaffBUS;
 import DTO.entities.Account;
 import DTO.entities.Role;
 import DTO.entities.Staff;
 import MyDesign.MyTable;
+import com.aspose.pdf.internal.l68v.l4h;
 import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -31,13 +36,17 @@ public class StaffAdd_Dialog extends javax.swing.JDialog {
     private DefaultComboBoxModel model;    
     private int personID;
     private String roleID;
+    private Account user;
+    private RolePermissionBUS rolePermissionBUS;
     /**
      * Creates new form StaffAdd_Dialog
      */
-    public StaffAdd_Dialog(Frame parent, boolean modal,MyDesign.MyTable tab,int userID,String role) throws IOException {
+    public StaffAdd_Dialog(Account user, Frame parent, boolean modal,MyDesign.MyTable tab) throws IOException, ClassNotFoundException, SQLException {
         super(parent, modal);
-        personID = userID;
-        roleID = roleID;
+        this.user = user;
+        personID = user.getPersonID();
+        roleID = user.getRoleID();
+        this.rolePermissionBUS = new RolePermissionBUS();
         try {
             staffBUS=new StaffBUS();
         } catch (ClassNotFoundException | SQLException e) {
@@ -45,7 +54,10 @@ public class StaffAdd_Dialog extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null,e.getMessage());
         }
         initComponents();
-        addRole(role);
+        addRole(user.getRoleID());
+        if(rolePermissionBUS.hasPerCreate(roleID, 9))
+            lbChucVu.setEnabled(true);
+        else lbChucVu.setEnabled(false);
     }
     public boolean checkDataVal(String name,String tel,String address,String username,String password) throws HeadlessException, FileNotFoundException, ClassNotFoundException, IOException, SQLException {
     	if(name.equals("")) {
@@ -421,7 +433,21 @@ public class StaffAdd_Dialog extends javax.swing.JDialog {
     }//GEN-LAST:event_btnThemNhanVienActionPerformed
 
     private void lbChucVuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbChucVuMouseClicked
-        
+        try {
+            StaffRole_Dialog srd = new StaffRole_Dialog(this.user,new javax.swing.JFrame(), true);
+            srd.setVisible(true);
+            srd.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                }
+            });
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_lbChucVuMouseClicked
 
     /**
