@@ -48,7 +48,7 @@ public class HomePage extends javax.swing.JFrame {
                 if (index == 0 && homePageBUS.hasPerAccess(user.getRoleID(), 1)) {
                     setForm(new Statistic_GUI());
                 }
-                else JOptionPane.showMessageDialog(this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                else JOptionPane.showMessageDialog(HomePage.this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 
                 if (index == 1 && homePageBUS.hasPerAccess(user.getRoleID(), 2)) {
                     try {
@@ -63,7 +63,7 @@ public class HomePage extends javax.swing.JFrame {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } 
-                else JOptionPane.showMessageDialog(this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                else JOptionPane.showMessageDialog(HomePage.this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 if (index == 2 && homePageBUS.hasPerAccess(user.getRoleID(), 3)) {
                     try {
                         setForm(new Pay_GUI(user));
@@ -75,7 +75,7 @@ public class HomePage extends javax.swing.JFrame {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } 
-                else JOptionPane.showMessageDialog(this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                else JOptionPane.showMessageDialog(HomePage.this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 if (index == 3 && homePageBUS.hasPerAccess(user.getRoleID(), 4)) {
                     try {
                         setForm(new WareHouse_GUI(user));
@@ -86,7 +86,7 @@ public class HomePage extends javax.swing.JFrame {
                     } catch (ClassNotFoundException ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else JOptionPane.showMessageDialog(this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                } else JOptionPane.showMessageDialog(HomePage.this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 if (index == 4 && homePageBUS.hasPerAccess(user.getRoleID(), 5)) {
                     try {
                         setForm(new Ticket_GUI(user));
@@ -97,21 +97,21 @@ public class HomePage extends javax.swing.JFrame {
                     } catch (IOException ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else JOptionPane.showMessageDialog(this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                } else JOptionPane.showMessageDialog(HomePage.this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 if (index == 5 && homePageBUS.hasPerAccess(user.getRoleID(), 6)) {
                     try {
                         setForm(new Reader_GUI(user));
                     } catch (Exception ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else JOptionPane.showMessageDialog(this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                } else JOptionPane.showMessageDialog(HomePage.this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 if (index == 6 && homePageBUS.hasPerAccess(user.getRoleID(), 7)) {
                     try {
                         setForm(new Staff_GUI(user));
                     } catch (Exception ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else JOptionPane.showMessageDialog(this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                } else JOptionPane.showMessageDialog(HomePage.this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 if (index == 7 && homePageBUS.hasPerAccess(user.getRoleID(), 8)) {
                     try {
                         setForm(new More_GUI(user));
@@ -120,7 +120,7 @@ public class HomePage extends javax.swing.JFrame {
                     } catch (IOException ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else JOptionPane.showMessageDialog(this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
+                } else JOptionPane.showMessageDialog(HomePage.this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
                 if (index == 8 && homePageBUS.hasPerAccess(user.getRoleID(), 9)) {
                     try {
                         setForm(new Admin_GUI(user));
@@ -133,7 +133,7 @@ public class HomePage extends javax.swing.JFrame {
                     } catch (NoSuchAlgorithmException ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else JOptionPane.showMessageDialog(this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
+                } else JOptionPane.showMessageDialog(HomePage.this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
                 if (index == 11) {
                     System.exit(0);
                 }
