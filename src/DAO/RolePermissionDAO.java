@@ -43,13 +43,20 @@ public class RolePermissionDAO {
         String context = this.getClass().getName();
         connectDB.connect(context);
         try {
-            String sql = "Select positionID,authorityID from role_permissions";
+            String sql = "Select *  from role_permissions";
             Statement stmt = connectDB.conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()){
                 RolePermission rolePermission = new RolePermission();
                 rolePermission.setRoleID(rs.getString(1));                
                 rolePermission.setPermissionID(rs.getInt(2));
+                rolePermission.setPerAccess(rs.getInt(3));                
+                rolePermission.setPerAccess(rs.getInt(3));
+                rolePermission.setPerCreate(rs.getInt(4));                
+                rolePermission.setPerView(rs.getInt(5));
+                rolePermission.setPerEdit(rs.getInt(6));
+                rolePermission.setPerDelete(rs.getInt(7));                
+                rolePermission.setIsDelete(rs.getInt(8));
                 list.add(rolePermission);
             }
         } catch (SQLException ex) {
@@ -58,16 +65,23 @@ public class RolePermissionDAO {
         connectDB.disconnect(context);
         return list;
     }
-    public boolean create(int permissionID, String roleID) throws ClassNotFoundException, SQLException {
+    public boolean create(RolePermission per) throws ClassNotFoundException, SQLException {
         String context = this.getClass().getName();
         connectDB.connect(context);
         try {
-            String sql = "INSERT INTO role_permissions(positionID,authorityID)"
-                    + "VALUES (?, ?)";
-            PreparedStatement pstmt = connectDB.conn.prepareStatement(sql);
-            pstmt.setString(1, roleID);
-            pstmt.setInt(2, permissionID);
+            String sql = "INSERT INTO role_permissions(positionID, authorityID, Per_access, Per_create, Per_view, Per_edit, Per_delete, IsActive) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement pstmt = ConnectDB.conn.prepareStatement(sql);
+            pstmt.setString(1, per.getRoleID());
+            pstmt.setInt(2, per.getPermissionID());
+            pstmt.setInt(3, per.getPerAccess());
+            pstmt.setInt(4, per.getPerCreate());            
+            pstmt.setInt(5, per.getPerView());            
+            pstmt.setInt(6, per.getPerEdit());
+            pstmt.setInt(7, per.getPerDelete());
+            pstmt.setInt(8, per.getIsDelete());
             pstmt.executeUpdate();
+            list.add(per);
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(RolePermissionDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -76,21 +90,29 @@ public class RolePermissionDAO {
         }
         return false;
     }    
-    public boolean delete(String roleID) throws SQLException {
+    public boolean update(RolePermission per) throws SQLException {
         String context = this.getClass().getName();
         connectDB.connect(context);
         try {
-            String sql = "DELETE FROM role_permissions WHERE positionID= ?;";
-            PreparedStatement pstmt = connectDB.conn.prepareStatement(sql);
-            pstmt.setString(1, roleID);
+            String sql = "UPDATE role_permissions SET Per_access = ?, Per_create = ?, Per_view =?, Per_edit =?, Per_delete =?  "
+                    + "WHERE positionID = ? AND authorityID = ?";
+            PreparedStatement pstmt = ConnectDB.conn.prepareStatement(sql);
+            pstmt.setInt(1, per.getPerAccess());
+            pstmt.setInt(2, per.getPerCreate());
+            pstmt.setInt(3, per.getPerView());
+            pstmt.setInt(4, per.getPerEdit());
+            pstmt.setInt(5, per.getPerDelete());            
+            pstmt.setString(6, per.getRoleID());            
+            pstmt.setInt(7, per.getPermissionID());
             pstmt.executeUpdate();
-            searchByID(roleID);
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(RolePermissionDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PermissionDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        connectDB.disconnect(context);
         return false;
     }
+    
     public ArrayList<RolePermission> searchByID(String ID) { 
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getRoleID().equals(ID)) {

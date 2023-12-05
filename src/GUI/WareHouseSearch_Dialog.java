@@ -9,6 +9,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.table.DefaultTableModel;
 
 import DAO.SupplyCardDAO;
+import DTO.entities.Account;
 import DTO.entities.SupplyCardWithStaff;
 import connection.ConnectDB;
 
@@ -38,7 +39,7 @@ public class WareHouseSearch_Dialog extends javax.swing.JDialog {
     /**
      * Creates new form SearchBorrow_Dialog
      */
-    public WareHouseSearch_Dialog(java.awt.Frame parent, boolean modal) throws SQLException, IOException, ClassNotFoundException {
+    public WareHouseSearch_Dialog( java.awt.Frame parent, boolean modal) throws SQLException, IOException, ClassNotFoundException {
         super(parent, modal);
         this.whg = new WareHouse_GUI();
         try {

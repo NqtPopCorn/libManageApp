@@ -32,7 +32,7 @@ public class ReaderBUS {
         }
          return null;
      }
-     public ArrayList<Reader> getReaderByName(String Name) throws ClassNotFoundException, SQLException
+     public Vector<Reader> getReaderByName(String Name) throws ClassNotFoundException, SQLException
      {
           try {
             return readerDAO.getReaderByName(Name);
@@ -92,5 +92,9 @@ public class ReaderBUS {
     public Vector<Reader> allOutSearch(String fStr) throws Exception{
         readerDAO = new ReaderDAO();
         return readerDAO.allOutSearch(fStr);
+    }
+    public Vector<Reader> getReaderById(int infoID) throws ClassNotFoundException, SQLException, IOException {
+        readerDAO = new ReaderDAO();
+        return readerDAO.getReaderById(infoID);
     }
 }

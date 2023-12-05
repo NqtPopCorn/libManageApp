@@ -272,6 +272,11 @@ public class StaffAdd_Dialog extends javax.swing.JDialog {
         lbChucVu.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbChucVu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/add.png"))); // NOI18N
         lbChucVu.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 204, 204)));
+        lbChucVu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbChucVuMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelBorder_Basic1Layout = new javax.swing.GroupLayout(panelBorder_Basic1);
         panelBorder_Basic1.setLayout(panelBorder_Basic1Layout);
@@ -414,6 +419,10 @@ public class StaffAdd_Dialog extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(null,e1.getMessage());
         }
     }//GEN-LAST:event_btnThemNhanVienActionPerformed
+
+    private void lbChucVuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbChucVuMouseClicked
+        
+    }//GEN-LAST:event_lbChucVuMouseClicked
 
     /**
      * @param args the command line arguments

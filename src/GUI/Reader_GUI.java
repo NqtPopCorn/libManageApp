@@ -9,6 +9,8 @@ import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import BUS.ReaderBUS;
+import BUS.RolePermissionBUS;
+import DTO.entities.Account;
 import DTO.entities.Reader;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -21,11 +23,15 @@ import javax.swing.JOptionPane;
  */
 public class Reader_GUI extends javax.swing.JPanel {
     ReaderBUS readerBUS;
+    Account user;
+    private RolePermissionBUS rolePermissionBUS ;
     /**
      * Creates new form Reader_GUI
      */
-    public Reader_GUI() throws Exception {
+    public Reader_GUI(Account user) throws Exception {
         initComponents();
+        this.user = user;
+        this.rolePermissionBUS = new RolePermissionBUS();
         spTable.setVerticalScrollBar(new ScrollBar());
         spTable.getVerticalScrollBar().setBackground(Color.WHITE);
         spTable.getViewport().setBackground(Color.WHITE);
@@ -39,6 +45,8 @@ public class Reader_GUI extends javax.swing.JPanel {
         addDefault();
         p.setBackground(Color.WHITE);
         spTable.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
+        if(rolePermissionBUS.hasPerCreate(user.getRoleID(), 6))
+            btnDocGiaMoi.setEnabled(false);
     }
     public void addDefault() throws Exception{
         Vector<Reader> arr= readerBUS.getAll();
@@ -56,8 +64,8 @@ public class Reader_GUI extends javax.swing.JPanel {
             }
             long daysBetween=0; 
             if(fineDate!=null) {
-	            LocalDate cuDate=LocalDate.now();
-	            daysBetween = ChronoUnit.DAYS.between(cuDate, fineDate);
+                LocalDate cuDate=LocalDate.now();
+                daysBetween = ChronoUnit.DAYS.between(cuDate, fineDate);
             }        
             Object row[] = {i+1,id,name,tel,address,daysBetween,isL};
             tbDanhSachDocGia.addRow(row);
@@ -140,6 +148,14 @@ public class Reader_GUI extends javax.swing.JPanel {
             }
         });
         spTable.setViewportView(tbDanhSachDocGia);
+        if (tbDanhSachDocGia.getColumnModel().getColumnCount() > 0) {
+            tbDanhSachDocGia.getColumnModel().getColumn(0).setMinWidth(40);
+            tbDanhSachDocGia.getColumnModel().getColumn(0).setMaxWidth(50);
+            tbDanhSachDocGia.getColumnModel().getColumn(5).setMinWidth(50);
+            tbDanhSachDocGia.getColumnModel().getColumn(5).setMaxWidth(70);
+            tbDanhSachDocGia.getColumnModel().getColumn(6).setMinWidth(50);
+            tbDanhSachDocGia.getColumnModel().getColumn(6).setMaxWidth(70);
+        }
 
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/search.png"))); // NOI18N
 
@@ -237,13 +253,13 @@ public class Reader_GUI extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tbDanhSachDocGiaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbDanhSachDocGiaMouseClicked
-        if (evt.getClickCount() == 2) {
+        if (evt.getClickCount() == 2 && rolePermissionBUS.hasPerView(this.user.getRoleID(), 6)) {
             int row = tbDanhSachDocGia.getSelectedRow();
             if (row >= 0) {
                 String cellValue = tbDanhSachDocGia.getValueAt(row, 1).toString();
                 int cellVal=Integer.parseInt(cellValue);
                 try {
-                        ReaderUpdateInfor_Dialog ruid=new ReaderUpdateInfor_Dialog(new javax.swing.JFrame(), true,cellVal,tbDanhSachDocGia);
+                        ReaderUpdateInfor_Dialog ruid=new ReaderUpdateInfor_Dialog(this.user, new javax.swing.JFrame(), true,cellVal,tbDanhSachDocGia);
                         ruid.setVisible(true);
                 }catch(Exception ex) {
                         JOptionPane.showMessageDialog(null,ex.getMessage());

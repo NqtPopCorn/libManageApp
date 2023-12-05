@@ -36,7 +36,6 @@ public class PermissionDAO {
     public ArrayList<Permission> read() throws IOException, ClassNotFoundException, SQLException{
         String context = this.getClass().getName();
         connectDB.connect(context);
-        System.out.println("check");
         try {
             String sql = "Select * from permissions";
             Statement stmt = ConnectDB.conn.createStatement();

@@ -8,6 +8,7 @@ import BUS.AuthorBUS;
 import BUS.CategoryBUS;
 import BUS.PublisherBUS;
 import BUS.SupplyCardBUS;
+import DTO.entities.Account;
 import MyDesign.ScrollBar;
 import java.awt.Color;
 import javax.swing.JPanel;
@@ -30,10 +31,7 @@ import javax.swing.table.DefaultTableModel;
  * @author QUANG DIEN
  */
 public class More_GUI extends javax.swing.JPanel {
-    private Author author;
-    private Category category;
-    private Publisher publisher;    
-    private SupplyCard supplyCard;
+    private Account user;
     private AuthorBUS authorBUS;
     private SupplyCardBUS supplyCardBUS;
     private CategoryBUS categoryBUS;
@@ -53,6 +51,15 @@ public class More_GUI extends javax.swing.JPanel {
      */
     public More_GUI() throws SQLException, IOException {
         initComponents();
+        styles();
+        initTableAuthor();
+        initTableCategory();
+        initTablePublisher();
+        initTableSupplier();
+    }
+    public More_GUI(Account user) throws SQLException, IOException {
+        initComponents();
+        this.user = user;
         styles();
         initTableAuthor();
         initTableCategory();

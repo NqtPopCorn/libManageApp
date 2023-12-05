@@ -12,6 +12,7 @@ import DTO.entities.BorrowCard;
 import DTO.entities.DetailBC;
 import BUS.BorrowCardBUS;
 import BUS.DetailBCBUS;
+import DTO.entities.Account;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -31,6 +32,7 @@ import javax.swing.JOptionPane;
  * @author QUANG DIEN
  */
 public class Ticket_GUI extends javax.swing.JPanel {
+    Account user;
     DecimalFormat formatter = new DecimalFormat("###,###,###");
     BorrowCardBUS ticketbll= new BorrowCardBUS();
     DetailBCBUS detailbcbll=new DetailBCBUS();
@@ -45,8 +47,9 @@ public class Ticket_GUI extends javax.swing.JPanel {
     /**
      * Creates new form Ticket_GUI
      */
-    public Ticket_GUI() throws ClassNotFoundException, SQLException, IOException {
+    public Ticket_GUI(Account user) throws ClassNotFoundException, SQLException, IOException {
         this.list = new Vector<>(ticketbll.getAllTicket());
+        this.user = user;
         initComponents();
         spTable.setVerticalScrollBar(new ScrollBar());
         spTable.getVerticalScrollBar().setBackground(Color.WHITE);

@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * @author WIN 10
  */
 public class RoleDAO {
-    public static ArrayList<Role> list = new ArrayList<>();
+    public static ArrayList<Role> list;
     protected Role role;
     private ConnectDB connectDB;
     
@@ -46,6 +46,7 @@ public class RoleDAO {
     public ArrayList<Role> read() throws IOException, ClassNotFoundException, SQLException{
         String context = this.getClass().getName();
         connectDB.connect(context);
+        list = new ArrayList<>() ;
         try {
             String sql = "Select * from roles";
             Statement stmt = ConnectDB.conn.createStatement();
@@ -53,8 +54,8 @@ public class RoleDAO {
             while(rs.next()){
                 Role role = new Role();
                 role.setRoleID(rs.getString(1));
-                role.setRoleName(rs.getString(2));                
-                role.setRoleName(rs.getString(2));          
+                role.setRoleName(rs.getString(2));
+                System.out.println(role.getRoleName());
                 role.setIsDeleted(rs.getByte(3));
                 list.add(role);
             }
@@ -69,7 +70,7 @@ public class RoleDAO {
         String context = this.getClass().getName();
         connectDB.connect(context);
         try {
-            String sql = "INSERT INTO roles(Role_ID, Role_name, isActive) "
+            String sql = "INSERT INTO roles(id, name, isActive) "
                     + "VALUES (?, ?,1)";
             PreparedStatement pstmt = ConnectDB.conn.prepareStatement(sql);
             pstmt.setString(1, role.getRoleID());

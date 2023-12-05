@@ -6,6 +6,8 @@ package GUI;
 
 import BUS.BookBUS;
 import BUS.PayBUS;
+import BUS.RolePermissionBUS;
+import DTO.entities.Account;
 import DTO.entities.Book1;
 import DTO.entities.BorrowCard;
 import DTO.entities.DetailBC;
@@ -43,12 +45,15 @@ public class Pay_GUI extends javax.swing.JPanel {
     public static BorrowCard bc__static;     
     public static DetailBC dt__static; 
     private int n;
-
+    private Account user;
+    private RolePermissionBUS rolePermissionBUS;
     /**
      * Creates new form Pay_GUI
      */
-    public Pay_GUI() {
+    public Pay_GUI(Account user) throws ClassNotFoundException, ClassNotFoundException, SQLException, IOException {
         initComponents();
+        this.user = user;
+        this.rolePermissionBUS = new RolePermissionBUS();
         try {
             pbus = new PayBUS();
             showAll();
@@ -71,6 +76,10 @@ public class Pay_GUI extends javax.swing.JPanel {
         p.setBackground(Color.WHITE);
         spTicketDetail.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
         spTable1.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
+        if(rolePermissionBUS.hasPerEdit(this.user.getRoleID(), 2)){
+            btnChoMuon.setEnabled(false);
+        }
+        else btnChoMuon.setEnabled(true);
     }
     
     private void showAll(){
@@ -105,7 +114,7 @@ public class Pay_GUI extends javax.swing.JPanel {
         DefaultTableModel Bookmodel = (DefaultTableModel) tbSach.getModel();
         Bookmodel.setRowCount(0);
         for(DetailBC obj:listBook){
-            Object[] lost={"Sách                                      Mất sách"};
+            Object[] lost={"Sách                         Mất sách"};
             Bookmodel.addRow(lost);
             Object[] book={"Tên sách:        "+obj.getBookname()};
             Bookmodel.addRow(book);
@@ -590,7 +599,7 @@ public class Pay_GUI extends javax.swing.JPanel {
             int selectedRow = tbSach.getSelectedRow();
             if (selectedRow >= 0) {
                 String cellValue = tbSach.getValueAt(selectedRow, 0).toString();
-                if (cellValue.contains("Mất sách")) {
+                if (cellValue.contains("Mất sách") && rolePermissionBUS.hasPerEdit(this.user.getRoleID(), 2)) {
                     String bookName = tbSach.getValueAt(selectedRow + 1, 0).toString().replace("Tên sách:        ", "").trim();
                     for (DetailBC detailBC : listBook) {
                         if(detailBC.getBookname().equals(bookName)){

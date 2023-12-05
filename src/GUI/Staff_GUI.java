@@ -28,16 +28,15 @@ public class Staff_GUI extends javax.swing.JPanel {
     private StaffBUS staffBUS;
     int userID;
     String roleID;
+    private Account userLogin;
     /**
      * Creates new form Staff_GUI
      */
 
-    public Staff_GUI(int userID,String roleID) throws Exception {
+    public Staff_GUI(Account userLogin) throws Exception {
         initComponents();
-        this.userID = userID;
-        this.roleID = roleID;
-        System.out.println(this.userID);        
-        System.out.println(this.roleID);
+        this.userID = userLogin.getPersonID();
+        this.roleID = userLogin.getRoleID();
 
         spTable.setVerticalScrollBar(new ScrollBar());
         spTable.getVerticalScrollBar().setBackground(Color.WHITE);
@@ -48,10 +47,8 @@ public class Staff_GUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null,ex.getMessage());
         }
         if(this.roleID.equals("AD")) {
-            
             addDefaultAD();
         }
-        System.out.println("end");
         if(this.roleID.equals("QL")) {
                 addDefaultQL();
         }
