@@ -61,7 +61,7 @@ public class ReaderDAO extends ConnectDB {
         }
         return result;
 }
-     public Vector<Reader> getReaderById(int id) throws ClassNotFoundException, SQLException {
+     public Vector<Reader> getReaderById(String id) throws ClassNotFoundException, SQLException {
         Vector<Reader> result = new Vector<>();
         connectDB.connect();
         if (ConnectDB.conn != null) {

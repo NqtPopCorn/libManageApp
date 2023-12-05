@@ -40,7 +40,7 @@ public class BorrowCardDAO{
                     obj.setstatus(rs.getBoolean("isActive"));
                     listticket.add(obj);
                     for(int i=0;i<listticket.size();i++) {
-             		String tmp="select book.name, detail_borrow_card.num, detail_borrow_card.lost, cp_book.ISBN,\r\n"
+             		String tmp="select book.name, detail_borrow_card.num, detail_borrow_card.lost, cp_book.ISBN\r\n"
              				+ "from borrow_card join detail_borrow_card on borrow_card.id=detail_borrow_card.bcID \r\n"
              				+ "				join cp_book on detail_borrow_card.ISBN=cp_book.ISBN \r\n"
              				+ "				join book on cp_book.bookID=book.id \r\n"

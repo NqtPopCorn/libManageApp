@@ -200,21 +200,13 @@ public class BorrowAddReader_Dialog extends javax.swing.JDialog {
     }//GEN-LAST:event_btnChonDocGiaActionPerformed
 
     private void txtDocGiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDocGiaActionPerformed
- 
-    }//GEN-LAST:event_txtDocGiaActionPerformed
-
-    private void txtDocGiaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDocGiaKeyTyped
-       
-    }//GEN-LAST:event_txtDocGiaKeyTyped
-
-    private void txtDocGiaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDocGiaKeyReleased
-    String info =txtDocGia.getText().trim();
+        String info =txtDocGia.getText().trim();
         ((DefaultTableModel)tbDocGia.getModel()).setRowCount(0);
        try {
            if (info.matches(".*[0-9].*")==true)
            {
-           int infoID=Integer.parseInt(info);
-           getAllReaderIntoList(readerBLL.getReaderById(infoID));
+           
+           getAllReaderIntoList(readerBLL.getReaderById(info));
            }
            else
            getAllReaderIntoList(readerBLL.getReaderByName(info));
@@ -230,6 +222,14 @@ public class BorrowAddReader_Dialog extends javax.swing.JDialog {
            {
                tbDocGia.addRow(new Object[]{i+1, readerList.get(i).getPersonID(),readerList.get(i).getName()});
            }  
+    }//GEN-LAST:event_txtDocGiaActionPerformed
+
+    private void txtDocGiaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDocGiaKeyTyped
+       
+    }//GEN-LAST:event_txtDocGiaKeyTyped
+
+    private void txtDocGiaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDocGiaKeyReleased
+    
         // TODO add your handling code here:
     }//GEN-LAST:event_txtDocGiaKeyReleased
 private void getAllReaderIntoList(Vector<Reader> reader)

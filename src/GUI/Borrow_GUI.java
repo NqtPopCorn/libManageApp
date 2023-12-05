@@ -144,7 +144,7 @@ public class Borrow_GUI extends javax.swing.JPanel {
 
         txtTienCoc = new JFormattedTextField(formatter);
         txtTienCoc.setColumns(9);
-        txtTienCoc.setEditable(true);
+        txtTienCoc.setEditable(false);
         txtTienCoc.setValue(0);
 
         jLabel6 = new javax.swing.JLabel();
@@ -697,20 +697,20 @@ public class Borrow_GUI extends javax.swing.JPanel {
         } 
         else {
             long tienCoc=Long.parseLong(txtTienCoc.getValue().toString());
-            if (tienCoc%1000!=0)
-             {
-                 JOptionPane.showMessageDialog(null, "Tiền cọc phải là bội số của 1000 VND");
-             }
-            else if (tienCoc<tinhTienCoc()||(tienCoc>tinhTongTienSach()))
-             {
-                 NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-                 String tinhTienCoc =numberFormat.format(tinhTienCoc());
-                String tongTienSach =numberFormat.format(tinhTongTienSach());
-                 JOptionPane.showMessageDialog(null, "Tiền cọc phải >= " + tinhTienCoc + " VNĐ và <= " +tongTienSach+" VNĐ!");
-             }
-                        
-             else
-             {
+//            if (tienCoc%1000!=0)
+//             {
+//                 JOptionPane.showMessageDialog(null, "Tiền cọc phải là bội số của 1000 VND");
+//             }
+//            else if (tienCoc<tinhTienCoc()||(tienCoc>tinhTongTienSach()))
+//             {
+//                 NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
+//                 String tinhTienCoc =numberFormat.format(tinhTienCoc());
+//                String tongTienSach =numberFormat.format(tinhTongTienSach());
+//                 JOptionPane.showMessageDialog(null, "Tiền cọc phải >= " + tinhTienCoc + " VNĐ và <= " +tongTienSach+" VNĐ!");
+//             }
+//                        
+//             else
+//             {
             Date startDate = new Date();
             String startDateStr = new SimpleDateFormat("yyyy-MM-dd").format(startDate).trim();
             String expReDateStr = new SimpleDateFormat("yyyy-MM-dd").format(jCalendarComboBox1.getDate()).trim();
@@ -720,7 +720,7 @@ public class Borrow_GUI extends javax.swing.JPanel {
             resetDetailBC();
             resetBC();
             JOptionPane.showMessageDialog(null, "Phiếu mượn đã được tạo thành công !");
-             }
+//             }
         }
     }
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
@@ -742,7 +742,8 @@ public class Borrow_GUI extends javax.swing.JPanel {
                         tbSachDaChon.setValueAt(k + 1, k, 0);
 
                     }
-                   txtTienCoc.setValue(0);
+                   txtTienCoc.setValue(tinhTienCoc()
+                   );
                     resetDetailBC();
                     JOptionPane.showMessageDialog(null, "Sách đã được xóa ra khỏi sách đã chọn!");
                 } else {
@@ -758,6 +759,7 @@ public class Borrow_GUI extends javax.swing.JPanel {
                     }
                 } else {
                     suaSoLuongSachDaChon(j, soLuong);
+                    txtTienCoc.setValue(tinhTienCoc());
                 }
 
             }
@@ -827,7 +829,7 @@ private void btnTimKiemActionPerformed(java.awt.event.ActionEvent evt) throws Cl
             tbSachDaChon.addRow(new Object[]{countTB + 1, tAISBN.getText(), tANameBook.getText(), tANameAuthor.getText(), tAPublisher.getText(), tASoLuong.getText()});
             tbSachKhaDung.clearSelection();
             resetDetailBC();
-           txtTienCoc.setValue(0);
+           txtTienCoc.setValue(tinhTienCoc());
         }
     }
       private long tinhTongTienSach() throws ClassNotFoundException, SQLException, IOException {
@@ -840,28 +842,27 @@ private void btnTimKiemActionPerformed(java.awt.event.ActionEvent evt) throws Cl
     }
       private long tinhTienCoc() throws ClassNotFoundException, SQLException, IOException
     {
-        return tinhTongTienSach()/3;
+        long tienCoc= tinhTongTienSach()/3;
+        long lamChan =tienCoc%1000;
+        if (lamChan==0)
+                return tienCoc;
+        else 
+        {
+            return tienCoc-lamChan;
+        }
     }
        private void AddDetailBC_SQL(int idBC) throws ClassNotFoundException, SQLException, IOException
        {
            int rowCount = tbSachDaChon.getRowCount();
         for (int i = 0; i < rowCount; i++) {
             detailBCBLL.addDetailBC(idBC, tbSachDaChon.getValueAt(i, 1).toString(), Integer.parseInt(tbSachDaChon.getValueAt(i, 5).toString()));
-            int storeNum=0;
-            int borrowNum=0;
-            int rowCountSKD = tbSachKhaDung.getRowCount();
-            for (int j = 0; j < rowCountSKD; j++)
-            {
-                if (tbSachKhaDung.getValueAt(j,1).toString().equals(tbSachDaChon.getValueAt(i, 1).toString()))
-                {
-                    storeNum=Integer.parseInt(tbSachKhaDung.getValueAt(j, 5).toString())-Integer.parseInt(tbSachDaChon.getValueAt(i, 5).toString());
-                    borrowNum=Integer.parseInt(tbSachDaChon.getValueAt(i, 5).toString())+bookBLL.getBookByISBN(tbSachKhaDung.getValueAt(j,1).toString()).getBorrowNum();
-                }
-                
-            }
+             int storeNum=bookBLL.getBookByISBN(tbSachDaChon.getValueAt(i, 1).toString()).getStoreNum();
+            int borrowNum =bookBLL.getBookByISBN(tbSachDaChon.getValueAt(i, 1).toString()).getBorrowNum();
+            int storeNumUpdate=storeNum-Integer.parseInt(tbSachDaChon.getValueAt(i, 5).toString());
+            int borrowNumUpdate=Integer.parseInt(tbSachDaChon.getValueAt(i, 5).toString())+borrowNum;
            
            
-            bookBLL.updateStoreNumBooks(tbSachDaChon.getValueAt(i, 1).toString(), storeNum, borrowNum);
+            bookBLL.updateStoreNumBooks(tbSachDaChon.getValueAt(i, 1).toString(), storeNumUpdate, borrowNumUpdate);
         }
        }
        private void suaSoLuongSachDaChon(int selectedBook,int soLuong) throws ClassNotFoundException, SQLException, IOException

@@ -93,7 +93,7 @@ public class ReaderBUS {
         readerDAO = new ReaderDAO();
         return readerDAO.allOutSearch(fStr);
     }
-    public Vector<Reader> getReaderById(int infoID) throws ClassNotFoundException, SQLException, IOException {
+    public Vector<Reader> getReaderById(String infoID) throws ClassNotFoundException, SQLException, IOException {
         readerDAO = new ReaderDAO();
         return readerDAO.getReaderById(infoID);
     }
