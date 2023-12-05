@@ -134,5 +134,17 @@ public class Account extends Person{
         if(!hasLetter) return PwdValidStatus.MISSINGLETTER;
         return PwdValidStatus.VALID;
     }
+    public boolean compare(String username,String password,String role) throws Exception {
+        if(!this.getUsername().equals(username)) {
+                return false;
+        }
+        if(!this.getRoleID().equals(role)) {
+                return false;
+        }
+        if(password.trim()!="") {
+                return false;
+        }
+        return true;
+    }   
 
 }

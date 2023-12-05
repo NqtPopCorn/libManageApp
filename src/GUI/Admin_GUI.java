@@ -37,6 +37,8 @@ public class Admin_GUI extends javax.swing.JPanel {
     private RolePermission rolePermission;
     private RolePermissionBUS rolePermissionBUS;
     private ArrayList<Role> listRole;
+    
+    
     private ArrayList<Permission> listPermisson;    
     private ArrayList<RolePermission> listRolePer;
 
@@ -50,7 +52,6 @@ public class Admin_GUI extends javax.swing.JPanel {
     public Admin_GUI(Account user) throws ClassNotFoundException, SQLException, IOException, NoSuchAlgorithmException {
         this.user = user;
         this.permissionBUS = new PermissionBUS();
-        this.roleBUS = new RoleBUS();
         this.rolePermissionBUS = new RolePermissionBUS();
         initComponents();
         styles();
@@ -80,6 +81,8 @@ public class Admin_GUI extends javax.swing.JPanel {
         
     }
     public void initTableRoles() throws ClassNotFoundException, SQLException, IOException, NoSuchAlgorithmException{
+        listRole = null;
+        RoleBUS roleBUS = new RoleBUS();
         listRole = roleBUS.getList();
         rolesModel = (DefaultTableModel) tbChucVu.getModel();
         rolesModel.setRowCount(0);
@@ -92,7 +95,6 @@ public class Admin_GUI extends javax.swing.JPanel {
         if (!listRole.isEmpty()) {
             Role firstRole = listRole.get(0);
             String roleID = firstRole.getRoleID();
-            System.out.println(roleID);
             initTablePermission(roleID); 
         }
     }
@@ -138,6 +140,7 @@ public class Admin_GUI extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         spTable = new javax.swing.JScrollPane();
         tbChucVu = new MyDesign.MyTable();
+        btnAddRole = new MyDesign.MyButton();
         panelBorder2 = new MyDesign.PanelBorder();
         jLabel6 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
@@ -149,7 +152,7 @@ public class Admin_GUI extends javax.swing.JPanel {
         tbTinhNang = new MyDesign.MyTable();
         btnXoaChucVu = new MyDesign.MyButton();
         btnCapNhat = new MyDesign.MyButton();
-
+        btnAddRole = new MyDesign.MyButton();
         setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel5.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
@@ -166,9 +169,15 @@ public class Admin_GUI extends javax.swing.JPanel {
                 "STT", "Chức vụ"
             }
         ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class
+            };
             boolean[] canEdit = new boolean [] {
                 false, false
             };
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -185,6 +194,19 @@ public class Admin_GUI extends javax.swing.JPanel {
             tbChucVu.getColumnModel().getColumn(0).setMaxWidth(70);
         }
 
+        btnAddRole.setBackground(new java.awt.Color(22, 113, 221));
+        btnAddRole.setForeground(new java.awt.Color(255, 255, 255));
+        btnAddRole.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/action-refresh-white.png"))); // NOI18N
+        btnAddRole.setText("Thêm chức vụ");
+        btnAddRole.setBorderColor(new java.awt.Color(22, 113, 221));
+        btnAddRole.setColor(new java.awt.Color(22, 113, 221));
+        btnAddRole.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        btnAddRole.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddRoleActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelBorder1Layout = new javax.swing.GroupLayout(panelBorder1);
         panelBorder1.setLayout(panelBorder1Layout);
         panelBorder1Layout.setHorizontalGroup(
@@ -195,6 +217,10 @@ public class Admin_GUI extends javax.swing.JPanel {
                     .addComponent(spTable, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addContainerGap(7, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAddRole, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         panelBorder1Layout.setVerticalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -202,7 +228,9 @@ public class Admin_GUI extends javax.swing.JPanel {
                 .addGap(13, 13, 13)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spTable, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
+                .addComponent(spTable, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnAddRole, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -339,7 +367,7 @@ public class Admin_GUI extends javax.swing.JPanel {
                     .addComponent(jLabel9)
                     .addComponent(txtNguoiTao))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(spTable1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(spTable1, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCapNhat, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -388,8 +416,16 @@ public class Admin_GUI extends javax.swing.JPanel {
 
     private void tbChucVuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbChucVuMouseClicked
         int selectedRow = tbChucVu.getSelectedRow();
+        System.out.println("Role selected: "+ selectedRow);
         if (selectedRow != -1) {
+            System.out.println("Check");
             String value = (String) tbChucVu.getValueAt(selectedRow, 1); // Replace 0 with the desired column index
+            for (Role role : listRole){
+                if(role.getRoleName().equals(value)){
+                    value = role.getRoleID();
+                    break;
+                }
+            }
             try {
                 initTablePermission(value);
             } catch (ClassNotFoundException ex) {
@@ -414,7 +450,6 @@ public class Admin_GUI extends javax.swing.JPanel {
                 List<Object> rowData = new ArrayList<>();
                 for (int column = 0; column < columnCount; column++) {
                     Object cellValue = tbTinhNang.getValueAt(row, column);
-                    System.out.println(cellValue);
                     rowData.add(cellValue);
                 }
                 dataList.add(rowData);
@@ -435,8 +470,39 @@ public class Admin_GUI extends javax.swing.JPanel {
         
     }//GEN-LAST:event_btnXoaChucVuActionPerformed
 
+    private void btnAddRoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRoleActionPerformed
+        try {
+            StaffRole_Dialog srd = new StaffRole_Dialog(this.user,new javax.swing.JFrame(), true);
+            srd.setVisible(true);
+            srd.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                try {
+                    initTableRoles();
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NoSuchAlgorithmException ex) {
+                    Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                }
+            });
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnAddRoleActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private MyDesign.MyButton btnAddRole;
     private MyDesign.MyButton btnCapNhat;
     private MyDesign.MyButton btnXoaChucVu;
     private javax.swing.JLabel jLabel22;

@@ -27,6 +27,7 @@ import BUS.BookBUS;
 import BUS.DetailBCBUS;
 import BUS.ReaderBUS;
 import BUS.BorrowCardBUS;
+import BUS.RolePermissionBUS;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -55,6 +56,9 @@ public class Borrow_GUI extends javax.swing.JPanel {
     private BorrowAddReader_Dialog BAReaderDialog;
     private ArrayList<Book1> bookList;
     private int staffID;
+    private Account user;
+    private RolePermissionBUS rolePermissionBUS;
+    
     
     /**
      * Creates new form Borrow_GUI
@@ -63,6 +67,8 @@ public class Borrow_GUI extends javax.swing.JPanel {
         getAllBookIntoList(bookBLL.getAll());
         initComponents();
         staffID=user.getPersonID();
+        this.user = user;
+        this.rolePermissionBUS = new RolePermissionBUS();
         showAvalableBooks();
         spTable.setVerticalScrollBar(new ScrollBar());
         spTable.getVerticalScrollBar().setBackground(Color.WHITE);
@@ -76,7 +82,21 @@ public class Borrow_GUI extends javax.swing.JPanel {
         spTable2.getViewport().setBackground(Color.WHITE);
         p.setBackground(Color.WHITE);
         spTable2.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
-        
+        if(rolePermissionBUS.hasPerEdit(user.getRoleID(), 2)){
+            btnChoMuon.setEnabled(true);
+            txtSoLuong.setEnabled(true);
+            btnThem.setEnabled(true);
+            btnTruSoLuong.setEnabled(true);
+        }
+        else{
+            btnChoMuon.setEnabled(false);
+            txtSoLuong.setEnabled(false);
+            btnThem.setEnabled(false);
+            btnTruSoLuong.setEnabled(false);
+        }
+        if(rolePermissionBUS.hasPerView(user.getRoleID(), 2))
+            btnThemDocGia.setEnabled(true);
+        else btnThemDocGia.setEnabled(false);
     }
 
     /**
@@ -141,21 +161,14 @@ public class Borrow_GUI extends javax.swing.JPanel {
         tAISBN = new JTextArea(1, 7);
         lbPublisher = new javax.swing.JLabel();
         tAPublisher = new JTextArea(1, 7);
-
         jCalendarComboBox1 = new JDateChooser();
-
-        
         textField2.setText("textField2");
-
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(732, 532));
-
         jLabel5.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(127, 127, 127));
         jLabel5.setText("Sách khả dụng");
-
         spTable.setBorder(null);
-
         tbSachKhaDung.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
                 new String[]{
@@ -193,7 +206,6 @@ public class Borrow_GUI extends javax.swing.JPanel {
                 }
             }
         });
-
         tbSachKhaDung.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {

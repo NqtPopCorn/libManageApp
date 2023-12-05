@@ -4,37 +4,70 @@
  */
 package GUI;
 
+import BUS.PermissionBUS;
+import BUS.RoleBUS;
+import BUS.RolePermissionBUS;
+import DTO.entities.Account;
+import DTO.entities.Permission;
+import DTO.entities.Role;
 import MyDesign.ScrollBar;
 import java.awt.Color;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author QUANG DIEN
  */
 public class StaffRole_Dialog extends javax.swing.JDialog {
-
+    private DefaultTableModel permissionsModel;
+    private ArrayList<Permission> listPermisson;
+    private ArrayList<Role> listRole;
+    private RolePermissionBUS rolePermissionBUS;
+    private PermissionBUS pbus;
+    private RoleBUS roleBUS;
+    private Account user;
+    private Role newRole;
     /**
      * Creates new form StaffRole_Dialog
      */
-    public StaffRole_Dialog(java.awt.Frame parent, boolean modal) {
+    public StaffRole_Dialog(Account user,java.awt.Frame parent, boolean modal) throws ClassNotFoundException, SQLException, IOException {
         super(parent, modal);
         initComponents();
-        spTable.setVerticalScrollBar(new ScrollBar());
-        spTable.getVerticalScrollBar().setBackground(Color.WHITE);
-        spTable.getViewport().setBackground(Color.WHITE);
+        this.user = user;
+        this.rolePermissionBUS = new RolePermissionBUS();
+        this.pbus = new PermissionBUS();
+        this.roleBUS = new RoleBUS();
         JPanel p = new JPanel();
         p.setBackground(Color.WHITE);
-        spTable.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
-        
         spTable1.setVerticalScrollBar(new ScrollBar());
         spTable1.getVerticalScrollBar().setBackground(Color.WHITE);
         spTable1.getViewport().setBackground(Color.WHITE);
         p.setBackground(Color.WHITE);
         spTable1.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
+        initTable();
     }
 
+    public void initTable(){
+        permissionsModel = (DefaultTableModel) tbTinhNang.getModel();
+        permissionsModel.setRowCount(0);
+        int stt = 1;
+        int permissionID;
+        String permissionName;
+        listPermisson = pbus.getList();
+        for (Permission permission : listPermisson){
+            permissionName = permission.getPermissionName();
+            permissionsModel.addRow(new Object[]{stt++,permissionName, false,false,false,false,false});
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -46,10 +79,6 @@ public class StaffRole_Dialog extends javax.swing.JDialog {
 
         panelBorder_Statistic_Blue1 = new MyDesign.PanelBorder_Statistic_Blue();
         panelBorder_Basic1 = new MyDesign.PanelBorder_Basic();
-        panelBorder1 = new MyDesign.PanelBorder();
-        jLabel5 = new javax.swing.JLabel();
-        spTable = new javax.swing.JScrollPane();
-        tbChucVu = new MyDesign.MyTable();
         panelBorder2 = new MyDesign.PanelBorder();
         jLabel6 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
@@ -63,51 +92,6 @@ public class StaffRole_Dialog extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        jLabel5.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(127, 127, 127));
-        jLabel5.setText("Tất cả chức vụ");
-
-        spTable.setBorder(null);
-
-        tbChucVu.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "STT", "Chức vụ"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        spTable.setViewportView(tbChucVu);
-
-        javax.swing.GroupLayout panelBorder1Layout = new javax.swing.GroupLayout(panelBorder1);
-        panelBorder1.setLayout(panelBorder1Layout);
-        panelBorder1Layout.setHorizontalGroup(
-            panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBorder1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spTable, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addContainerGap(7, Short.MAX_VALUE))
-        );
-        panelBorder1Layout.setVerticalGroup(
-            panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBorder1Layout.createSequentialGroup()
-                .addGap(13, 13, 13)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spTable, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
-                .addContainerGap())
-        );
 
         jLabel6.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(51, 51, 51));
@@ -135,18 +119,39 @@ public class StaffRole_Dialog extends javax.swing.JDialog {
 
             },
             new String [] {
-                "STT", "Tính năng", "Được phép"
+                "STT", "Tính năng", "Truy cập", "Tạo", "Xem", "Sửa", "Xóa"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, true, true, true, true, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
         spTable1.setViewportView(tbTinhNang);
+        if (tbTinhNang.getColumnModel().getColumnCount() > 0) {
+            tbTinhNang.getColumnModel().getColumn(0).setMinWidth(40);
+            tbTinhNang.getColumnModel().getColumn(0).setMaxWidth(50);
+            tbTinhNang.getColumnModel().getColumn(2).setMinWidth(70);
+            tbTinhNang.getColumnModel().getColumn(2).setMaxWidth(70);
+            tbTinhNang.getColumnModel().getColumn(3).setMinWidth(70);
+            tbTinhNang.getColumnModel().getColumn(3).setMaxWidth(70);
+            tbTinhNang.getColumnModel().getColumn(4).setMinWidth(70);
+            tbTinhNang.getColumnModel().getColumn(4).setMaxWidth(70);
+            tbTinhNang.getColumnModel().getColumn(5).setMinWidth(70);
+            tbTinhNang.getColumnModel().getColumn(5).setMaxWidth(70);
+            tbTinhNang.getColumnModel().getColumn(6).setMinWidth(70);
+            tbTinhNang.getColumnModel().getColumn(6).setMaxWidth(70);
+        }
 
         btnThemMoi.setBackground(new java.awt.Color(22, 113, 221));
         btnThemMoi.setForeground(new java.awt.Color(255, 255, 255));
@@ -155,6 +160,11 @@ public class StaffRole_Dialog extends javax.swing.JDialog {
         btnThemMoi.setBorderColor(new java.awt.Color(22, 113, 221));
         btnThemMoi.setColor(new java.awt.Color(22, 113, 221));
         btnThemMoi.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        btnThemMoi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnThemMoiMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelBorder2Layout = new javax.swing.GroupLayout(panelBorder2);
         panelBorder2.setLayout(panelBorder2Layout);
@@ -176,7 +186,7 @@ public class StaffRole_Dialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(panelBorder2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(spTable1, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
+                .addComponent(spTable1, javax.swing.GroupLayout.DEFAULT_SIZE, 710, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder2Layout.createSequentialGroup()
@@ -201,7 +211,7 @@ public class StaffRole_Dialog extends javax.swing.JDialog {
                     .addComponent(txtNguoiTao))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(spTable1, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(55, Short.MAX_VALUE))
             .addGroup(panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder2Layout.createSequentialGroup()
                     .addContainerGap(486, Short.MAX_VALUE)
@@ -214,9 +224,7 @@ public class StaffRole_Dialog extends javax.swing.JDialog {
         panelBorder_Basic1Layout.setHorizontalGroup(
             panelBorder_Basic1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder_Basic1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panelBorder1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(panelBorder2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -224,9 +232,7 @@ public class StaffRole_Dialog extends javax.swing.JDialog {
             panelBorder_Basic1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder_Basic1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelBorder_Basic1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelBorder2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelBorder1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(panelBorder2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -278,63 +284,78 @@ public class StaffRole_Dialog extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnThemMoiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnThemMoiMouseClicked
+        try {
+            String newRoleName = txtTenChucVu.getText();
+            if(newRoleName.isEmpty()){
+                JOptionPane.showMessageDialog(this,"Bạn cần nhập tên Role cần thêm mới", "Thông báo lỗi", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                int rowCount = tbTinhNang.getRowCount();
+                int[] columnIndices = {2, 3, 4, 5, 6}; // Chỉ mục của các cột cần lấy giá trị
+                List<List<Object>> dataList = new ArrayList<>();
+                for (int row = 0; row < rowCount; row++) {
+                    List<Object> rowData = new ArrayList<>();
+                    for (int columnIndex : columnIndices) {
+                        Object cellValue = tbTinhNang.getValueAt(row, columnIndex);
+                        rowData.add(cellValue);
+                    }
+                    dataList.add(rowData);
+
+                }
+                roleBUS = new RoleBUS();
+                String ID  = Role.generateID();
+                listRole = roleBUS.getList();
+                // Kiểm tra xem ID có trùng lặp không
+                boolean isDuplicateID = false;
+                for (Role role : listRole) {
+                    if (role.getRoleID().equals(ID)) {
+                        isDuplicateID = true;
+                        break;
+                    }
+                }
+                // Nếu ID trùng lặp, tiếp tục tạo mới ID
+                while (isDuplicateID) {
+                    ID = Role.generateID();
+                    isDuplicateID = false;
+                    for (Role role : listRole) {
+                        if (role.getRoleID().equals(ID)) {
+                            isDuplicateID = true;
+                            break;
+                        }
+                    }
+                }
+                newRole = new Role(ID, newRoleName,1);
+                roleBUS.addBrandNewRole(newRole);
+                rolePermissionBUS.savePermissions(dataList, ID);
+                this.setVisible(false);
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(StaffRole_Dialog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(StaffRole_Dialog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(StaffRole_Dialog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(StaffRole_Dialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnThemMoiMouseClicked
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(StaffRole_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(StaffRole_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(StaffRole_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(StaffRole_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                StaffRole_Dialog dialog = new StaffRole_Dialog(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private MyDesign.MyButton btnThemMoi;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private MyDesign.PanelBorder panelBorder1;
     private MyDesign.PanelBorder panelBorder2;
     private MyDesign.PanelBorder_Basic panelBorder_Basic1;
     private MyDesign.PanelBorder_Statistic_Blue panelBorder_Statistic_Blue1;
-    private javax.swing.JScrollPane spTable;
     private javax.swing.JScrollPane spTable1;
-    private MyDesign.MyTable tbChucVu;
     private MyDesign.MyTable tbTinhNang;
     private javax.swing.JLabel txtNguoiTao;
     private MyDesign.MyTextField_Basic txtTenChucVu;

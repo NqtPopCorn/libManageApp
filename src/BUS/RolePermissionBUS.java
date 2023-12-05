@@ -25,6 +25,10 @@ public class RolePermissionBUS {
     protected static ArrayList<Permission> listPer;
 
     protected static RolePermissionDAO rolePermissionDAO;
+
+    /**
+     *
+     */
     protected static RoleDAO roleDAO;
     protected static PermissionDAO permissionDAO;
     
@@ -35,9 +39,7 @@ public class RolePermissionBUS {
     public RolePermissionBUS() throws ClassNotFoundException, SQLException, IOException {
         rolePermissionDAO = new RolePermissionDAO();
         role = new Role();
-        
         permissionDAO = new PermissionDAO();
-        roleDAO = new RoleDAO();
         list = new ArrayList<>(rolePermissionDAO.read());
         quantity = list.size();
     }
@@ -50,14 +52,30 @@ public class RolePermissionBUS {
         quantity = list.size();
         return quantity;
     }
-
+    
+    public void savePermissions(List<List<Object>> dataList, String role_ID) throws ClassNotFoundException, SQLException, IOException {
+        ArrayList<String> perID = new ArrayList<>();
+        listPer = permissionDAO.getList();
+        int stt = 0;
+        for (List<Object> rowData : dataList) {
+            RolePermission permission = new RolePermission();
+            permission.setIsDelete(0);
+            permission.setRoleID(role_ID);
+            permission.setPermissionID(listPer.get(stt).getPermissionID());
+            permission.setPerAccess((boolean) rowData.get(0) ? 1 : 0);
+            permission.setPerCreate((boolean) rowData.get(1) ? 1 : 0);
+            permission.setPerView((boolean) rowData.get(2) ? 1 : 0);
+            permission.setPerEdit((boolean) rowData.get(3) ? 1 : 0);
+            permission.setPerDelete((boolean) rowData.get(4) ? 1 : 0);
+            rolePermissionDAO.create(permission);
+            stt++;
+        }
+    }
     public static ArrayList<RolePermission> canAccessForm(String roleID) throws NoSuchAlgorithmException {
         RolePermission temp;
         canAccess= new ArrayList<>();
         for (RolePermission _rolePermission : list) {
             temp = (RolePermission) _rolePermission;
-            System.out.println(roleID);
-            System.out.println(temp.getRoleID());
             if(roleID.equals(temp.getRoleID())){
                 canAccess.add(temp);
             }
@@ -78,6 +96,7 @@ public class RolePermissionBUS {
         return listpermission;
     }    
     public void updateRolePermissions(List<List<Object>> dataList, String roleName) throws ClassNotFoundException, SQLException, IOException {
+        roleDAO = new RoleDAO();
         role = roleDAO.getRole(roleName);
         listPer = permissionDAO.getList();
         int stt = 0;

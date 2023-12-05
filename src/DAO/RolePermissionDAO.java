@@ -70,16 +70,16 @@ public class RolePermissionDAO {
         connectDB.connect(context);
         try {
             String sql = "INSERT INTO role_permissions(positionID, authorityID, Per_access, Per_create, Per_view, Per_edit, Per_delete, IsActive) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement pstmt = ConnectDB.conn.prepareStatement(sql);
             pstmt.setString(1, per.getRoleID());
             pstmt.setInt(2, per.getPermissionID());
-            pstmt.setInt(4, per.getPerAccess());
-            pstmt.setInt(5, per.getPerCreate());            
-            pstmt.setInt(6, per.getPerView());            
-            pstmt.setInt(7, per.getPerEdit());
-            pstmt.setInt(8, per.getPerDelete());
-            pstmt.setInt(9, per.getIsDelete());
+            pstmt.setInt(3, per.getPerAccess());
+            pstmt.setInt(4, per.getPerCreate());            
+            pstmt.setInt(5, per.getPerView());            
+            pstmt.setInt(6, per.getPerEdit());
+            pstmt.setInt(7, per.getPerDelete());
+            pstmt.setInt(8, per.getIsDelete());
             pstmt.executeUpdate();
             list.add(per);
             return true;

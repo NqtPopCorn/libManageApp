@@ -20,34 +20,25 @@ public class RoleBUS {
     protected static ArrayList<Role> list;
     protected static RoleDAO roleDAO;
     protected static Role role;
-    private static int quantity = 0;
 
     public RoleBUS() throws ClassNotFoundException, SQLException, IOException {
         roleDAO = new RoleDAO();
         list = new ArrayList<>(roleDAO.getList());
-        quantity = list.size();
     }
 
     public static ArrayList<Role> getList() {
         return list;
     }
     
-    public static int getQuantity() {
-        quantity = list.size();
-        return quantity;
-    }
     public static void deleteRoleByID(String roleName) throws ClassNotFoundException, SQLException, IOException{
-        roleDAO = new RoleDAO();
         role = roleDAO.getRole(roleName);
         roleDAO.delete(role);
     }
     public boolean addRoleName(String name) throws Exception {
-        roleDAO = new RoleDAO();
     	return roleDAO.ckNewRole(name);
     }
     
     public boolean addRoleNameID(String id) throws Exception {
-        roleDAO = new RoleDAO();
     	return roleDAO.ckNewRoleID(id);
     }
     public String addBrandNewRole(Role role) throws Exception {

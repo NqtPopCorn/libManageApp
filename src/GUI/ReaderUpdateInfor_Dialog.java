@@ -20,6 +20,8 @@ import javax.swing.JOptionPane;
 
 import BUS.ReaderBUS;
 import BUS.BorrowCardBUS;
+import BUS.RolePermissionBUS;
+import DTO.entities.Account;
 import DTO.entities.Reader;
 import DTO.entities.BorrowCard;
 import java.util.ArrayList;
@@ -31,16 +33,24 @@ import java.util.ArrayList;
 public class ReaderUpdateInfor_Dialog extends javax.swing.JDialog {
 	ReaderBUS readerBUS;
 	Reader a;
+        private Account user;
+        private RolePermissionBUS rolePermissionBUS;
     /**
      * Creates new form ReaderUpdateInfor_Dialog
      * @throws SQLException 
      * @throws ClassNotFoundException 
      */
-    public ReaderUpdateInfor_Dialog(java.awt.Frame parent, boolean modal,int id,MyDesign.MyTable tab) throws ClassNotFoundException, SQLException {
+    public ReaderUpdateInfor_Dialog(Account user, java.awt.Frame parent, boolean modal,int id,MyDesign.MyTable tab) throws ClassNotFoundException, SQLException, IOException {
         super(parent, modal);
         readerBUS =new ReaderBUS();
+        this.user = user;
+        this.rolePermissionBUS = new RolePermissionBUS();
         initComponents(tab,id);
         upInfo(id);
+        if(rolePermissionBUS.hasPerEdit(user.getRoleID(), 6))
+            btnSuaThongTin.setEnabled(false);
+        if(rolePermissionBUS.hasPerDelete(user.getRoleID(), 6))
+            btnXoaDocGia.setEnabled(false);
     }
 
     /**
@@ -50,13 +60,13 @@ public class ReaderUpdateInfor_Dialog extends javax.swing.JDialog {
      */
     public void upInfo(int id) {
     	try {
-			a=readerBUS.findbyID(id);
-			txtTen.setText(a.getName());
-			txtSoDienThoai.setText(a.getTel());
-			txtDiaChi.setText(a.getAddress());
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null,e.getMessage());
-		}
+                a=readerBUS.findbyID(id);
+                txtTen.setText(a.getName());
+                txtSoDienThoai.setText(a.getTel());
+                txtDiaChi.setText(a.getAddress());
+        } catch (Exception e) {
+                JOptionPane.showMessageDialog(null,e.getMessage());
+        }
     }
     
     public void addDefault(MyDesign.MyTable tab) throws Exception{

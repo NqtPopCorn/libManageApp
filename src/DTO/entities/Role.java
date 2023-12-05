@@ -4,6 +4,8 @@
  */
 package DTO.entities;
 
+import java.util.Random;
+
 /**
  *
  * @author WIN 10
@@ -44,5 +46,20 @@ public class Role {
 
     public void setIsDeleted(int isDeleted) {
         this.isDeleted = isDeleted;
+    }
+    public static String generateID() {
+        Random random = new Random();
+        // Tạo một mảng chứa các chữ cái
+        char[] letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+        // Tạo một StringBuilder để xây dựng ID
+        StringBuilder idBuilder = new StringBuilder();
+        // Tạo ngẫu nhiên hai chữ cái
+        for (int i = 0; i < 2; i++) {
+            char randomLetter = letters[random.nextInt(letters.length)];
+            idBuilder.append(randomLetter);
+        }
+
+        // Trả về ID đã tạo
+        return idBuilder.toString();
     }
 }

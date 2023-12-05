@@ -35,5 +35,21 @@ public class Staff extends Person{
     public void setManageID(int manageID) {
         this.manageID = manageID;
     }
-    
+    public boolean compare(String name,String tel,String address) throws Exception {
+        if(!this.getName().toUpperCase().equals(name.toUpperCase())) {
+                return false;
+        }
+        if(!this.getTel().equals(tel)) {
+                return false;
+        }
+        if(!this.getAddress().toUpperCase().equals(address.toUpperCase())) {
+                return false;
+        }
+        if(!this.getAddress().toUpperCase().equals(address.toUpperCase())) {
+                return false;
+        }
+
+        return true;
+    }
+
 }

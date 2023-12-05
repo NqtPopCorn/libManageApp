@@ -277,7 +277,6 @@ public class StaffDAO {
     public List<Staff> getAllStaf() throws ClassNotFoundException, SQLException, IOException {
         List<Staff> list = new ArrayList<>();
 		String query = "SELECT * FROM staff";
-        // ConnectDB connectDB = new ConnectDB();
         connectDB.connect();
         try (
             PreparedStatement preparedStatement = connectDB.conn.prepareStatement(query);
@@ -295,9 +294,30 @@ public class StaffDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return list;
     }
-    
+    public Staff findbyID (int id) throws Exception {
+    	Staff a=new Staff();
+    	connectDB.connect();
+    	if(ConnectDB.conn!=null){
+            try{
+            	String sql="select Staff.id as sId,Staff.name as sName,tel,address from Staff where Staff.id=?;";
+            	PreparedStatement preparedStatement= ConnectDB.conn.prepareStatement(sql);
+            	preparedStatement.setInt(1, id);
+            	ResultSet rs=preparedStatement.executeQuery();
+                while(rs.next()) {
+                    a.setPersonID(rs.getInt(1));
+                    a.setName(rs.getString(2));
+                    a.setTel(rs.getString(3));
+                    a.setAddress(rs.getString(4));
+                }
+            }catch(SQLException ex){
+                ex.printStackTrace();
+            } finally {
+                connectDB.disconnect();
+            }
+        }
+    	return a;
+    }
     
 }

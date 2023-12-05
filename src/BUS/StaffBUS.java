@@ -92,4 +92,7 @@ public class StaffBUS {
     public Account findbyID(int id) throws Exception {
     	return userDAO.findbyID(id);
     }
+    public Staff findStaffbyID(int id) throws Exception {
+    	return staffDAO.findbyID(id);
+    }
 }
