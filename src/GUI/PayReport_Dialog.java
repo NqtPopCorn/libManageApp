@@ -253,10 +253,12 @@ public class PayReport_Dialog extends javax.swing.JDialog {
 
     private void snSoLuongMat1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_snSoLuongMat1StateChanged
         // TODO add your handling code here:
-        // TODO add your handling code here:
         int soLuong = (int) snSoLuongMat1.getValue();
-        if(soLuong<0) return;
-        if (soLuong > dt__static.getNum()) {
+        if(soLuong<0){
+            snSoLuongMat1.setValue(0);
+            return;
+        }
+        if (soLuong > dt__static.getNum()&& soLuong>0) {
         snSoLuongMat1.setValue(dt__static.getNum());
         soLuong = dt__static.getNum();
         }
