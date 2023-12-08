@@ -16,21 +16,12 @@ import javax.swing.JOptionPane;
 import BUS.CategoryBUS;
 import DTO.entities.Author;
 import DTO.entities.Category;
-import DTO.entities.Publisher;
-
-import javax.swing.JComboBox;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import MyDesign.MyButton;
-import java.awt.Color;
-import java.awt.Font;
 
 /**
  *
  * @author QUANG DIEN
  */
-public class WareHouseAddTypeBook_Dialog extends javax.swing.JDialog {
+public class WareHouseAddNewTypeBook_Dialog extends javax.swing.JDialog {
     static String nameFrame;
     /**
      * Creates new form WareHouseAddReader_Dialog
@@ -38,9 +29,9 @@ public class WareHouseAddTypeBook_Dialog extends javax.swing.JDialog {
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public WareHouseAddTypeBook_Dialog(java.awt.Frame parent,String nameFrame ,boolean modal) throws ClassNotFoundException, SQLException, IOException {
+    public WareHouseAddNewTypeBook_Dialog(java.awt.Frame parent,String nameFrame ,boolean modal) throws ClassNotFoundException, SQLException, IOException {
         super(parent,nameFrame ,modal);
-        WareHouseAddTypeBook_Dialog.nameFrame = nameFrame;
+        WareHouseAddNewTypeBook_Dialog.nameFrame = nameFrame;
         setLocationRelativeTo(null);
         initComponents();
     }
@@ -57,20 +48,21 @@ public class WareHouseAddTypeBook_Dialog extends javax.swing.JDialog {
         panelBorder_Statistic_Blue1 = new MyDesign.PanelBorder_Statistic_Blue();
         panelBorder_Basic1 = new MyDesign.PanelBorder_Basic();
         jLabel8 = new javax.swing.JLabel();
+        txtTheLoaiSach = new MyDesign.MyTextField_Basic();
         btnThemTheLoai = new MyDesign.MyButton();
-        btnLoadDuLieu = new MyDesign.MyButton();
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel8.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         jLabel8.setText("Thể loại sách");
-        
-        List<Category> categoryList = cate.getAllName();
+
+        txtTheLoaiSach.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 229, 229)));
+
         btnThemTheLoai.setBackground(new java.awt.Color(22, 113, 221));
         btnThemTheLoai.setForeground(new java.awt.Color(255, 255, 255));
         btnThemTheLoai.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/action-add-white.png"))); // NOI18N
-        btnThemTheLoai.setText("Thêm thể loại mới");
+        btnThemTheLoai.setText("Thêm thể loại");
         btnThemTheLoai.setBorderColor(new java.awt.Color(22, 113, 221));
         btnThemTheLoai.setColor(new java.awt.Color(22, 113, 221));
         btnThemTheLoai.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
@@ -78,104 +70,105 @@ public class WareHouseAddTypeBook_Dialog extends javax.swing.JDialog {
         btnThemTheLoai.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	WareHouseAddNewTypeBook_Dialog r;
-                try {
-                    r = new WareHouseAddNewTypeBook_Dialog(null, nameFrame, rootPaneCheckingEnabled);
-                    r.setVisible(true);
-                } catch (ClassNotFoundException | SQLException | IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
+                if (txtTheLoaiSach.getText().equals("")) {
+                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Vui lòng điền đầy đủ thông tin.", "Cảnh Báo", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    try {
+                        Category c = new Category();
+                        c.setName(txtTheLoaiSach.getText());
+                        if (nameFrame == "more_gui") {
+                            System.out.print("More_GUI");
+                            More_GUI gui;
+                            try {
+                                gui = new More_GUI();
+                                try {
+                                    if(cate.getByNameCategory(c.getName())!=null)
+                                    {
+                                        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên thể loại đã tồn tại!","Thông báo",JOptionPane.WARNING_MESSAGE);
+                                    }
+                                    else {
+                                        cate.saveInfo(c);
+                                        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);                                
+                                        gui.initTableAuthor();
+                                        hide();
+                                        gui.setVisible(true);
+                                        
+                                    }
+                                } catch (ClassNotFoundException e1) {
+                                    // TODO Auto-generated catch block
+                                    e1.printStackTrace();
+                                }
+                            } catch (SQLException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                            } catch (IOException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                            }
+                        }
+                        else{
+                            WareHouseImport_Dialog whid;
+                            try {
+                                whid = new WareHouseImport_Dialog(null, rootPaneCheckingEnabled);
+                                if(cate.getByNameCategory(c.getName())!=null)
+                            {
+                                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên Thể Loại đã tồn tại!","Thông báo",JOptionPane.WARNING_MESSAGE);
+                                
+                            }
+                            else {
+                                cate.saveInfo(c);
+                                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
+                            }
+                            } catch (ClassNotFoundException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                            } catch (SQLException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                            } catch (IOException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                        }}
+                        
+                    } catch (HeadlessException e1) {
+                        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Lỗi Thêm Thể Loại.", "ERROR", JOptionPane.ERROR_MESSAGE);
+                        System.out.println(e1);
+                    }
                 }
             }
         });
         
-        cbCategory.setBackground(new java.awt.Color(246, 250, 255));
-        cbCategory.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-//        cbTacGia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tác giả" }));
-	    for(Category item : categoryList)
-	    {
-	      cbCategory.addItem(item.getName());
-	    }
-        cbCategory.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 229, 229)));
-        cbCategory.setOpaque(true);
-        cbCategory.setPreferredSize(new java.awt.Dimension(77, 28));
-        
-        cbCategory.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				String selectedValue = (String) cbCategory.getSelectedItem();
-                if (selectedValue != null) {
-                    whdialog.addToComboBox(selectedValue);
-                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm vào mục thành công!","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-                }
-			}
-		});
-        
-        btnLoadDuLieu = new MyButton();
-        btnLoadDuLieu.setText("Load Dữ Liệu");
-        btnLoadDuLieu.setForeground(Color.WHITE);
-        btnLoadDuLieu.setFont(new Font("SansSerif", Font.BOLD, 14));
-        btnLoadDuLieu.setColor(new Color(22, 113, 221));
-        btnLoadDuLieu.setBorderColor(new Color(22, 113, 221));
-        btnLoadDuLieu.setBackground(new Color(22, 113, 221));
-        
-		btnLoadDuLieu.addActionListener(new ActionListener() {
-					
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
-						cbCategory.removeAllItems();
-		    			try {
-		    				List<Category> categoryList = cate.getAllName();
-		    				for(Category item : categoryList)
-		    			    {
-		    			      cbCategory.addItem(item.getName());
-		    			    }
-						} catch (SQLException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}
-				});
-        
         javax.swing.GroupLayout panelBorder_Basic1Layout = new javax.swing.GroupLayout(panelBorder_Basic1);
+        panelBorder_Basic1.setLayout(panelBorder_Basic1Layout);
         panelBorder_Basic1Layout.setHorizontalGroup(
-        	panelBorder_Basic1Layout.createParallelGroup(Alignment.LEADING)
-        		.addGroup(panelBorder_Basic1Layout.createSequentialGroup()
-        			.addGap(29)
-        			.addGroup(panelBorder_Basic1Layout.createParallelGroup(Alignment.LEADING)
-        				.addGroup(panelBorder_Basic1Layout.createSequentialGroup()
-        					.addComponent(btnThemTheLoai, GroupLayout.PREFERRED_SIZE, 290, GroupLayout.PREFERRED_SIZE)
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(btnLoadDuLieu, GroupLayout.PREFERRED_SIZE, 290, GroupLayout.PREFERRED_SIZE))
-        				.addGroup(panelBorder_Basic1Layout.createSequentialGroup()
-        					.addComponent(jLabel8)
-        					.addGap(10)
-        					.addComponent(cbCategory, 0, 475, Short.MAX_VALUE)))
-        			.addContainerGap())
+            panelBorder_Basic1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelBorder_Basic1Layout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addGroup(panelBorder_Basic1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnThemTheLoai, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelBorder_Basic1Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtTheLoaiSach, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         panelBorder_Basic1Layout.setVerticalGroup(
-        	panelBorder_Basic1Layout.createParallelGroup(Alignment.LEADING)
-        		.addGroup(panelBorder_Basic1Layout.createSequentialGroup()
-        			.addGap(28)
-        			.addGroup(panelBorder_Basic1Layout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(jLabel8)
-        				.addComponent(cbCategory, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
-        			.addGap(18)
-        			.addGroup(panelBorder_Basic1Layout.createParallelGroup(Alignment.LEADING)
-        				.addComponent(btnLoadDuLieu, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(btnThemTheLoai, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE))
-        			.addContainerGap(25, Short.MAX_VALUE))
+            panelBorder_Basic1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelBorder_Basic1Layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addGroup(panelBorder_Basic1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(txtTheLoaiSach, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(btnThemTheLoai, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(25, Short.MAX_VALUE))
         );
-        panelBorder_Basic1.setLayout(panelBorder_Basic1Layout);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/nav-reader.png"))); // NOI18N
-        jLabel4.setText("Thêm thể loại sách");
+        jLabel4.setText("Thể loại sách");
 
         javax.swing.GroupLayout panelBorder_Statistic_Blue1Layout = new javax.swing.GroupLayout(panelBorder_Statistic_Blue1);
         panelBorder_Statistic_Blue1.setLayout(panelBorder_Statistic_Blue1Layout);
@@ -229,13 +222,13 @@ public class WareHouseAddTypeBook_Dialog extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(WareHouseAddTypeBook_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(WareHouseAddNewTypeBook_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(WareHouseAddTypeBook_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(WareHouseAddNewTypeBook_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(WareHouseAddTypeBook_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(WareHouseAddNewTypeBook_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(WareHouseAddTypeBook_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(WareHouseAddNewTypeBook_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -243,9 +236,9 @@ public class WareHouseAddTypeBook_Dialog extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                WareHouseAddTypeBook_Dialog dialog;
+                WareHouseAddNewTypeBook_Dialog dialog;
                 try {
-                    dialog = new WareHouseAddTypeBook_Dialog(new javax.swing.JFrame(), nameFrame, true);
+                    dialog = new WareHouseAddNewTypeBook_Dialog(new javax.swing.JFrame(), nameFrame, true);
                     dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -273,13 +266,11 @@ public class WareHouseAddTypeBook_Dialog extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private MyDesign.MyButton btnThemTheLoai;
-    private MyDesign.MyButton btnLoadDuLieu;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel8;
-    protected JComboBox cbCategory = new JComboBox();
     private MyDesign.PanelBorder_Basic panelBorder_Basic1;
     private MyDesign.PanelBorder_Statistic_Blue panelBorder_Statistic_Blue1;
-    private WareHouseImport_Dialog whdialog = new WareHouseImport_Dialog(null, isDefaultLookAndFeelDecorated());
+    private MyDesign.MyTextField_Basic txtTheLoaiSach;
     private CategoryBUS cate = new CategoryBUS();
-    private WareHouseAddNewTypeBook_Dialog whnew;
+    // End of variables declaration//GEN-END:variables
 }

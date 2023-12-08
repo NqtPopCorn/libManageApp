@@ -147,10 +147,10 @@ public class StaffAdd_Dialog extends javax.swing.JDialog {
                 model = (DefaultComboBoxModel<String>) cbChucVu.getModel();
                 model.removeAllElements();
                 model.addElement("Chức vụ");
-                if(role=="QL") {
+                if(role.equals("QL")) {
                         model.addAll(staffBUS.getRoleQL());
                 }
-                if(role=="AD") {
+                if(role.equals("AD")) {
                         model.addAll(staffBUS.getRoleAD());
                 }
             } catch (Exception e) {

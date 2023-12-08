@@ -155,7 +155,7 @@ public class AccountDAO {
                     a.setTel(rs.getString(3));
                     a.setAddress(rs.getString(4));
                     a.setUsername(rs.getString(5));
-                    a.setRoleID(rs.getString(7));
+                    a.setRoleID(rs.getString(6));
                 }
             }catch(SQLException ex){
                 ex.printStackTrace();

@@ -46,7 +46,8 @@ public class Reader_GUI extends javax.swing.JPanel {
         p.setBackground(Color.WHITE);
         spTable.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
         if(rolePermissionBUS.hasPerCreate(user.getRoleID(), 6))
-            btnDocGiaMoi.setEnabled(false);
+            btnDocGiaMoi.setEnabled(true);
+        else btnDocGiaMoi.setEnabled(false);
     }
     public void addDefault() throws Exception{
         Vector<Reader> arr= readerBUS.getAll();

@@ -4,6 +4,7 @@
  */
 package GUI;
 
+import BUS.RolePermissionBUS;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,6 +31,7 @@ public class StaffInfor_Dialog extends javax.swing.JDialog {
 	StaffBUS sBLL;
 	Account a;
         Staff s;
+        private RolePermissionBUS rolePermissionBUS;
     /**
      * Creates new form StaffAdd_Dialog
      */
@@ -37,20 +39,22 @@ public class StaffInfor_Dialog extends javax.swing.JDialog {
         super(parent, modal);
         try {
             sBLL =new StaffBUS();
+            this.rolePermissionBUS = new RolePermissionBUS();
         } catch (ClassNotFoundException | SQLException e) {
             // TODO Auto-generated catch block
             JOptionPane.showMessageDialog(null,e.getMessage());
         }
         initComponents(roleID,userID,tab);
         upData(id);
+        
     }
     
     public void addDefault(MyDesign.MyTable tab,String roleID) throws Exception{
     	tab.setRowCount(0);
-        if(roleID=="AD") {
+        if(roleID.equals("AD")) {
         	addDefaultAD(tab);
         }
-        if(roleID=="QL") {
+        if(roleID.equals("QL")) {
         	addDefaultQL(tab);
         }
     }
@@ -100,6 +104,15 @@ public class StaffInfor_Dialog extends javax.swing.JDialog {
             txtDiaChi.setText(a.getAddress());
             txtUsername.setText(a.getUsername());
             cbChucVu.setSelectedItem(a.getRoleID());
+            if(rolePermissionBUS.hasPerEdit(a.getRoleID(), 7))
+                btnSuaThongTin.setEnabled(true);
+            else btnSuaThongTin.setEnabled(false);
+            
+            if(rolePermissionBUS.hasPerDelete(a.getRoleID(), 7))
+                btnXoaNhanVien.setEnabled(true);
+            else btnXoaNhanVien.setEnabled(false);
+            
+            
         } catch (Exception e) {
                 JOptionPane.showMessageDialog(null,e.getMessage());
         }
@@ -219,10 +232,10 @@ public class StaffInfor_Dialog extends javax.swing.JDialog {
         cbChucVu.setPreferredSize(new java.awt.Dimension(77, 28));
         DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>) cbChucVu.getModel();
         try {
-        	if(roleID=="QL") {
+        	if(roleID.equals("QL")) {
         		model.addAll(sBLL.getRoleAD());
         	}
-        	if(roleID=="AD") {
+        	if(roleID.equals("AD")) {
         		model.addAll(sBLL.getRoleAll());
         	}
 		} catch (Exception e) {

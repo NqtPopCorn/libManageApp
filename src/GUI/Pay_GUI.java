@@ -77,9 +77,10 @@ public class Pay_GUI extends javax.swing.JPanel {
         spTicketDetail.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
         spTable1.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
         if(rolePermissionBUS.hasPerEdit(this.user.getRoleID(), 2)){
-            btnChoMuon.setEnabled(false);
+            btnChoMuon.setEnabled(true);
+            
         }
-        else btnChoMuon.setEnabled(true);
+        else btnChoMuon.setEnabled(false);
     }
     
     private void showAll(){

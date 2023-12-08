@@ -48,9 +48,11 @@ public class ReaderUpdateInfor_Dialog extends javax.swing.JDialog {
         initComponents(tab,id);
         upInfo(id);
         if(rolePermissionBUS.hasPerEdit(user.getRoleID(), 6))
-            btnSuaThongTin.setEnabled(false);
+            btnSuaThongTin.setEnabled(true);
+        else btnSuaThongTin.setEnabled(false);
         if(rolePermissionBUS.hasPerDelete(user.getRoleID(), 6))
-            btnXoaDocGia.setEnabled(false);
+            btnXoaDocGia.setEnabled(true);
+        else btnSuaThongTin.setEnabled(false);
     }
 
     /**

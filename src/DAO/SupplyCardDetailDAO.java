@@ -4,12 +4,19 @@
  */
 package DAO;
 
+import DTO.entities.Staff;
+import DTO.entities.SupplyCard;
 import DTO.entities.SupplyCardDetail;
+import DTO.entities.SupplyCardWithStaff;
 import connection.ConnectDB;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -22,7 +29,7 @@ import java.sql.PreparedStatement;
  */
 public class SupplyCardDetailDAO {
     private ConnectDB connectDB;
-    public SupplyCardDetailDAO() throws ClassNotFoundException, SQLException, IOException{
+    public SupplyCardDetailDAO(ConnectDB connectDB) throws ClassNotFoundException, SQLException, IOException{
     	try {
 			this.connectDB = new ConnectDB();
 		} catch (ClassNotFoundException e) {
@@ -33,6 +40,34 @@ public class SupplyCardDetailDAO {
 			e.printStackTrace();
 		}
     }
+    public List<SupplyCardDetail> getAllSupplyCardDetail() {
+        List<SupplyCardDetail> supplyCardDetailList = new ArrayList<>();
+        String query = "SELECT * FROM detail_supply_card";
+
+        try {
+            connectDB.connect();
+            Connection connection = connectDB.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                SupplyCardDetail supplyCardDetail = new SupplyCardDetail();
+                supplyCardDetail.setScID(resultSet.getInt("scID"));
+                supplyCardDetail.setISBN(resultSet.getString("ISBN"));
+                supplyCardDetail.setNum(resultSet.getInt("num"));
+
+                supplyCardDetailList.add(supplyCardDetail); // Thêm dữ liệu SupplyCardDetail vào danh sách
+            }
+
+            connection.close(); // Đóng kết nối sau khi sử dụng
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return supplyCardDetailList; // Trả về danh sách SupplyCardDetail
+    }
+
     public void saveInfo(SupplyCardDetail supplyCardDetail){
        String query = "INSERT INTO detail_supply_card (scID, ISBN, num) VALUES (?,?,?)";
 

@@ -18,18 +18,19 @@ import java.sql.SQLException;
 public class DetailSupplyCardBUS {
     private  SupplyCardDetailDAO dd;
     private SupplyCardDetail dsc;
+    private ConnectDB connectDB;
     public DetailSupplyCardBUS() throws IOException
     {
         ConnectDB connectDB = null;
         try {
-            dd = new SupplyCardDetailDAO();
+            dd = new SupplyCardDetailDAO(this.connectDB);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
     }
     public void saveDSC(SupplyCardDetail dsc) throws ClassNotFoundException, SQLException, IOException
     {
-            dd = new SupplyCardDetailDAO();
+            dd = new SupplyCardDetailDAO(this.connectDB);
             dd.saveInfo(dsc);
     }
 }

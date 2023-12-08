@@ -1,7 +1,9 @@
 package BUS;
 
 import DAO.AuthorDAO;
+import DAO.BookAuthorDAO;
 import DTO.entities.Author;
+import DTO.entities.BookAuthor;
 import connection.ConnectDB;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -18,6 +20,7 @@ import java.util.List;
  */
 public class AuthorBUS {
     private  AuthorDAO ad;
+    private BookAuthorDAO bad;
     private ConnectDB connectDB;
     public AuthorBUS() throws SQLException, IOException
     {
@@ -47,6 +50,16 @@ public class AuthorBUS {
         ad = new AuthorDAO(connectDB);
         ad.deleteByName(name);
         return true;
+    }
+    public int getByAuthorID(String name) throws SQLException, IOException
+    {
+    	ad = new AuthorDAO(connectDB);
+    	return ad.getByAuthorID(name);
+    }
+    public void saveBookAuthor(BookAuthor ba) throws SQLException, IOException
+    {
+    	bad = new BookAuthorDAO(connectDB);
+    	bad.saveBookAuthor(ba);
     }
     public void disconnect() {
         ad.disconnect();

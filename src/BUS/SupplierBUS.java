@@ -17,11 +17,13 @@ import java.util.List;
  */
 public class SupplierBUS {
     private  SupplierDAO ad;
-    public SupplierBUS() throws SQLException, IOException
+    private ConnectDB connectDB;
+    public SupplierBUS() throws SQLException, IOException, ClassNotFoundException
     {
-        ConnectDB connectDB = null;
+        this.connectDB = null;
         try {
-            ad = new SupplierDAO();
+            connectDB = new ConnectDB();
+            ad = new SupplierDAO(connectDB);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -39,6 +41,16 @@ public class SupplierBUS {
             ad = new SupplierDAO();
             ad.saveAuthor(a);
 
+    }
+    public int getBySupplierID(String sub) throws SQLException, IOException
+    {
+    	ad = new SupplierDAO(connectDB);
+    	return ad.getBySupplierID(sub);
+    }
+    public void saveSupplier(Supplier a) throws SQLException, IOException
+    {
+    	ad = new SupplierDAO(connectDB);
+    	ad.saveSupplier(a);
     }
     public boolean deteleByAuthorName(String name) throws  SQLException, IOException{
         ad = new SupplierDAO();

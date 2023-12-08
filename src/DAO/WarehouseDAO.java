@@ -84,7 +84,132 @@ public class WarehouseDAO {
         connectDB.disconnect();
         return img;
     }
-
+    
+    public String getByEdition(String name)throws SQLException {
+        String edition = null;
+        String query = "SELECT cp_book.edition FROM book INNER JOIN cp_book ON cp_book.bookID = book.id AND book.name = ?";
+        connectDB.connect();
+        try {
+            Connection connection = connectDB.getConnection();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, name);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        edition = resultSet.getString("edition");
+                    }
+                }
+            } 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        connectDB.disconnect();
+        return edition;
+    }
+    
+    public long getByCost(String name)throws SQLException {
+        long cost = 0;
+        String query = "SELECT cp_book.Cost FROM book INNER JOIN cp_book ON cp_book.bookID = book.id AND book.name = ?";
+        connectDB.connect();
+        try {
+            Connection connection = connectDB.getConnection();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, name);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        cost = resultSet.getLong("Cost");
+                    }
+                }
+            } 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        connectDB.disconnect();
+        return cost;
+    }
+    
+    public long getByCostFromISBN(String name)throws SQLException {
+        long cost = 0;
+        String query = "SELECT cp_book.Cost FROM book INNER JOIN cp_book ON cp_book.bookID = book.id WHERE cp_book.isbn COLLATE Latin1_General_BIN = ? COLLATE Latin1_General_BIN";
+        connectDB.connect();
+        try {
+            Connection connection = connectDB.getConnection();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, name);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        cost = resultSet.getLong("Cost");
+                    }
+                }
+            } 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        connectDB.disconnect();
+        return cost;
+    }
+    
+    public String getByImgFromISBN(String name)throws SQLException {
+        String img = null;
+        String query = "SELECT cp_book.img FROM book INNER JOIN cp_book ON cp_book.bookID = book.id WHERE cp_book.isbn COLLATE Latin1_General_BIN = ? COLLATE Latin1_General_BIN";
+        connectDB.connect();
+        try {
+            Connection connection = connectDB.getConnection();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, name);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        img = resultSet.getString("img");
+                    }
+                }
+            } 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        connectDB.disconnect();
+        return img;
+    }
+    
+    public String getByEditionFromISBN(String name)throws SQLException {
+        String edition = null;
+        String query = "SELECT cp_book.edition FROM book INNER JOIN cp_book ON cp_book.bookID = book.id WHERE cp_book.isbn COLLATE Latin1_General_BIN = ? COLLATE Latin1_General_BIN";
+        connectDB.connect();
+        try {
+            Connection connection = connectDB.getConnection();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, name);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        edition = resultSet.getString("edition");
+                    }
+                }
+            } 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        connectDB.disconnect();
+        return edition;
+    }
+    
+    public String getNameBook(String isbn)throws SQLException{
+    	String name = null;
+    	String query = "SELECT book.name FROM book INNER JOIN cp_book ON cp_book.bookID = book.id WHERE cp_book.isbn COLLATE Latin1_General_BIN = ? COLLATE Latin1_General_BIN";
+    	connectDB.connect();
+        try {
+            Connection connection = connectDB.getConnection();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, isbn);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        name = resultSet.getString("name");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        connectDB.disconnect();
+        return name;
+    }
     public String getByISBN(String name) throws SQLException{
         String isbn = null;
         String query = "SELECT cp_book.ISBN FROM book INNER JOIN cp_book ON cp_book.bookID = book.id AND book.name COLLATE Latin1_General_CI_AI = ?";
@@ -108,7 +233,7 @@ public class WarehouseDAO {
 
     public int getByNameBook(String name) throws SQLException{
         int bookid = 0;
-        String query = "SELECT cp_book.bookID FROM book INNER JOIN cp_book ON cp_book.bookID = book.id AND book.name LIKE ?";
+        String query = "SELECT cp_book.bookID FROM book INNER JOIN cp_book ON cp_book.bookID = book.id WHERE book.name COLLATE Latin1_General_CI_AI = ? COLLATE Latin1_General_CI_AI";
         connectDB.connect();
         try {
             Connection connection = connectDB.getConnection();
@@ -219,7 +344,7 @@ public class WarehouseDAO {
     }
 
     public void saveOldBook(Warehouse kho)  throws SQLException{
-        String query = "UPDATE cp_book SET storeNum = storeNum + ? WHERE ISBN = ?";
+        String query = "UPDATE cp_book SET storeNum = storeNum + ?, edition = ?, publisherID = ?, Cost = ? WHERE ISBN = ?";
         try {
             connectDB.connect();
             Connection connection = connectDB.getConnection();
@@ -227,7 +352,10 @@ public class WarehouseDAO {
             {
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                     preparedStatement.setInt(1, kho.getStoreNum());
-                    preparedStatement.setString(2, kho.getIsbn());
+                    preparedStatement.setString(2, kho.getEdition());
+                    preparedStatement.setInt(3, kho.getPublisherID());
+                    preparedStatement.setLong(4, kho.getCost());
+                    preparedStatement.setString(5, kho.getIsbn());
                     preparedStatement.executeUpdate();
                 }
             }

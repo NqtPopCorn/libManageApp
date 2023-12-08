@@ -4,7 +4,10 @@
  */
 package BUS;
 
+import DAO.AuthorDAO;
+import DAO.BookCategoryDAO;
 import DAO.CategoryDAO;
+import DTO.entities.BookCategory;
 import DTO.entities.Category;
 import connection.ConnectDB;
 import java.io.IOException;
@@ -19,16 +22,16 @@ import java.util.logging.Logger;
  */
 public class CategoryBUS {
     private  CategoryDAO cdao;
+    private  BookCategoryDAO bcadao;
     private ConnectDB connectDB;
-    public CategoryBUS() throws SQLException, IOException{
+    public CategoryBUS() throws SQLException, IOException
+    {
         ConnectDB connectDB = null;
         try {
             connectDB = new ConnectDB();
-            cdao = new CategoryDAO();
+            cdao = new CategoryDAO(connectDB);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-        } catch (IOException ex) {
-            Logger.getLogger(CategoryBUS.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     public List<Category> getAllName() throws SQLException{
@@ -36,17 +39,27 @@ public class CategoryBUS {
     }
     public void saveInfo(Category c) throws SQLException, IOException, ClassNotFoundException
     {
-            cdao = new CategoryDAO();
+            cdao = new CategoryDAO(connectDB);
             cdao.saveProvider(c);
 
     }
     public String getByNameCategory(String name) throws SQLException, IOException, ClassNotFoundException
     {
-            cdao = new CategoryDAO();
+            cdao = new CategoryDAO(connectDB);
             return cdao.getByNameCategory(name);
     }
+    public void saveBookCategory(BookCategory bookcategory) throws SQLException, IOException
+    {
+    		bcadao = new BookCategoryDAO(connectDB);
+    		bcadao.saveBookCategory(bookcategory);
+    }
+    public int getByCategoryID(String name) throws SQLException, IOException
+    {
+	    	cdao = new CategoryDAO(connectDB);
+	    	return cdao.getByCategoryID(name);
+    }
     public boolean deleteByCategoryName (String name) throws SQLException, IOException, ClassNotFoundException {
-        cdao = new CategoryDAO();
+        cdao = new CategoryDAO(connectDB);
         cdao.deleteByName(name);
         return true;
     }

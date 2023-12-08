@@ -28,6 +28,17 @@ public class SupplierDAO {
                 e.printStackTrace();
         }
     }
+    public SupplierDAO(ConnectDB connectDB) throws SQLException, IOException{
+            try {
+                    this.connectDB = new ConnectDB();
+            } catch (ClassNotFoundException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+            } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+            }
+    }
 
     public String getBySupplierName(String name) throws SQLException{
         String status = null;
@@ -83,6 +94,22 @@ public class SupplierDAO {
              e.printStackTrace();
          }
      }
+    public void saveSupplier(Supplier a) {
+        String query = "INSERT INTO supplier (name) VALUES (?)";
+        try {
+            connectDB.connect();
+            Connection connection = connectDB.getConnection();
+            if(connection!=null)
+            {
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setString(1, a.getSupplier_name());
+                    preparedStatement.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public  void deleteByName (String name){
         String query = "UPDATE supplier SET status = 1 WHERE name = ?";
         try{
@@ -96,6 +123,26 @@ public class SupplierDAO {
         catch (SQLException e){
             e.printStackTrace();
         }
+    }
+    public int getBySupplierID(String sub) throws SQLException {
+        int supID = 0;
+        String query = "SELECT id FROM supplier WHERE name LIKE ?";
+        connectDB.connect();
+        try {
+            Connection connection = connectDB.getConnection();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, sub);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        supID = resultSet.getInt("id");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        connectDB.disconnect();
+        return supID;
     }
     public void disconnect() {
             try {

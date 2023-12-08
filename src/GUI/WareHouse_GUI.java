@@ -4,6 +4,7 @@
  */
 package GUI;
 
+import BUS.RolePermissionBUS;
 import MyDesign.ScrollBar;
 import connection.ConnectDB;
 
@@ -12,8 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -23,22 +22,20 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import java.util.List;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import BUS.SupplyCardWithStaffBUS;
 import DAO.StaffDAO;
 import DAO.SupplyCardDAO;
+import DAO.SupplyCardDetailDAO;
 import DTO.entities.Account;
+import DTO.entities.SupplyCardDetail;
 import DTO.entities.SupplyCardWithStaff;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -46,15 +43,18 @@ import DTO.entities.SupplyCardWithStaff;
  * @author QUANG DIEN
  */
 public class WareHouse_GUI extends javax.swing.JPanel {
-    SupplyCardDAO supplyCardDAO;
-    Account user;
-    SupplyCardWithStaffBUS supplyCardWithStaffBUS;
+    private SupplyCardDAO supplyCardDAO;
+    private Account user;
+    private RolePermissionBUS rolePermissionBUS;
+    private SupplyCardWithStaffBUS supplyCardWithStaffBUS;
+    private SupplyCardDetailDAO supplyCardDetailDAO;
 	/**
      * Creates new form WareHouse_GUI
      */
     public WareHouse_GUI(Account user) throws SQLException, SQLException, IOException, ClassNotFoundException {
         initComponents();
         this.user = user;
+        this.rolePermissionBUS = new RolePermissionBUS();
         spTable.setVerticalScrollBar(new ScrollBar());
         spTable.getVerticalScrollBar().setBackground(Color.WHITE);
         spTable.getViewport().setBackground(Color.WHITE);
@@ -77,11 +77,15 @@ public class WareHouse_GUI extends javax.swing.JPanel {
         p.setBackground(Color.WHITE);
         spTable.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
         spTable.setViewportView(tbLichSuNhapHang);
+        spTable2.setViewportView(tbChiTietPhieuNhap);
         spTable2.setVerticalScrollBar(new ScrollBar());
         spTable2.getVerticalScrollBar().setBackground(Color.WHITE);
         spTable2.getViewport().setBackground(Color.WHITE);
         p.setBackground(Color.WHITE);
         spTable2.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
+        if(rolePermissionBUS.hasPerCreate(this.user.getRoleID(), 4))
+            btnNhapSach.setEnabled(true);
+        else btnNhapSach.setEnabled(false);
     }
 
     /**
@@ -103,9 +107,11 @@ public class WareHouse_GUI extends javax.swing.JPanel {
         
         SupplyCardDAO supplyCardDAO = new SupplyCardDAO(connectDB);
         StaffDAO staffDAO = new StaffDAO();
-        
+        SupplyCardDetailDAO supplyCardDetailDAO = new SupplyCardDetailDAO(connectDB);
        
         List<SupplyCardWithStaff> supplyCardWithStaffList = new ArrayList<>();
+        List<SupplyCardDetail> supplyCardDetail = new ArrayList<>();
+        supplyCardDetail = supplyCardDetailDAO.getAllSupplyCardDetail();
         supplyCardWithStaffList = supplyCardDAO.getAllSupplyCardWithStaff();
         jLabel7 = new javax.swing.JLabel();
         spTable2 = new javax.swing.JScrollPane();
@@ -156,59 +162,6 @@ public class WareHouse_GUI extends javax.swing.JPanel {
             model.addRow(rowData);
         }
         
-        tbLichSuNhapHang.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 1 || e.getClickCount() == 2) {
-                    DefaultTableModel model = (DefaultTableModel) tbLichSuNhapHang.getModel();
-                    int selectedRow = tbLichSuNhapHang.getSelectedRow();
-                    if (selectedRow >= 0) {
-                        String filePath = "D:\\Users\\Hi\\Documents\\Excel";
-                        JFileChooser fileChooser = new JFileChooser(filePath);
-                        int returnValue = fileChooser.showOpenDialog(null);
-                        if (returnValue == JFileChooser.APPROVE_OPTION) {
-                            File selectedFile = fileChooser.getSelectedFile();
-                            if (selectedFile != null) {
-                                DefaultTableModel model1 = (DefaultTableModel) tbChiTietPhieuNhap.getModel();
-                                model1.setRowCount(0);
-                                try (FileInputStream fis = new FileInputStream(selectedFile);
-                                    Workbook workbook = new XSSFWorkbook(fis)) {
-                                    Sheet sheet = workbook.getSheetAt(0);
-
-                                    for (int i = 0; i <= sheet.getLastRowNum(); i++) {
-                                        Row row = sheet.getRow(i);
-                                        Object[] rowData = new Object[row.getLastCellNum()];
-                                        for (int j = 0; j < row.getLastCellNum(); j++) {
-                                            Cell cell = row.getCell(j);
-                                            switch (cell.getCellType()) {
-                                                case Cell.CELL_TYPE_STRING:
-                                                    rowData[j] = cell.getStringCellValue();
-                                                    break;
-                                                case Cell.CELL_TYPE_NUMERIC:
-                                                    rowData[j] = cell.getNumericCellValue();
-                                                    break;
-                                                case Cell.CELL_TYPE_BOOLEAN:
-                                                    rowData[j] = cell.getBooleanCellValue();
-                                                    break;
-                                                default:
-                                                    rowData[j] = cell.toString();
-                                            }
-                                        }
-                                        model1.addRow(rowData);
-                                    }
-
-                                    tbChiTietPhieuNhap.setModel(model1);
-                                } catch (IOException ex) {
-                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Lỗi mở tệp.", "Thông Báo", JOptionPane.ERROR_MESSAGE);
-                                    System.out.println(ex);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        
         jLabel7.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(127, 127, 127));
         jLabel7.setText("Chi tiết phiếu nhập");
@@ -220,7 +173,7 @@ public class WareHouse_GUI extends javax.swing.JPanel {
 
             },
             new String [] {
-            		"", "", "", "", "", "", "", "", ""
+            		"Mã Phiếu Nhập", "Mã ISBN", "Số lượng"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -231,8 +184,19 @@ public class WareHouse_GUI extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        spTable2.setViewportView(tbChiTietPhieuNhap);
+        
+        DefaultTableModel model2 = (DefaultTableModel) tbChiTietPhieuNhap.getModel();
 
+        for (SupplyCardDetail i : supplyCardDetail) {
+            // Tạo một mảng các Object chứa thông tin cần hiển thị
+            Object[] rowData = {
+            		i.getScID(),
+            		i.getISBN(),
+            		i.getNum()
+            };
+            model2.addRow(rowData);
+        }
+        
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/search.png"))); // NOI18N
         
         
@@ -243,15 +207,11 @@ public class WareHouse_GUI extends javax.swing.JPanel {
 
                     String searchInput = txtTimKiem.getText().trim();
                     String key = "NXB";
-                    String keyDate = "2023-";
+                    String keyDate = "20-";
                     if (!searchInput.isEmpty()) {
                     	if(!isNumeric(searchInput))
                     	{
-                    		if(containsStringIgnoreCase(searchInput, key))
-                    		{
-                    			// timkiemNCC();    
-                    		}
-                    		else if(containsString(searchInput, keyDate)) {
+                    		if(containsString(searchInput, keyDate)) {
                     			timkiemSupDate();
                     		}
                     		else {
@@ -388,39 +348,12 @@ public class WareHouse_GUI extends javax.swing.JPanel {
     public static boolean containsString(String text, String searchString) {
         return text.contains(searchString);
     }
-//    public void timkiemNCC() {
-//    	DefaultTableModel model = (DefaultTableModel) tbLichSuNhapHang.getModel(); // Lấy model của JTable
-//
-//        String searchInput = txtTimKiem.getText().trim();
-//        try {
-//			List<SupplyCardWithStaff> supplyCardWithStaffList = supplyCardDAO.searchByProvider(searchInput);
-//			model.setRowCount(0); // Xóa tất cả các hàng hiện tại trong bảng
-//
-//			for (SupplyCardWithStaff supplyCardWithStaff : supplyCardWithStaffList) {
-//			    // Tạo một mảng các Object chứa thông tin cần hiển thị
-//			    Object[] rowData = {
-//			        (model.getRowCount() + 1),
-//			        supplyCardWithStaff.getSupply_Card().getSupDate(),
-//			        supplyCardWithStaff.getSupply_Card().getProvider(),
-//			        supplyCardWithStaff.getSupply_Card().getTongchi(),
-//			        supplyCardWithStaff.getStaff().getName()
-//			    };
-//			    model.addRow(rowData);
-//			}
-//			if (supplyCardWithStaffList.isEmpty()) {
-//				JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Định dạng tìm kiếm không đúng (ghi rõ NXB_'tên NXB') hoặc dữ liệu đó không tồn tại.","Lỗi",JOptionPane.ERROR_MESSAGE);
-//            }
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			System.out.println(e);
-//			JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Định dạng tìm kiếm không đúng (ghi rõ NXB_'tên NXB') hoặc dữ liệu đó không tồn tại.","Lỗi",JOptionPane.ERROR_MESSAGE);
-//		}
-//    }
     public void timkiemNameStaff() {
     	DefaultTableModel model = (DefaultTableModel) tbLichSuNhapHang.getModel(); // Lấy model của JTable
 
         String searchInput = txtTimKiem.getText().trim();
         try {
+                        supplyCardDAO = new SupplyCardDAO(connectDB);
 			List<SupplyCardWithStaff> supplyCardWithStaffList = supplyCardDAO.searchByStaff(searchInput);
 			model.setRowCount(0); // Xóa tất cả các hàng hiện tại trong bảng
 
@@ -452,7 +385,13 @@ public class WareHouse_GUI extends javax.swing.JPanel {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date parsedDate = sdf.parse(searchInput);
             Timestamp selectedTimestamp = new Timestamp(parsedDate.getTime()); // Lấy thời gian từ ngày đã chọn
-            
+            try {
+                supplyCardDAO = new SupplyCardDAO(connectDB);
+            } catch (SQLException ex) {
+                Logger.getLogger(WareHouse_GUI.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(WareHouse_GUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
             List<SupplyCardWithStaff> supplyCardWithStaffList = supplyCardDAO.searchBySupDate(selectedTimestamp);
             model.setRowCount(0);
 
@@ -479,22 +418,28 @@ public class WareHouse_GUI extends javax.swing.JPanel {
 
 
     public void loadAll() {
-    	DefaultTableModel model = (DefaultTableModel) tbLichSuNhapHang.getModel(); // Lấy model của JTable
-
-        String searchInput = txtTimKiem.getText().trim();
-        List<SupplyCardWithStaff> supplyCardWithStaffList = supplyCardDAO.getAllSupplyCardWithStaff();
-        model.setRowCount(0); // Xóa tất cả các hàng hiện tại trong bảng
-
-        for (SupplyCardWithStaff supplyCardWithStaff : supplyCardWithStaffList) {
-            // Tạo một mảng các Object chứa thông tin cần hiển thị
-            Object[] rowData = {
-                (model.getRowCount() + 1),
-                supplyCardWithStaff.getSupply_Card().getSupDate(),
-                supplyCardWithStaff.getSupply_Card().getProvider(),
-                supplyCardWithStaff.getSupply_Card().getTongchi(),
-                supplyCardWithStaff.getStaff().getName()
-            };
-            model.addRow(rowData);
+        try {
+            DefaultTableModel model = (DefaultTableModel) tbLichSuNhapHang.getModel(); // Lấy model của JTable
+            supplyCardDAO = new SupplyCardDAO(connectDB);
+            String searchInput = txtTimKiem.getText().trim();
+            List<SupplyCardWithStaff> supplyCardWithStaffList = supplyCardDAO.getAllSupplyCardWithStaff();
+            model.setRowCount(0); // Xóa tất cả các hàng hiện tại trong bảng
+            
+            for (SupplyCardWithStaff supplyCardWithStaff : supplyCardWithStaffList) {
+                // Tạo một mảng các Object chứa thông tin cần hiển thị
+                Object[] rowData = {
+                    (model.getRowCount() + 1),
+                    supplyCardWithStaff.getSupply_Card().getSupDate(),
+                    supplyCardWithStaff.getSupply_Card().getProvider(),
+                    supplyCardWithStaff.getSupply_Card().getTongchi(),
+                    supplyCardWithStaff.getStaff().getName()
+                };
+                model.addRow(rowData);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(WareHouse_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(WareHouse_GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

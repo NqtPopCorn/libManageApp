@@ -22,7 +22,7 @@ public class SupplyCardBUS {
     private ConnectDB connectDB;
     public SupplyCardBUS() throws SQLException, IOException
     {
-        ConnectDB connectDB = null;
+        this.connectDB = null;
         try {
             connectDB = new ConnectDB();
             scd = new SupplyCardDAO(connectDB);
@@ -35,10 +35,42 @@ public class SupplyCardBUS {
             kdao = new WarehouseDAO(connectDB);
             return kdao.getByImg(name);
     }
+    public String getByEdition(String name) throws SQLException, IOException
+    {
+    		kdao = new WarehouseDAO(connectDB);
+    		return kdao.getByEdition(name);
+    }
+    public String getByEditionFromISBN(String name) throws SQLException, IOException
+    {
+    		kdao = new WarehouseDAO(connectDB);
+    		return kdao.getByEditionFromISBN(name);
+    }
+    
+    public long getByCost(String name) throws SQLException, IOException
+    {
+    		kdao = new WarehouseDAO(connectDB);
+    		return kdao.getByCost(name);
+    }
+    public long getByCostFromISBN(String name) throws SQLException, IOException
+    {
+    		kdao = new WarehouseDAO(connectDB);
+    		return kdao.getByCostFromISBN(name);
+    }
+    
     public String getByISBN(String name) throws SQLException, IOException
     {
             kdao = new WarehouseDAO(connectDB);
             return kdao.getByISBN(name);
+    }
+    public String getByImgFromISBN(String name) throws SQLException, IOException
+    {
+            kdao = new WarehouseDAO(connectDB);
+            return kdao.getByImgFromISBN(name);
+    } 
+    public String getNameBook(String isbn) throws SQLException, IOException
+    {
+    		kdao = new WarehouseDAO(connectDB);
+    		return kdao.getNameBook(isbn);
     }
     public int getByID() throws SQLException, IOException
     {

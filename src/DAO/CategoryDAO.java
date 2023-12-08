@@ -23,6 +23,17 @@ public class CategoryDAO {
 	public CategoryDAO() throws SQLException, IOException, ClassNotFoundException{
         connectDB = new ConnectDB();
 	}
+    public CategoryDAO(ConnectDB connectDB) throws SQLException, IOException{
+        try {
+                this.connectDB = new ConnectDB();
+        } catch (ClassNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+        } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+        }
+    }
 	public String getByNameCategory(String name) throws ClassNotFoundException, SQLException, IOException {
 	    String status = null;
 	    String query = "SELECT name FROM category WHERE name COLLATE Latin1_General_CI_AI = ?";
@@ -89,6 +100,26 @@ public class CategoryDAO {
         catch (SQLException e){
             e.printStackTrace();
         }
+    }
+    public int getByCategoryID(String name) {
+        int id = 0;
+        String query = "SELECT id FROM category WHERE name LIKE ?";
+
+        try {
+        	connectDB.connect();
+            Connection connection = connectDB.getConnection();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, name);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        id = resultSet.getInt("id");
+                    }
+                }
+            } 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        return id;
     }
     public void disconnect() {
             try {

@@ -18,6 +18,7 @@ import BUS.StaffBUS;
 import DTO.entities.Staff;
 import DTO.entities.Account;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -96,10 +97,10 @@ public class Staff_GUI extends javax.swing.JPanel {
     
     public void findVal(String str,String roleID) throws Exception {
     	Vector<Account> arr=new Vector<Account>();
-    	if(roleID=="AD") {
+    	if(roleID.equals("AD")) {
     		arr=staffBUS.allOutSearchAD(str);
     	}
-    	if(roleID=="QL") {
+    	if(roleID.equals("QL")) {
     		arr=staffBUS.allOutSearchQL(str);
     	}
     	if(arr.size()==0) {
@@ -290,10 +291,15 @@ public class Staff_GUI extends javax.swing.JPanel {
     }//GEN-LAST:event_txtTimKiemActionPerformed
 
     private void btnNhanVienMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhanVienMoiActionPerformed
+        
         try {
             StaffAdd_Dialog sad=new StaffAdd_Dialog(this.userLogin ,new javax.swing.JFrame(), true,tbDanhSachNhanVien);
             sad.setVisible(true);
         } catch (IOException ex) {
+            Logger.getLogger(Staff_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Staff_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
             Logger.getLogger(Staff_GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnNhanVienMoiActionPerformed

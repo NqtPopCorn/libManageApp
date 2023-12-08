@@ -86,6 +86,26 @@ public class AuthorDAO {
              e.printStackTrace();
          }
      }
+    public int getByAuthorID(String name) {
+        int id = 0;
+        String query = "SELECT id FROM author WHERE name LIKE ?";
+
+        try {
+        	connectDB.connect();
+            Connection connection = connectDB.getConnection();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, name);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        id = resultSet.getInt("id");
+                    }
+                }
+            } 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        return id;
+    }
     public  void deleteByName (String name){
         String query = "UPDATE author SET isActive = 0 WHERE name = ?";
         try{
