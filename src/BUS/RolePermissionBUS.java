@@ -105,10 +105,10 @@ public class RolePermissionBUS {
               per.setRoleID(role.getRoleID());
               per.setPermissionID(listPer.get(stt).getPermissionID());
               per.setPerAccess((boolean)rowData.get(0)?1:0);              
-              per.setPerAccess((boolean)rowData.get(1)?1:0);
-              per.setPerAccess((boolean)rowData.get(2)?1:0);
-              per.setPerAccess((boolean)rowData.get(3)?1:0);
-              per.setPerAccess((boolean)rowData.get(4)?1:0);
+              per.setPerCreate((boolean)rowData.get(1)?1:0);
+              per.setPerView((boolean)rowData.get(2)?1:0);
+              per.setPerEdit((boolean)rowData.get(3)?1:0);
+              per.setPerDelete((boolean)rowData.get(4)?1:0);
               rolePermissionDAO.update(per);
               stt++;
         }

@@ -102,10 +102,11 @@ public class Admin_GUI extends javax.swing.JPanel {
         }
     }
     public void initTablePermission(String roleID) throws ClassNotFoundException, SQLException, IOException, NoSuchAlgorithmException{
+        RolePermissionBUS rolePer = new RolePermissionBUS();
         listPermisson = permissionBUS.getList();
         permissionsModel = (DefaultTableModel) tbTinhNang.getModel();
         ArrayList<Integer> listPer = new ArrayList<>();
-        listRolePer = rolePermissionBUS.canAccessForm(roleID);
+        listRolePer = rolePer.canAccessForm(roleID);
         for (Role role : listRole){
             if(role.getRoleID().equals(roleID)) 
                 txtTenChucVu.setText(role.getRoleName());
@@ -304,11 +305,6 @@ public class Admin_GUI extends javax.swing.JPanel {
                 btnXoaChucVuMouseClicked(evt);
             }
         });
-        btnXoaChucVu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnXoaChucVuActionPerformed(evt);
-            }
-        });
 
         btnCapNhat.setBackground(new java.awt.Color(22, 113, 221));
         btnCapNhat.setForeground(new java.awt.Color(255, 255, 255));
@@ -317,9 +313,9 @@ public class Admin_GUI extends javax.swing.JPanel {
         btnCapNhat.setBorderColor(new java.awt.Color(22, 113, 221));
         btnCapNhat.setColor(new java.awt.Color(22, 113, 221));
         btnCapNhat.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        btnCapNhat.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCapNhatActionPerformed(evt);
+        btnCapNhat.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCapNhatMouseClicked(evt);
             }
         });
 
@@ -442,36 +438,6 @@ public class Admin_GUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tbChucVuMouseClicked
 
-    private void btnCapNhatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCapNhatActionPerformed
-        int rowCount = tbTinhNang.getRowCount();
-        int columnCount = tbTinhNang.getColumnCount()-1;
-        List<List<Object>> dataList = new ArrayList<>();
-        for (int row = 0; row < rowCount; row++) {
-            boolean checkValue = (boolean) tbTinhNang.getValueAt(row, 2);
-            if(checkValue){
-                List<Object> rowData = new ArrayList<>();
-                for (int column = 0; column < columnCount; column++) {
-                    Object cellValue = tbTinhNang.getValueAt(row, column);
-                    rowData.add(cellValue);
-                }
-                dataList.add(rowData);
-            }
-        }
-        try {
-            rolePermissionBUS.updateRolePermissions(dataList, txtTenChucVu.getText());
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btnCapNhatActionPerformed
-
-    private void btnXoaChucVuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaChucVuActionPerformed
-        
-    }//GEN-LAST:event_btnXoaChucVuActionPerformed
-
     private void btnAddRoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRoleActionPerformed
         try {
             StaffRole_Dialog srd = new StaffRole_Dialog(this.user,new javax.swing.JFrame(), true);
@@ -532,6 +498,36 @@ public class Admin_GUI extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_btnXoaChucVuMouseClicked
+
+    private void btnCapNhatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCapNhatMouseClicked
+        int rowCount = tbTinhNang.getRowCount();
+        int columnCount = tbTinhNang.getColumnCount()-1;
+        List<List<Object>> dataList = new ArrayList<>();
+        for (int row = 0; row < rowCount; row++) {
+            System.out.println(row);
+                List<Object> rowData = new ArrayList<>();
+                for (int column = 2; column <= columnCount; column++) {
+                    Object cellValue = tbTinhNang.getValueAt(row, column);
+                    rowData.add(cellValue);
+                }
+                dataList.add(rowData);
+                System.out.println(rowData);
+        }
+        try {
+            rolePermissionBUS.updateRolePermissions(dataList, txtTenChucVu.getText());
+            DefaultTableModel model = (DefaultTableModel) tbChucVu.getModel();
+            model.setRowCount(0);
+            initTableRoles();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnCapNhatMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
