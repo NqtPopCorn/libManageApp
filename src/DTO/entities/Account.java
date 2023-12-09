@@ -60,7 +60,9 @@ public class Account extends Person{
     }
 
     public Account(String username, String password, String role) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.username = username;
+        this.pwd = pwd;
+        this.roleID = roleID;
     }
 
     public String getUsername() {

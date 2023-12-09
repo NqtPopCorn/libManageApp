@@ -29,6 +29,11 @@ public abstract class Person {
         this.tel = tel;
         this.address = address;
     }
+    public Person(String name, String tel, String address) {
+        this.name = name;
+        this.tel = tel;
+        this.address = address;
+    }
     public Person() {
     }
 

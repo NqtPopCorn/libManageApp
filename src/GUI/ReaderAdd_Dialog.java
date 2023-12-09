@@ -30,6 +30,7 @@ public class ReaderAdd_Dialog extends javax.swing.JDialog {
     public ReaderAdd_Dialog(java.awt.Frame parent, boolean modal,MyDesign.MyTable tab) throws ClassNotFoundException, SQLException {
         super(parent, modal);
         readerBUS = new ReaderBUS();
+        this.tab = tab;
         initComponents();
     }
     public void addDefault(MyDesign.MyTable tab) throws Exception{

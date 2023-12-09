@@ -24,8 +24,9 @@ public class Staff extends Person{
         this.manageID = manageID;
     }
 
-    public Staff(String name, String tel, String address, String role) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Staff(String name, String tel, String address, int manageID) {
+        super(name, tel, address);
+        this.manageID = manageID;
     }
 
     public int getManageID() {

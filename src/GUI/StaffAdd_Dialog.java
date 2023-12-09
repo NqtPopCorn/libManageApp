@@ -44,6 +44,7 @@ public class StaffAdd_Dialog extends javax.swing.JDialog {
     public StaffAdd_Dialog(Account user, Frame parent, boolean modal,MyDesign.MyTable tab) throws IOException, ClassNotFoundException, SQLException {
         super(parent, modal);
         this.user = user;
+        this.tab = tab;
         personID = user.getPersonID();
         roleID = user.getRoleID();
         this.rolePermissionBUS = new RolePermissionBUS();
@@ -418,7 +419,7 @@ public class StaffAdd_Dialog extends javax.swing.JDialog {
             String role=(String) cbChucVu.getSelectedItem();
         try {
             if(checkDataVal(name,tel,address,username,password)) {
-                JOptionPane.showMessageDialog(null,staffBUS.addStaff(new Staff(name,tel,address,roleID) ,new Account(username,password,role)));
+                JOptionPane.showMessageDialog(null,staffBUS.addStaff(new Staff(name,tel,address,personID) ,new Account(username,password,role)));
                 addDefaultQL(tab);
                 dispose();
             }

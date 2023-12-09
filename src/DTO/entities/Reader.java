@@ -40,10 +40,9 @@ public class Reader extends Person{
     }
 
     public Reader(String name, String tel, String address) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       super(name,tel,address);
     }
 
-    
     public void setFineDate(LocalDate fineDate) {
         this.fineDate = fineDate;
     }

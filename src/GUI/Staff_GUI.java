@@ -38,6 +38,7 @@ public class Staff_GUI extends javax.swing.JPanel {
 
     public Staff_GUI(Account userLogin) throws Exception {
         initComponents();
+        this.userLogin = userLogin;
         this.userID = userLogin.getPersonID();
         this.roleID = userLogin.getRoleID();
         this.rolePermissionBUS = new RolePermissionBUS();
