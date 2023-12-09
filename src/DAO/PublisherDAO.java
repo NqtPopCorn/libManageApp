@@ -67,14 +67,16 @@ public class PublisherDAO {
     }
 public List<Publisher> getAllName() throws SQLException {
     List<Publisher> list = new ArrayList<>();
-    String query = "SELECT name FROM publisher";
+    String query = "SELECT * FROM publisher";
     connectDB.connect();    
     try (Connection connection = connectDB.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(query);
          ResultSet resultSet = preparedStatement.executeQuery()) {
         while (resultSet.next()) {
             Publisher p = new Publisher();
-            p.setName(resultSet.getString("name"));
+            p.setId(resultSet.getInt(1));
+            p.setName(resultSet.getString(2));
+            p.setStatus(resultSet.getInt(3));
             list.add(p);
         }
     } catch (SQLException e) {

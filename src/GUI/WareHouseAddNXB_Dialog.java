@@ -14,6 +14,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import BUS.PublisherBUS;
+import DTO.entities.Category;
 import DTO.entities.Publisher;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,12 +25,15 @@ import java.util.logging.Logger;
  */
 public class WareHouseAddNXB_Dialog extends javax.swing.JDialog {
     static String nameFrame;
+    static String action;
     /**
      * Creates new form WareHouseAddReader_Dialog
      */
-    public WareHouseAddNXB_Dialog(java.awt.Frame parent, String nameFrame,boolean modal) throws SQLException, IOException, ClassNotFoundException {
+    public WareHouseAddNXB_Dialog(java.awt.Frame parent, String nameFrame,String action,boolean modal) throws SQLException, IOException, ClassNotFoundException {
         super(parent, modal);
-        WareHouseAddNXB_Dialog.nameFrame = nameFrame;
+        WareHouseAddNXB_Dialog.nameFrame = nameFrame;        
+        WareHouseAddNXB_Dialog.action = action;
+
         initComponents();
     }
 
@@ -85,7 +89,14 @@ public class WareHouseAddNXB_Dialog extends javax.swing.JDialog {
                                 else {
                                     pub.saveInfo(p);
                                     JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);                                
-                                    gui.initTableAuthor();
+                                    List<Publisher> publishers = pub.getAllName();
+                                    gui.publishersModel.setRowCount(0);
+                                    int stt = 1;
+                                    for(Publisher item : publishers)
+                                    {
+                                        if(item.isStatus() == 1)
+                                            gui.publishersModel.addRow(new Object[]{stt++,item.getName()});
+                                    }
                                     hide();
                                     gui.setVisible(true);
                                     
@@ -94,6 +105,9 @@ public class WareHouseAddNXB_Dialog extends javax.swing.JDialog {
                                 // TODO Auto-generated catch block
                                 e1.printStackTrace();
                             } catch (IOException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                            }catch (ClassNotFoundException e1) {
                                 // TODO Auto-generated catch block
                                 e1.printStackTrace();
                             }
@@ -209,54 +223,7 @@ public class WareHouseAddNXB_Dialog extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(WareHouseAddNXB_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(WareHouseAddNXB_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(WareHouseAddNXB_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(WareHouseAddNXB_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    WareHouseAddNXB_Dialog dialog = new WareHouseAddNXB_Dialog(new javax.swing.JFrame(),nameFrame, true);
-                    dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                        @Override
-                        public void windowClosing(java.awt.event.WindowEvent e) {
-                            
-                            System.exit(0);
-                        }
-                    });
-                    dialog.setVisible(true);
-                } catch (SQLException ex) {
-                    Logger.getLogger(WareHouseAddNXB_Dialog.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(WareHouseAddNXB_Dialog.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(WareHouseAddNXB_Dialog.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private MyDesign.MyButton btnThemNhaXuatBan;

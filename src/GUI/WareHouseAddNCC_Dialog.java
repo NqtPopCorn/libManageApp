@@ -12,8 +12,9 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import BUS.PublisherBUS;
+import BUS.SupplierBUS;
 import BUS.SupplyCardBUS;
-import DTO.entities.Publisher;
+import DTO.entities.Supplier;
 import DTO.entities.SupplyCard;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -26,12 +27,15 @@ import java.util.logging.Logger;
  */
 public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
     static String nameFrame;
+    static String action;
     /**
      * Creates new form WareHouseAddReader_Dialog
      */
-    public WareHouseAddNCC_Dialog(java.awt.Frame parent,String nameFrame, boolean modal) throws SQLException, IOException, ClassNotFoundException {
+    public WareHouseAddNCC_Dialog(java.awt.Frame parent,String nameFrame,String action, boolean modal) throws SQLException, IOException, ClassNotFoundException {
         super(parent,nameFrame ,modal);
-        WareHouseAddNCC_Dialog.nameFrame = nameFrame;
+        WareHouseAddNCC_Dialog.nameFrame = nameFrame;        
+        WareHouseAddNCC_Dialog.action = action;
+
         try {
             initComponents();
         } catch (ClassNotFoundException ex) {
@@ -77,38 +81,51 @@ public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
                     JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Vui lòng điền đầy đủ thông tin.", "Cảnh Báo", JOptionPane.WARNING_MESSAGE);
                 } else {
                     try {
-                    	Publisher p = new Publisher();
-                        p.setName(txtNhaCungCap.getText());
+                    	Supplier p = new Supplier();
+                        p.setSupplier_name(txtNhaCungCap.getText());
                         if (nameFrame == "more_gui"){
-                            System.out.print("More_GUI");
+                            
                             More_GUI gui;
-                            try {
-                                gui = new More_GUI();
-                                if(pub.getByNamePub(p.getName())!=null)
-                                {
-                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên NCC đã tồn tại!","Thông báo",JOptionPane.WARNING_MESSAGE);
+                            if(action == "add"){
+                                try {
+                                    gui = new More_GUI();
+                                    if(pub.getByNameAuthor(p.getSupplier_name())!=null)
+                                    {
+                                        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên NCC đã tồn tại!","Thông báo",JOptionPane.WARNING_MESSAGE);
+                                    }
+                                    else {
+                                        pub.saveInfo(p);
+                                        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);                                
+                                        List<Supplier> publisherList = pub.getAllName();
+                                        int stt = 1;
+                                        gui.suppliersModel.setRowCount(0);
+                                        for(Supplier item : publisherList)
+                                        {
+                                            if(item.getSupplier_status() == 1)
+                                                gui.suppliersModel.addRow(new Object[]{stt++,item.getSupplier_name()});
+                                        }
+                                        hide();
+                                        gui.setVisible(true);
+                                        
+                                    }
+                                } catch (SQLException e1) {
+                                    // TODO Auto-generated catch block
+                                    e1.printStackTrace();
+                                } catch (IOException e1) {
+                                    // TODO Auto-generated catch block
+                                    e1.printStackTrace();
+                                }catch (ClassNotFoundException e1) {
+                                    // TODO Auto-generated catch block
+                                    e1.printStackTrace();
                                 }
-                                else {
-                                    pub.saveInfo(p);
-                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);                                
-                                    gui.initTableAuthor();
-                                    hide();
-                                    gui.setVisible(true);
-                                    
-                                }
-                            } catch (SQLException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            } catch (IOException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
                             }
+                            
                         }
                         else{
                             WareHouseImport_Dialog whid;
                             try {
                                 whid = new WareHouseImport_Dialog(null, rootPaneCheckingEnabled);
-                                if(pub.getByNamePub(p.getName())!=null)
+                                if(pub.getByNameAuthor(p.getSupplier_name())!=null)
                                 {
                                     JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên NCC đã tồn tại!","Thông báo",JOptionPane.WARNING_MESSAGE);
                                     
@@ -116,16 +133,18 @@ public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
                                 else {
                                     pub.saveInfo(p);
                                     JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
-                                    List<Publisher> publisherList = pub.getAllName();
+                                    List<Supplier> publisherList = pub.getAllName();
                                     whid.cbNhaCungCap.removeAllItems();
                                     whid.cbNXB.removeAllItems();
-                                    for(Publisher item : publisherList)
+                                    for(Supplier item : publisherList)
                                     {
-                                        whid.cbNXB.addItem(item.getName());
+                                        if(item.getSupplier_status() == 1)
+                                            whid.cbNXB.addItem(item.getSupplier_name());
                                     }
-                                    for(Publisher item : publisherList)
+                                    for(Supplier item : publisherList)
                                     {
-                                        whid.cbNhaCungCap.addItem(item.getName());
+                                        if(item.getSupplier_status() == 1)
+                                            whid.cbNhaCungCap.addItem(item.getSupplier_name());
                                     }
                                     hide();
                                     whid.setVisible(true);
@@ -219,59 +238,7 @@ public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-            /* Set the Nimbus look and feel */
-            //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-            /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-            * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-            */
-            try {
-                for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                    if ("Nimbus".equals(info.getName())) {
-                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                        break;
-                    }
-                }
-            } catch (ClassNotFoundException ex) {
-                java.util.logging.Logger.getLogger(WareHouseAddNCC_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            } catch (InstantiationException ex) {
-                java.util.logging.Logger.getLogger(WareHouseAddNCC_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
-                java.util.logging.Logger.getLogger(WareHouseAddNCC_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-                java.util.logging.Logger.getLogger(WareHouseAddNCC_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            }
-            //</editor-fold>
-            //</editor-fold>
-            //</editor-fold>
-            //</editor-fold>
-            
-            /* Create and display the dialog */
-            java.awt.EventQueue.invokeLater(new Runnable() {
-                public void run() {
-                    try {
-                        WareHouseAddNCC_Dialog dialog = new WareHouseAddNCC_Dialog(new javax.swing.JFrame(), nameFrame, true);
-                        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                            @Override
-                            public void windowClosing(java.awt.event.WindowEvent e) {
-                                System.exit(0);
-                            }
-                        });
-                        dialog.setVisible(true);
-                    } catch (SQLException ex) {
-                        Logger.getLogger(WareHouseAddNCC_Dialog.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IOException ex) {
-                        Logger.getLogger(WareHouseAddNCC_Dialog.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (ClassNotFoundException ex) {
-                        Logger.getLogger(WareHouseAddNCC_Dialog.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            });
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-    }
+        
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private MyDesign.MyButton btnThemNhaCungCap;
@@ -281,6 +248,6 @@ public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
     private MyDesign.PanelBorder_Statistic_Blue panelBorder_Statistic_Blue1;
     private MyDesign.MyTextField_Basic txtNhaCungCap;
     private SupplyCardBUS scb = new SupplyCardBUS();
-    private PublisherBUS pub = new PublisherBUS();
+    private SupplierBUS pub = new SupplierBUS();
     // End of variables declaration//GEN-END:variables
 }

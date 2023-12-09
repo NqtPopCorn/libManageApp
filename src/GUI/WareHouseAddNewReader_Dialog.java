@@ -15,6 +15,10 @@ import javax.swing.JOptionPane;
 
 import BUS.AuthorBUS;
 import DTO.entities.Author;
+import DTO.entities.Supplier;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -23,13 +27,14 @@ import DTO.entities.Author;
  */
 public class WareHouseAddNewReader_Dialog extends javax.swing.JDialog {
     String nameFrame;
+    String action;
     /**
      * Creates new form WareHouseAddReader_Dialog
      * @throws IOException
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public WareHouseAddNewReader_Dialog(java.awt.Frame parent,String nameFrame ,boolean modal) throws ClassNotFoundException, SQLException, IOException {
+    public WareHouseAddNewReader_Dialog(java.awt.Frame parent,String nameFrame,boolean modal) throws ClassNotFoundException, SQLException, IOException {
         super(parent,nameFrame, modal);
         this.nameFrame = nameFrame;
         setLocationRelativeTo(null);
@@ -87,7 +92,14 @@ public class WareHouseAddNewReader_Dialog extends javax.swing.JDialog {
                             else {
                                 au.saveInfo(a);
                                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);                                
-                                gui.initTableAuthor();
+                                int stt = 1;
+                                List<Author> authors = au.getAllName();
+                                gui.authorsModel.setRowCount(0);
+                                for(Author item : authors)
+                                {
+                                    if(item.isStatus() == 1)
+                                        gui.authorsModel.addRow(new Object[]{stt++,item.getName()});
+                                }
                                 hide();
                                 gui.setVisible(true);
                                 
@@ -98,7 +110,9 @@ public class WareHouseAddNewReader_Dialog extends javax.swing.JDialog {
                         } catch (IOException e1) {
                             // TODO Auto-generated catch block
                             e1.printStackTrace();
-                        }
+                        }   catch (ClassNotFoundException ex) {
+                                Logger.getLogger(WareHouseAddNewReader_Dialog.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                     }
                     else {
                         try{
@@ -108,7 +122,7 @@ public class WareHouseAddNewReader_Dialog extends javax.swing.JDialog {
                             }
                             else {
                                 au.saveInfo(a);
-                                whrd = new WareHouseAddReader_Dialog(null, nameFrame, rootPaneCheckingEnabled);
+                                whrd = new WareHouseAddReader_Dialog(null, nameFrame,"add", rootPaneCheckingEnabled);
                                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
                             }
                         } catch (SQLException e1) {
@@ -262,6 +276,6 @@ public class WareHouseAddNewReader_Dialog extends javax.swing.JDialog {
     private MyDesign.PanelBorder_Statistic_Blue panelBorder_Statistic_Blue1;
     private MyDesign.MyTextField_Basic txtTenTacGia;
     private AuthorBUS au = new AuthorBUS();
-    private WareHouseAddReader_Dialog whrd = new WareHouseAddReader_Dialog(null, nameFrame, rootPaneCheckingEnabled);
+    private WareHouseAddReader_Dialog whrd = new WareHouseAddReader_Dialog(null, nameFrame, "add",rootPaneCheckingEnabled);
     // End of variables declaration//GEN-END:variables
 }

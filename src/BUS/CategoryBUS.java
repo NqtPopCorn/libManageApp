@@ -34,8 +34,8 @@ public class CategoryBUS {
             e.printStackTrace();
         }
     }
-    public List<Category> getAllName() throws SQLException{
-        return cdao.getAllName();
+    public List<Category> getAll() throws SQLException{
+        return cdao.getAll();
     }
     public void saveInfo(Category c) throws SQLException, IOException, ClassNotFoundException
     {

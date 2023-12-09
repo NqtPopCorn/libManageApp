@@ -32,15 +32,17 @@ import java.awt.Font;
  */
 public class WareHouseAddTypeBook_Dialog extends javax.swing.JDialog {
     static String nameFrame;
+    static String action;
     /**
      * Creates new form WareHouseAddReader_Dialog
      * @throws IOException
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public WareHouseAddTypeBook_Dialog(java.awt.Frame parent,String nameFrame ,boolean modal) throws ClassNotFoundException, SQLException, IOException {
-        super(parent,nameFrame ,modal);
+    public WareHouseAddTypeBook_Dialog(java.awt.Frame parent,String nameFrame, String action,boolean modal) throws ClassNotFoundException, SQLException, IOException {
+        super(parent, nameFrame ,modal);
         WareHouseAddTypeBook_Dialog.nameFrame = nameFrame;
+        WareHouseAddTypeBook_Dialog.action = action;
         setLocationRelativeTo(null);
         initComponents();
     }
@@ -66,7 +68,7 @@ public class WareHouseAddTypeBook_Dialog extends javax.swing.JDialog {
         jLabel8.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         jLabel8.setText("Thể loại sách");
         
-        List<Category> categoryList = cate.getAllName();
+        List<Category> categoryList = cate.getAll();
         btnThemTheLoai.setBackground(new java.awt.Color(22, 113, 221));
         btnThemTheLoai.setForeground(new java.awt.Color(255, 255, 255));
         btnThemTheLoai.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/action-add-white.png"))); // NOI18N
@@ -128,7 +130,7 @@ public class WareHouseAddTypeBook_Dialog extends javax.swing.JDialog {
 						// TODO Auto-generated method stub
 						cbCategory.removeAllItems();
 		    			try {
-		    				List<Category> categoryList = cate.getAllName();
+		    				List<Category> categoryList = cate.getAll();
 		    				for(Category item : categoryList)
 		    			    {
 		    			      cbCategory.addItem(item.getName());
@@ -245,7 +247,7 @@ public class WareHouseAddTypeBook_Dialog extends javax.swing.JDialog {
             public void run() {
                 WareHouseAddTypeBook_Dialog dialog;
                 try {
-                    dialog = new WareHouseAddTypeBook_Dialog(new javax.swing.JFrame(), nameFrame, true);
+                    dialog = new WareHouseAddTypeBook_Dialog(new javax.swing.JFrame(), nameFrame,action, true);
                     dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -271,7 +273,7 @@ public class WareHouseAddTypeBook_Dialog extends javax.swing.JDialog {
         });
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify                     
     private MyDesign.MyButton btnThemTheLoai;
     private MyDesign.MyButton btnLoadDuLieu;
     private javax.swing.JLabel jLabel4;

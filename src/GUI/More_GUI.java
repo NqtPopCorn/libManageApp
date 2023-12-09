@@ -7,6 +7,8 @@ package GUI;
 import BUS.AuthorBUS;
 import BUS.CategoryBUS;
 import BUS.PublisherBUS;
+import BUS.RolePermissionBUS;
+import BUS.SupplierBUS;
 import BUS.SupplyCardBUS;
 import DTO.entities.Account;
 import MyDesign.ScrollBar;
@@ -17,6 +19,7 @@ import javax.swing.JScrollPane;
 import DTO.entities.Author;
 import DTO.entities.Category;
 import DTO.entities.Publisher;
+import DTO.entities.Supplier;
 import DTO.entities.SupplyCard;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -36,30 +39,34 @@ public class More_GUI extends javax.swing.JPanel {
     private SupplyCardBUS supplyCardBUS;
     private CategoryBUS categoryBUS;
     private PublisherBUS publisherBUS;
-    private List<Author> listAuthor;    
+    private SupplierBUS supplierBUS;
     private List<Category> listCategory;
+    private List<Author> listAuthor;    
     private List<Publisher> listPublisher;
-    private List<SupplyCard> listSupplier;
+    private List<Supplier> listSupplier;
 
-    private DefaultTableModel authorsModel;    
-    private DefaultTableModel categoriesModel;
-    private DefaultTableModel publishersModel;
-    private DefaultTableModel suppliersModel;
+    DefaultTableModel authorsModel;    
+    DefaultTableModel categoriesModel;
+    DefaultTableModel publishersModel;
+    DefaultTableModel suppliersModel;
+    private RolePermissionBUS rolePermissionBUS;
 
     /**
      * Creates new form More_GUI
      */
-    public More_GUI() throws SQLException, IOException {
+    public More_GUI() throws SQLException, IOException, ClassNotFoundException {
         initComponents();
         styles();
         initTableAuthor();
         initTableCategory();
         initTablePublisher();
         initTableSupplier();
+        
     }
-    public More_GUI(Account user) throws SQLException, IOException {
+    public More_GUI(Account user) throws SQLException, IOException, ClassNotFoundException {
         initComponents();
         this.user = user;
+        this.rolePermissionBUS = new RolePermissionBUS();
         styles();
         initTableAuthor();
         initTableCategory();
@@ -423,9 +430,9 @@ public class More_GUI extends javax.swing.JPanel {
        if(evt.getClickCount()==1 || evt.getClickCount()==2)
         {
             setVisible(false);
-            WareHouseAddReader_Dialog r;
+            WareHouseAddNewReader_Dialog r;
            try { 
-               r = new WareHouseAddReader_Dialog(null,"more_gui", true);
+               r = new WareHouseAddNewReader_Dialog(null,"more_gui", true);
                r.setVisible(true);
            } catch (SQLException ex) {
                Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -441,9 +448,9 @@ public class More_GUI extends javax.swing.JPanel {
         if(evt.getClickCount()==1 || evt.getClickCount()==2)
         {
             setVisible(false);
-            WareHouseAddTypeBook_Dialog r;
+            WareHouseAddNewTypeBook_Dialog r;
            try { 
-               r = new WareHouseAddTypeBook_Dialog(null,"more_gui", true);
+               r = new WareHouseAddNewTypeBook_Dialog(null,"more_gui", true);
                r.setVisible(true);
            } catch (SQLException ex) {
                Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -461,7 +468,7 @@ public class More_GUI extends javax.swing.JPanel {
             setVisible(false);
             WareHouseAddNCC_Dialog r;
            try { 
-               r = new WareHouseAddNCC_Dialog(null,"more_gui", true);
+               r = new WareHouseAddNCC_Dialog(null,"more_gui","add", true);
                r.setVisible(true);
            } catch (SQLException ex) {
                Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -479,7 +486,7 @@ public class More_GUI extends javax.swing.JPanel {
             setVisible(false);
             WareHouseAddNXB_Dialog r;
            try { 
-               r = new WareHouseAddNXB_Dialog(null,"more_gui", true);
+               r = new WareHouseAddNXB_Dialog(null,"more_gui","add  ", true);
                r.setVisible(true);
            } catch (SQLException ex) {
                Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -553,36 +560,32 @@ public class More_GUI extends javax.swing.JPanel {
     }//GEN-LAST:event_lbXoaTheLoaiMouseClicked
 
     private void lbXoaNCCMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbXoaNCCMouseClicked
-//        if(evt.getClickCount()==1 || evt.getClickCount()==2){
-//            int selectedRow = tbNhaCungCap.getSelectedRow();
-//            if (selectedRow != -1) {
-//                String theloai = tbTheLoaiSach.getValueAt(selectedRow, 1).toString();
-//                int option = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa thể loại " + theloai + "?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
-//                if (option == JOptionPane.YES_OPTION) {
-//                    try {
-//                        categoryBUS = new CategoryBUS();
-//                        boolean check;
-//                        try {
-//                            check = categoryBUS.deleteByCategoryName(theloai);
-//                            if(check == true){
-//                                JOptionPane.showMessageDialog(panelBorder1, "Đã xóa thành công", "Xác nhận xóa", HEIGHT);
-//                                DefaultTableModel model = (DefaultTableModel) tbTheLoaiSach.getModel();
-//                                model.setRowCount(0);
-//                                initTableCategory();
-//                            }
-//                        } catch (ClassNotFoundException ex) {
-//                            Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
-//                        }
-//                        
-//                        
-//                    } catch (SQLException ex) {
-//                        Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
-//                    } catch (IOException ex) {
-//                        Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-//                }
-//            }
-//        }
+        if(evt.getClickCount()==1 || evt.getClickCount()==2){
+            int selectedRow = tbNhaCungCap.getSelectedRow();
+            if (selectedRow != -1) {
+                String supplier = tbNhaCungCap.getValueAt(selectedRow, 1).toString();
+                int option = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa thể loại " + supplier + "?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+                if (option == JOptionPane.YES_OPTION) {
+                    try {
+                        supplierBUS = new SupplierBUS();
+                        boolean check;
+                        check = supplierBUS.deteleBySupplierName(supplier);
+                        if(check == true){
+                            JOptionPane.showMessageDialog(panelBorder1, "Đã xóa thành công", "Xác nhận xóa", HEIGHT);
+                            DefaultTableModel model = (DefaultTableModel) tbTheLoaiSach.getModel();
+                            model.setRowCount(0);
+                            initTableCategory();
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
     }//GEN-LAST:event_lbXoaNCCMouseClicked
 
     private void lbXoaNXBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbXoaNXBMouseClicked
@@ -618,7 +621,7 @@ public class More_GUI extends javax.swing.JPanel {
         String authorName;
         int stt = 1;
         for (Author author : listAuthor){
-            if(author.isStatus() == 0){
+            if(author.isStatus() == 1){
                 authorName = author.getName();
                 authorsModel.addRow(new Object[]{stt++,authorName});
             }
@@ -627,12 +630,12 @@ public class More_GUI extends javax.swing.JPanel {
     }
     public void initTableCategory() throws SQLException, IOException{
         categoryBUS = new CategoryBUS();
-        listCategory = categoryBUS.getAllName();
+        listCategory = categoryBUS.getAll();
         categoriesModel = (DefaultTableModel) tbTheLoaiSach.getModel();
         String categoryName;
         int stt = 1;
         for(Category category : listCategory){
-            if(category.isStatus() == 0){
+            if(category.isStatus() == 1){
                 categoryName = category.getName();
                 categoriesModel.addRow(new Object[]{stt++,categoryName});
             }
@@ -640,29 +643,33 @@ public class More_GUI extends javax.swing.JPanel {
         }
                
     
-    }public void initTablePublisher() throws SQLException, IOException{
+    }
+    public void initTablePublisher() throws SQLException, IOException{
         publisherBUS = new PublisherBUS();
         listPublisher = publisherBUS.getAllName();
         publishersModel = (DefaultTableModel) tbNhaXuatBan.getModel();
         String publisherName;
         int stt = 1;
         for(Publisher publisher : listPublisher){
-            if(publisher.isStatus() == 0){
+            if(publisher.isStatus() == 1){
                 publisherName = publisher.getName();
                 publishersModel.addRow(new Object[]{stt++, publisherName});
             }
             
         }
     
-    }public void initTableSupplier() throws SQLException, IOException{
-        supplyCardBUS = new SupplyCardBUS();
-        listSupplier = supplyCardBUS.getAllName();
+    }
+    public void initTableSupplier() throws SQLException, IOException, ClassNotFoundException{
+        supplierBUS = new SupplierBUS();
+        listSupplier = supplierBUS.getAllName();
         suppliersModel = (DefaultTableModel) tbNhaCungCap.getModel();
-        int supplierName;
+        String supplierName;
         int stt = 1;
-        for(SupplyCard supplier : listSupplier){
-            supplierName = supplier.getProvider();
-            suppliersModel.addRow(new Object[]{stt++,supplierName});
+        for(Supplier supplier : listSupplier){
+            if(supplier.getSupplier_status() == 1){
+                supplierName = supplier.getSupplier_name();
+                suppliersModel.addRow(new Object[]{stt++,supplierName});
+            }
         }
     }
     
@@ -692,6 +699,31 @@ public class More_GUI extends javax.swing.JPanel {
         spTable3.getViewport().setBackground(Color.WHITE);
         p.setBackground(Color.WHITE);
         spTable3.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
+        if(rolePermissionBUS.hasPerCreate(this.user.getRoleID(), 8)){
+            lbThemNCC.setEnabled(true);
+            lbThemNXB.setEnabled(true);
+            lbThemTacGia.setEnabled(true);
+            lbThemTheLoai.setEnabled(true);
+        }
+        else{
+            lbThemNCC.setEnabled(false);
+            lbThemNXB.setEnabled(false);
+            lbThemTacGia.setEnabled(false);
+            lbThemTheLoai.setEnabled(false);
+        }
+        if(rolePermissionBUS.hasPerDelete(this.user.getRoleID(), 8)){
+            lbXoaNCC.setEnabled(true);
+            lbXoaNXB.setEnabled(true);
+            lbXoaTacGia.setEnabled(true);
+            lbXoaTheLoai.setEnabled(true);
+        }
+        else{
+            lbXoaNCC.setEnabled(false);
+            lbXoaNXB.setEnabled(false);
+            lbXoaTacGia.setEnabled(false);
+            lbXoaTheLoai.setEnabled(false);
+        }
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -62,14 +62,15 @@ public class SupplierDAO {
 	
     public List<Supplier> getAllName() throws SQLException {
         List<Supplier> list = new ArrayList<>();
-        String query = "SELECT name FROM supplier";
+        String query = "SELECT * FROM supplier";
         connectDB.connect();
         try (Connection connection = connectDB.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
             	Supplier a = new Supplier();
-                a.setSupplier_name(resultSet.getString("name"));
+                a.setSupplier_id(resultSet.getInt(1));
+                a.setSupplier_name(resultSet.getString(2));
                 list.add(a);
             }
         } catch (SQLException e) {
@@ -78,22 +79,6 @@ public class SupplierDAO {
 
         return list;
     }
-    public void saveAuthor(Supplier a) {
-         String query = "INSERT INTO supplier (name) VALUES (?)";
-         try {
-             connectDB.connect();
-             Connection connection = connectDB.getConnection();
-             if(connection!=null)
-             {
-                 try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                     preparedStatement.setString(1, a.getSupplier_name());
-                     preparedStatement.executeUpdate();
-                 }
-             }
-         } catch (SQLException e) {
-             e.printStackTrace();
-         }
-     }
     public void saveSupplier(Supplier a) {
         String query = "INSERT INTO supplier (name) VALUES (?)";
         try {
@@ -111,12 +96,27 @@ public class SupplierDAO {
         }
     }
     public  void deleteByName (String name){
-        String query = "UPDATE supplier SET status = 1 WHERE name = ?";
+        String query = "UPDATE supplier SET isActive = 1 WHERE name = ?";
         try{
             connectDB.connect();
             if(connectDB.conn != null){
                 PreparedStatement pstmt = connectDB.conn.prepareStatement(query);
                 pstmt.setString(1, name);
+                pstmt.executeUpdate();
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+    public void update(Supplier supplier){
+        String query = "UPDATE supplier SET name = ? WHERE id = ?";
+        try{
+            connectDB.connect();
+            if(connectDB.conn != null){
+                PreparedStatement pstmt = connectDB.conn.prepareStatement(query);
+                pstmt.setString(1, supplier.getSupplier_name());                
+                pstmt.setInt(2, supplier.getSupplier_id());
                 pstmt.executeUpdate();
             }
         }

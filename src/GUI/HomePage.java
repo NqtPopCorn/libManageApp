@@ -115,6 +115,8 @@ public class HomePage extends javax.swing.JFrame {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } 
                 else if (index == 8 && homePageBUS.hasPerAccess(user.getRoleID(), 9)) {

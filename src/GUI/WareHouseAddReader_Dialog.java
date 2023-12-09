@@ -34,15 +34,17 @@ import java.awt.Font;
  */
 public class WareHouseAddReader_Dialog extends javax.swing.JDialog {
     String nameFrame;
+    static String action;
     /**
      * Creates new form WareHouseAddReader_Dialog
      * @throws IOException
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public WareHouseAddReader_Dialog(java.awt.Frame parent,String nameFrame ,boolean modal) throws ClassNotFoundException, SQLException, IOException {
+    public WareHouseAddReader_Dialog(java.awt.Frame parent,String nameFrame, String action ,boolean modal) throws ClassNotFoundException, SQLException, IOException {
         super(parent,nameFrame, modal);
         this.nameFrame = nameFrame;
+        WareHouseAddReader_Dialog.action = action;
         setLocationRelativeTo(null);
         initComponents();
     }
@@ -246,7 +248,7 @@ public class WareHouseAddReader_Dialog extends javax.swing.JDialog {
             public void run() {
                 WareHouseAddReader_Dialog dialog;
                 try {
-                    dialog = new WareHouseAddReader_Dialog(new javax.swing.JFrame(), null ,true);
+                    dialog = new WareHouseAddReader_Dialog(new javax.swing.JFrame(), null ,action,true);
                     dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                         @Override
                         public void windowClosing(java.awt.event.WindowEvent e) {
@@ -272,7 +274,7 @@ public class WareHouseAddReader_Dialog extends javax.swing.JDialog {
         });
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify                     
     private MyDesign.MyButton btnThemTacGia;
     private MyDesign.MyButton btnLoadDuLieu;
     private javax.swing.JLabel jLabel4;

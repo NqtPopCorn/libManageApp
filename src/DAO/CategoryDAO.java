@@ -69,16 +69,18 @@ public class CategoryDAO {
             e.printStackTrace();
         }
     }
-    public List<Category> getAllName() throws SQLException {
+    public List<Category> getAll() throws SQLException {
         List<Category> list = new ArrayList<>();
-        String query = "SELECT name FROM category";
+        String query = "SELECT * FROM category";
         connectDB.connect();
         try (Connection connection = connectDB.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
             	Category c = new Category();
-                c.setName(resultSet.getString("name"));
+                c.setId(resultSet.getInt(1));
+                c.setName(resultSet.getString(2));
+                c.setStatus(resultSet.getInt(3));
                 list.add(c);
             }
         } catch (SQLException e) {

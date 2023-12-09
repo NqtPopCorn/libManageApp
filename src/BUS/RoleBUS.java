@@ -30,9 +30,10 @@ public class RoleBUS {
         return list;
     }
     
-    public static void deleteRoleByID(String roleName) throws ClassNotFoundException, SQLException, IOException{
+    public boolean deleteRoleByID(String roleName) throws ClassNotFoundException, SQLException, IOException{
         role = roleDAO.getRole(roleName);
         roleDAO.delete(role);
+        return true;
     }
     public boolean addRoleName(String name) throws Exception {
     	return roleDAO.ckNewRole(name);

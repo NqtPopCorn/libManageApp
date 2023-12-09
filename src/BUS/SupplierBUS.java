@@ -34,12 +34,12 @@ public class SupplierBUS {
             return ad.getBySupplierName(name);
     }
     public List<Supplier> getAllName() throws SQLException{
-    return ad.getAllName();
-}
+        return ad.getAllName();
+    }
     public void saveInfo(Supplier a) throws SQLException, IOException
     {
             ad = new SupplierDAO();
-            ad.saveAuthor(a);
+            ad.saveSupplier(a);
 
     }
     public int getBySupplierID(String sub) throws SQLException, IOException
@@ -52,7 +52,12 @@ public class SupplierBUS {
     	ad = new SupplierDAO(connectDB);
     	ad.saveSupplier(a);
     }
-    public boolean deteleByAuthorName(String name) throws  SQLException, IOException{
+    public void updateSupplier(Supplier a) throws SQLException, IOException
+    {
+    	ad = new SupplierDAO(connectDB);
+    	ad.update(a);
+    }
+    public boolean deteleBySupplierName(String name) throws  SQLException, IOException{
         ad = new SupplierDAO();
         ad.deleteByName(name);
         return true;

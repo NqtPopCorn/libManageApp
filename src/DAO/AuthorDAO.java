@@ -54,14 +54,16 @@ public class AuthorDAO {
 	
     public List<Author> getAllName() throws SQLException {
         List<Author> list = new ArrayList<>();
-        String query = "SELECT name FROM author";
+        String query = "SELECT * FROM author";
         connectDB.connect();
         try (Connection connection = connectDB.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
             	Author a = new Author();
-                a.setName(resultSet.getString("name"));
+                a.setId(resultSet.getInt(1));
+                a.setName(resultSet.getString(2));
+                a.setStatus(resultSet.getInt(3));
                 list.add(a);
             }
         } catch (SQLException e) {

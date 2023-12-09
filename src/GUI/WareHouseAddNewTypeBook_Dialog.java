@@ -16,6 +16,8 @@ import javax.swing.JOptionPane;
 import BUS.CategoryBUS;
 import DTO.entities.Author;
 import DTO.entities.Category;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -89,7 +91,14 @@ public class WareHouseAddNewTypeBook_Dialog extends javax.swing.JDialog {
                                     else {
                                         cate.saveInfo(c);
                                         JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);                                
-                                        gui.initTableAuthor();
+                                        int stt = 1;
+                                        List<Category> categories = cate.getAll();
+                                        gui.categoriesModel.setRowCount(0);
+                                        for(Category item : categories)
+                                        {
+                                            if(item.isStatus() == 1)
+                                                gui.categoriesModel.addRow(new Object[]{stt++,item.getName()});
+                                        }
                                         hide();
                                         gui.setVisible(true);
                                         
@@ -104,6 +113,8 @@ public class WareHouseAddNewTypeBook_Dialog extends javax.swing.JDialog {
                             } catch (IOException e1) {
                                 // TODO Auto-generated catch block
                                 e1.printStackTrace();
+                            } catch (ClassNotFoundException ex) {
+                                Logger.getLogger(WareHouseAddNewTypeBook_Dialog.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
                         else{

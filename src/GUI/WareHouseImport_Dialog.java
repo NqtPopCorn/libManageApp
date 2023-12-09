@@ -139,7 +139,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         cbNXB = new javax.swing.JComboBox<>();
         lbThemNXB = new javax.swing.JLabel();
         category = new CategoryBUS();
-        List<Category> categoryList = category.getAllName();
+        List<Category> categoryList = category.getAll();
         cbTheLoai = new javax.swing.JComboBox<>();
         lbThemTheLoai = new javax.swing.JLabel();
         panelBorder1 = new MyDesign.PanelBorder();
@@ -433,7 +433,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         			WareHouseAddReader_Dialog r;
                     try {
 //                        r = new WareHouseAddReader_Dialog(null, "warehouse" ,rootPaneCheckingEnabled);
-                        r = new WareHouseAddReader_Dialog(null, "warehouse", rootPaneCheckingEnabled);
+                        r = new WareHouseAddReader_Dialog(null, "warehouse","add", rootPaneCheckingEnabled);
                         r.setVisible(true);
                         cbTacGia.addItem(String.valueOf(r.cbTgia.getSelectedItem()));
                     } catch (ClassNotFoundException | SQLException | IOException e1) {
@@ -469,7 +469,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         		{
         			WareHouseAddNXB_Dialog r;
                     try {
-                        r = new WareHouseAddNXB_Dialog(null,"warehouse", rootPaneCheckingEnabled);
+                        r = new WareHouseAddNXB_Dialog(null,"warehouse","add", rootPaneCheckingEnabled);
                         r.setVisible(true);
                         cbNXB.removeAllItems();
                         for(Publisher item : publisherList)
@@ -509,7 +509,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         		{
         			WareHouseAddTypeBook_Dialog r;
                     try {
-                        r = new WareHouseAddTypeBook_Dialog(null,"warehouse", rootPaneCheckingEnabled);
+                        r = new WareHouseAddTypeBook_Dialog(null,"warehouse","add",rootPaneCheckingEnabled);
                         r.setVisible(true);
                         cbTheLoai.addItem(String.valueOf(r.cbCategory.getSelectedItem()));
                     } catch (ClassNotFoundException | SQLException | IOException e1) {
@@ -1143,7 +1143,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         		{
         			WareHouseAddNCC_Dialog r;
                     try {
-                        r = new WareHouseAddNCC_Dialog(null,"warehouse" ,rootPaneCheckingEnabled);
+                        r = new WareHouseAddNCC_Dialog(null,"warehouse" ,"add",rootPaneCheckingEnabled);
                         r.setVisible(true);
                     } catch (ClassNotFoundException | SQLException | IOException e1) {
                         // TODO Auto-generated catch block

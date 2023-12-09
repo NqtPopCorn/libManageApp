@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -89,8 +90,10 @@ public class Admin_GUI extends javax.swing.JPanel {
         int stt = 1;
         String roleName;
         for (Role role : listRole){
-            roleName = role.getRoleName();
-            rolesModel.addRow(new Object[]{stt++,roleName});
+            if(role.getIsDeleted() == 1){
+                roleName = role.getRoleName();
+                rolesModel.addRow(new Object[]{stt++,roleName});
+            }
         }
         if (!listRole.isEmpty()) {
             Role firstRole = listRole.get(0);
@@ -152,7 +155,7 @@ public class Admin_GUI extends javax.swing.JPanel {
         tbTinhNang = new MyDesign.MyTable();
         btnXoaChucVu = new MyDesign.MyButton();
         btnCapNhat = new MyDesign.MyButton();
-        btnAddRole = new MyDesign.MyButton();
+
         setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel5.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
@@ -169,15 +172,9 @@ public class Admin_GUI extends javax.swing.JPanel {
                 "STT", "Chức vụ"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class
-            };
             boolean[] canEdit = new boolean [] {
                 false, false
             };
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -302,6 +299,11 @@ public class Admin_GUI extends javax.swing.JPanel {
         btnXoaChucVu.setColor(new java.awt.Color(255, 241, 241));
         btnXoaChucVu.setColorOver(new java.awt.Color(255, 241, 241));
         btnXoaChucVu.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        btnXoaChucVu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnXoaChucVuMouseClicked(evt);
+            }
+        });
         btnXoaChucVu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnXoaChucVuActionPerformed(evt);
@@ -499,6 +501,37 @@ public class Admin_GUI extends javax.swing.JPanel {
             Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnAddRoleActionPerformed
+
+    private void btnXoaChucVuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnXoaChucVuMouseClicked
+        if(evt.getClickCount()==1 || evt.getClickCount()==2){
+            int selectedRow = tbChucVu.getSelectedRow();
+            if (selectedRow != -1) {
+                String role = tbChucVu.getValueAt(selectedRow, 1).toString();
+                int option = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa chức vụ " + role + "?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+                if (option == JOptionPane.YES_OPTION) {
+                    try {
+                        roleBUS = new RoleBUS();
+                        boolean check = roleBUS.deleteRoleByID(role);
+                        if(check == true){
+                            JOptionPane.showMessageDialog(panelBorder1, "Đã xóa thành công", "Xác nhận xóa", HEIGHT);
+                            DefaultTableModel model = (DefaultTableModel) tbChucVu.getModel();
+                            model.setRowCount(0);
+                            initTableRoles();
+                        }
+                        
+                    } catch (SQLException ex) {
+                        Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (NoSuchAlgorithmException ex) {
+                        Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_btnXoaChucVuMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
