@@ -113,7 +113,15 @@ public class Admin_GUI extends javax.swing.JPanel {
         }
         txtTenChucVu.setEnabled(false);
         permissionsModel.setRowCount(0);
-         
+        if(roleID.equals("AD")){
+            btnCapNhat.setEnabled(false);
+            btnXoaChucVu.setEnabled(false);
+        }
+        else{
+            btnCapNhat.setEnabled(true);
+            btnXoaChucVu.setEnabled(true);
+        }
+        
         int stt = 1;
         int permissionID;
         String permissionName;
