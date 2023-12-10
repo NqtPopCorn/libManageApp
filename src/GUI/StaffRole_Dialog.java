@@ -7,6 +7,7 @@ package GUI;
 import BUS.PermissionBUS;
 import BUS.RoleBUS;
 import BUS.RolePermissionBUS;
+import BUS.StaffBUS;
 import DTO.entities.Account;
 import DTO.entities.Permission;
 import DTO.entities.Role;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -34,11 +36,32 @@ public class StaffRole_Dialog extends javax.swing.JDialog {
     private RolePermissionBUS rolePermissionBUS;
     private PermissionBUS pbus;
     private RoleBUS roleBUS;
+    private StaffBUS staffBUS;
     private Account user;
     private Role newRole;
+    javax.swing.JComboBox<String> cbChucVu;
     /**
      * Creates new form StaffRole_Dialog
      */
+    public StaffRole_Dialog(Account user,javax.swing.JComboBox<String> cbChucVu,java.awt.Frame parent, boolean modal) throws ClassNotFoundException, SQLException, IOException {
+        super(parent, modal);
+        initComponents();
+        this.user = user;
+        this.rolePermissionBUS = new RolePermissionBUS();
+        this.pbus = new PermissionBUS();
+        this.roleBUS = new RoleBUS();
+        this.staffBUS=new StaffBUS();
+        this.cbChucVu=cbChucVu;
+        JPanel p = new JPanel();
+        p.setBackground(Color.WHITE);
+        spTable1.setVerticalScrollBar(new ScrollBar());
+        spTable1.getVerticalScrollBar().setBackground(Color.WHITE);
+        spTable1.getViewport().setBackground(Color.WHITE);
+        p.setBackground(Color.WHITE);
+        spTable1.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
+        initTable();
+    }
+    
     public StaffRole_Dialog(Account user,java.awt.Frame parent, boolean modal) throws ClassNotFoundException, SQLException, IOException {
         super(parent, modal);
         initComponents();
@@ -55,6 +78,25 @@ public class StaffRole_Dialog extends javax.swing.JDialog {
         spTable1.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
         initTable();
     }
+    
+    public void addRole(String role) {
+            try {
+                DefaultComboBoxModel model = (DefaultComboBoxModel<String>) cbChucVu.getModel();
+                model.removeAllElements();
+                model.addElement("Chức vụ");
+                if(role.equals("QL")) {
+                        model.addAll(staffBUS.getRoleQL());
+                }
+                if(role.equals("AD")) {
+                        model.addAll(staffBUS.getRoleAD());
+                }
+            } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    JOptionPane.showMessageDialog(null,e.getMessage());
+            }
+            cbChucVu.revalidate();
+            cbChucVu.repaint();
+        }
 
     public void initTable(){
         permissionsModel = (DefaultTableModel) tbTinhNang.getModel();
@@ -328,6 +370,9 @@ public class StaffRole_Dialog extends javax.swing.JDialog {
                 roleBUS.addBrandNewRole(newRole);
                 rolePermissionBUS.savePermissions(dataList, ID);
                 this.setVisible(false);
+                if(cbChucVu!=null){
+                    addRole(user.getRoleID());
+                }
             }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(StaffRole_Dialog.class.getName()).log(Level.SEVERE, null, ex);
