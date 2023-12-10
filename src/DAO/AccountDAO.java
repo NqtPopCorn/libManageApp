@@ -235,4 +235,48 @@ public class AccountDAO {
         }
         return arr;
     }
+    
+    public String getRole(String id) throws SQLException{
+        String role="";
+        String context = this.getClass().getName();
+        connectDB.connect(context);   
+        if(connectDB.conn!=null){
+            try{
+            	String sql="select name from roles where id=?";
+                PreparedStatement preparedStatement= connectDB.conn.prepareStatement(sql);
+            	preparedStatement.setString(1, id);
+            	ResultSet rs=preparedStatement.executeQuery();
+                while(rs.next()) {
+                    role=rs.getString(1);
+                }
+            } catch(SQLException ex){
+                ex.printStackTrace();
+            } finally {
+                connectDB.disconnect();
+            }
+        }
+        return role;
+    }
+    
+    public String getRoleID(String name) throws SQLException{
+        String role="";
+        String context = this.getClass().getName();
+        connectDB.connect(context);   
+        if(connectDB.conn!=null){
+            try{
+            	String sql="select id from roles where name=?";
+                PreparedStatement preparedStatement= connectDB.conn.prepareStatement(sql);
+            	preparedStatement.setString(1, name);
+            	ResultSet rs=preparedStatement.executeQuery();
+                while(rs.next()) {
+                    role=rs.getString(1);
+                }
+            } catch(SQLException ex){
+                ex.printStackTrace();
+            } finally {
+                connectDB.disconnect();
+            }
+        }
+        return role;
+    }
 }

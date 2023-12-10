@@ -201,6 +201,7 @@ public class StaffDAO {
         connectDB.connect();
         if(connectDB.conn!=null){
             try{
+                System.out.println("pass:"+u.getPwd());
             	connectDB.conn.setAutoCommit(false);
             	String sql="update staff set name=? , tel=? , address=? where id=? ";
             	PreparedStatement preparedStatement= connectDB.conn.prepareStatement(sql);
@@ -209,32 +210,27 @@ public class StaffDAO {
                 preparedStatement.setString(3,a.getAddress());
                 preparedStatement.setInt(4, a.getPersonID());
                 if(preparedStatement.executeUpdate()>0){
-                	String sql2="Select id from roles where name=N'"+u.getRoleID()+"'";
-                	String roleID="";
-                	Statement stmt = connectDB.conn.createStatement();
-                	ResultSet rs2=stmt.executeQuery(sql2);
-                	while(rs2.next()) {
-                    	roleID=rs2.getString(1);
-                    }
-                	if(u.getPwd().trim()=="") {
-                		String sql1="update account set userName=? , positionID=?  where userID=? ";
-                		PreparedStatement prep1= connectDB.conn.prepareStatement(sql1);
-                    	prep1.setString(1,u.getUsername());
-                    	prep1.setString(2,roleID);
-                    	prep1.setInt(3,u.getPersonID());
-                    	if(prep1.executeUpdate()>0){
+                	if(u.getPwd().trim().equals("") || u.getPwd()==null) {
+                            System.out.println(1.3);
+                            String sql1="update account set userName=? , positionID=?  where userID=? ";
+                            PreparedStatement prep1= connectDB.conn.prepareStatement(sql1);
+                            prep1.setString(1,u.getUsername());
+                            prep1.setString(2,u.getRoleID());
+                            prep1.setInt(3,u.getPersonID());
+                            if(prep1.executeUpdate()>0){
                     		flag=true;
-                    	}
+                            }
                 	}else {
-                		String sql1="update account set userName=? , password=? ,positionID=?  where userID=? ";
-                		PreparedStatement prep1= connectDB.conn.prepareStatement(sql1);
-                		prep1.setString(1,u.getUsername());
-                    	prep1.setString(2,u.hashPassword(u.getPwd()));
-                    	prep1.setString(3,roleID);
-                    	prep1.setInt(4,a.getPersonID());
-                    	if(prep1.executeUpdate()>0){
+                            System.out.println(2.3);
+                            String sql1="update account set userName=? , password=? ,positionID=?  where userID=? ";
+                            PreparedStatement prep1= connectDB.conn.prepareStatement(sql1);
+                            prep1.setString(1,u.getUsername());
+                            prep1.setString(2,u.hashPassword(u.getPwd()));
+                            prep1.setString(3,u.getRoleID());
+                            prep1.setInt(4,a.getPersonID());
+                            if(prep1.executeUpdate()>0){
                     		flag=true;
-                    	}
+                            }
                 	}	
                 }
                 connectDB.conn.commit();

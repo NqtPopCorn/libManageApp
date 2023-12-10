@@ -132,7 +132,7 @@ public class Reader_GUI extends javax.swing.JPanel {
 
             },
             new String [] {
-                "STT", "Mã độc giả", "Tên độc giả", "Số điện thoại", "Địa chỉ", "Đã mượn ", "Trạng thái"
+                "STT", "Mã độc giả", "Tên độc giả", "Số điện thoại", "Địa chỉ", "Số ngày phạt", "Trạng thái"
             }
         ) {
             boolean[] canEdit = new boolean [] {

@@ -111,7 +111,7 @@
                     <Column editable="false" title="T&#xea;n &#x111;&#x1ed9;c gi&#x1ea3;" type="java.lang.Object"/>
                     <Column editable="false" title="S&#x1ed1; &#x111;i&#x1ec7;n tho&#x1ea1;i" type="java.lang.Object"/>
                     <Column editable="false" title="&#x110;&#x1ecb;a ch&#x1ec9;" type="java.lang.Object"/>
-                    <Column editable="true" title="&#x110;&#xe3; m&#x1b0;&#x1ee3;n " type="java.lang.Object"/>
+                    <Column editable="true" title="S&#x1ed1; ng&#xe0;y ph&#x1ea1;t" type="java.lang.Object"/>
                     <Column editable="true" title="Tr&#x1ea1;ng th&#xe1;i" type="java.lang.Object"/>
                   </Table>
                 </Property>

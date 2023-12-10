@@ -38,18 +38,18 @@ public class Staff extends Person{
     }
     public boolean compare(String name,String tel,String address) throws Exception {
         if(!this.getName().toUpperCase().equals(name.toUpperCase())) {
+            System.out.println(0.1);
                 return false;
         }
         if(!this.getTel().equals(tel)) {
+            System.out.println(1.1);
                 return false;
         }
-        if(!this.getAddress().toUpperCase().equals(address.toUpperCase())) {
+        if(!this.getAddress().toUpperCase().equals(address.toUpperCase())) {    
+            System.out.println(2.1);
                 return false;
         }
-        if(!this.getAddress().toUpperCase().equals(address.toUpperCase())) {
-                return false;
-        }
-
+        System.out.println(3.1);
         return true;
     }
 

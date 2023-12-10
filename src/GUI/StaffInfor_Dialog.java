@@ -53,7 +53,6 @@ public class StaffInfor_Dialog extends javax.swing.JDialog {
         this.roleID = roleID;
         this.userID = userID;
         initComponents();
-        upData(id);
         DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>) cbChucVu.getModel();
         try {
             if(roleID.equals("QL")) {
@@ -62,6 +61,7 @@ public class StaffInfor_Dialog extends javax.swing.JDialog {
             if(roleID.equals("AD")) {
                     model.addAll(sBLL.getRoleAll());
         }
+        upData(id);
         } catch (Exception e) {
                 // TODO Auto-generated catch block
                 JOptionPane.showMessageDialog(null,e.getMessage());
@@ -122,7 +122,7 @@ public class StaffInfor_Dialog extends javax.swing.JDialog {
             txtSoDienThoai.setText(a.getTel());
             txtDiaChi.setText(a.getAddress());
             txtUsername.setText(a.getUsername());
-            cbChucVu.setSelectedItem(a.getRoleID());
+            cbChucVu.setSelectedItem(sBLL.getRole(a.getRoleID()));
             if(rolePermissionBUS.hasPerEdit(a.getRoleID(), 7))
                 btnSuaThongTin.setEnabled(true);
             else btnSuaThongTin.setEnabled(false);
@@ -399,15 +399,16 @@ public class StaffInfor_Dialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSuaThongTinMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSuaThongTinMouseClicked
-        System.out.println("Fuck my life");
         String name=txtTen.getText().trim();
         String tel=txtSoDienThoai.getText().trim();
         String address=txtDiaChi.getText().trim();
         String username=txtUsername.getText().trim();
-        String password=txtMatKhau.getText().trim();
-        String role=(String) cbChucVu.getSelectedItem();
+        String password=txtMatKhau.getText();
         try {
-            if(!s.compare(name, tel, address) && a.compare(username, password, roleID)) {
+            String role=sBLL.getRoleID((String) cbChucVu.getSelectedItem());
+            System.out.println(name+" "+tel+" "+address+" "+username+" "+password+" "+role);
+            System.out.println(s.getName()+" "+s.getTel()+" "+s.getAddress()+" "+a.getUsername()+" "+a.getPwd()+" "+a.getRoleID());  ;
+            if(!(s.compare(name, tel, address) && a.compare(username, password, role))) {
                     if(!a.getRoleID().equals(roleID) || (a.getRoleID().equals(roleID) && a.getPersonID()==userID)) {
                             int diaRS=JOptionPane.showConfirmDialog(null,"Bạn có chắc muốn sửa thông tin nhân viên này?");
                             if(diaRS==JOptionPane.YES_OPTION){
@@ -426,6 +427,8 @@ public class StaffInfor_Dialog extends javax.swing.JDialog {
                     }else {
                             JOptionPane.showMessageDialog(null,"Bạn không có quyền sửa nhân viên này");
                     }
+            }else{
+                JOptionPane.showMessageDialog(null,"Dữ liệu không thay đổi");
             }
         } catch (Exception e1) {
                 // TODO Auto-generated catch block
