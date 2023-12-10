@@ -62,7 +62,7 @@ public class Account extends Person{
     public Account(String username, String password, String role) {
         this.username = username;
         this.pwd = password;
-        this.roleID = roleID;
+        this.roleID = role;
     }
 
     public String getUsername() {
@@ -137,15 +137,20 @@ public class Account extends Person{
         return PwdValidStatus.VALID;
     }
     public boolean compare(String username,String password,String role) throws Exception {
+        
         if(!this.getUsername().equals(username)) {
+            System.out.println(0.2);
                 return false;
         }
         if(!this.getRoleID().equals(role)) {
+            System.out.println(1.2);
                 return false;
         }
-        if(password.trim()!="") {
+        System.out.println("pass:"+password);
+        if(!password.trim().equals("")) {
                 return false;
         }
+        System.out.println(3.2);
         return true;
     }   
 

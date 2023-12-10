@@ -88,11 +88,16 @@ public class StaffBUS {
         return userDAO.allOutSearchQL(str);
     }
     
-    
     public Account findbyID(int id) throws Exception {
     	return userDAO.findbyID(id);
     }
     public Staff findStaffbyID(int id) throws Exception {
     	return staffDAO.findbyID(id);
+    }
+    public String getRole(String id) throws SQLException{       
+        return userDAO.getRole(id);
+    }
+    public String getRoleID(String name) throws SQLException{       
+        return userDAO.getRoleID(name);
     }
 }
