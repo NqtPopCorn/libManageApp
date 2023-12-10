@@ -333,6 +333,9 @@
                   <Font name="SansSerif" size="14" style="1"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnXoaNhanVienMouseClicked"/>
+              </Events>
             </Component>
             <Component class="MyDesign.MyButton" name="btnSuaThongTin">
               <Properties>
@@ -356,6 +359,9 @@
                   <Font name="SansSerif" size="14" style="1"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnSuaThongTinMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

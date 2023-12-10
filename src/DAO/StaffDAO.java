@@ -257,7 +257,7 @@ public class StaffDAO {
             	PreparedStatement preparedStatement= connectDB.conn.prepareStatement(sql);
                 preparedStatement.setInt(1, a.getPersonID());
                 if(preparedStatement.executeUpdate()>0){
-                	String sql1="update account set status=0 where userID=? ";
+                	String sql1="update account set isActive=0 where userID=? ";
                 	PreparedStatement prep1= connectDB.conn.prepareStatement(sql1);
                 	prep1.setInt(1, a.getPersonID());
                 	if(prep1.executeUpdate()>0){

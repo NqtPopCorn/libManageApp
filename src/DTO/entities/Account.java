@@ -61,7 +61,7 @@ public class Account extends Person{
 
     public Account(String username, String password, String role) {
         this.username = username;
-        this.pwd = pwd;
+        this.pwd = password;
         this.roleID = roleID;
     }
 

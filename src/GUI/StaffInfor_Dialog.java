@@ -32,6 +32,10 @@ public class StaffInfor_Dialog extends javax.swing.JDialog {
 	Account a;
         Staff s;
         private RolePermissionBUS rolePermissionBUS;
+        int id;
+        MyDesign.MyTable tab;
+        String roleID;
+        int userID;
     /**
      * Creates new form StaffAdd_Dialog
      */
@@ -44,9 +48,24 @@ public class StaffInfor_Dialog extends javax.swing.JDialog {
             // TODO Auto-generated catch block
             JOptionPane.showMessageDialog(null,e.getMessage());
         }
-        initComponents(roleID,userID,tab);
+        this.id = id;
+        this.tab = tab;
+        this.roleID = roleID;
+        this.userID = userID;
+        initComponents();
         upData(id);
-        
+        DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>) cbChucVu.getModel();
+        try {
+            if(roleID.equals("QL")) {
+                    model.addAll(sBLL.getRoleAD());
+            }
+            if(roleID.equals("AD")) {
+                    model.addAll(sBLL.getRoleAll());
+        }
+        } catch (Exception e) {
+                // TODO Auto-generated catch block
+                JOptionPane.showMessageDialog(null,e.getMessage());
+        }
     }
     
     public void addDefault(MyDesign.MyTable tab,String roleID) throws Exception{
@@ -166,7 +185,7 @@ public class StaffInfor_Dialog extends javax.swing.JDialog {
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents(String roleID,int userID,MyDesign.MyTable tab) {
+    private void initComponents() {
 
         panelBorder_Statistic_Blue1 = new MyDesign.PanelBorder_Statistic_Blue();
         panelBorder_Basic1 = new MyDesign.PanelBorder_Basic();
@@ -217,7 +236,7 @@ public class StaffInfor_Dialog extends javax.swing.JDialog {
         txtUsername.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 229, 229)));
 
         jLabel12.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        jLabel12.setText("Mật khẩu mới");
+        jLabel12.setText("Mật khẩu");
 
         txtMatKhau.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 229, 229)));
 
@@ -230,20 +249,6 @@ public class StaffInfor_Dialog extends javax.swing.JDialog {
         cbChucVu.setBorder(null);
         cbChucVu.setOpaque(true);
         cbChucVu.setPreferredSize(new java.awt.Dimension(77, 28));
-        DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>) cbChucVu.getModel();
-        try {
-        	if(roleID.equals("QL")) {
-        		model.addAll(sBLL.getRoleAD());
-        	}
-        	if(roleID.equals("AD")) {
-        		model.addAll(sBLL.getRoleAll());
-        	}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			JOptionPane.showMessageDialog(null,e.getMessage());
-		}
-        cbChucVu.revalidate();
-        cbChucVu.repaint();
 
         btnXoaNhanVien.setBackground(new java.awt.Color(255, 241, 241));
         btnXoaNhanVien.setForeground(new java.awt.Color(248, 67, 67));
@@ -253,25 +258,11 @@ public class StaffInfor_Dialog extends javax.swing.JDialog {
         btnXoaNhanVien.setColor(new java.awt.Color(255, 241, 241));
         btnXoaNhanVien.setColorOver(new java.awt.Color(255, 241, 241));
         btnXoaNhanVien.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        btnXoaNhanVien.addActionListener(new ActionListener() {
-         	 @Override
-            public void actionPerformed(ActionEvent e){
-       		try {
-       			if(!a.getRoleID().equals(roleID)) {
-       				int diaRS=JOptionPane.showConfirmDialog(null,"Bạn có chắc xoá nhân viên này?");
-						if(diaRS==JOptionPane.YES_OPTION){
-							JOptionPane.showConfirmDialog(null,sBLL.eraShowStaff(s));
- 							addDefault(tab,roleID);
- 							dispose();
-						}
-       			}else {
-						JOptionPane.showMessageDialog(null,"Bạn không có quyền xoá nhân viên này");
-					}
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					JOptionPane.showMessageDialog(null,e1.getMessage());
-				}
-       }});
+        btnXoaNhanVien.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnXoaNhanVienMouseClicked(evt);
+            }
+        });
 
         btnSuaThongTin.setBackground(new java.awt.Color(22, 113, 221));
         btnSuaThongTin.setForeground(new java.awt.Color(255, 255, 255));
@@ -280,41 +271,10 @@ public class StaffInfor_Dialog extends javax.swing.JDialog {
         btnSuaThongTin.setBorderColor(new java.awt.Color(22, 113, 221));
         btnSuaThongTin.setColor(new java.awt.Color(22, 113, 221));
         btnSuaThongTin.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        btnSuaThongTin.addActionListener(new ActionListener() {
-          	 @Override
-             public void actionPerformed(ActionEvent e){
-        		 	String name=txtTen.getText().trim();
-        		    String tel=txtSoDienThoai.getText().trim();
-        		    String address=txtDiaChi.getText().trim();
-        		    String username=txtUsername.getText().trim();
-        		    String password=txtMatKhau.getText().trim();
-        		    String role=(String) cbChucVu.getSelectedItem();
-        		    try {
- 						if(!s.compare(name, tel, address) && a.compare(username, password, roleID)) {
- 							if(!a.getRoleID().equals(roleID) || (a.getRoleID().equals(roleID) && a.getPersonID()==userID)) {
-	 							int diaRS=JOptionPane.showConfirmDialog(null,"Bạn có chắc muốn sửa thông tin nhân viên này?");
-	 							if(diaRS==JOptionPane.YES_OPTION){
-		 		 					if(checkDataVal(name,tel,address,username,password)) {
-			 							s.setName(name);
-			 							s.setTel(tel);
-			 							s.setAddress(address);
-			 							a.setUsername(username);
-			 							a.setPwd(password);
-			 							a.setRoleID(role);
-			 							JOptionPane.showMessageDialog(null,sBLL.updateOneStaff(s,a));
-			 							addDefault(tab,roleID);
-			 							dispose();
-		 		 					}
-	 							}
- 							}else {
- 								JOptionPane.showMessageDialog(null,"Bạn không có quyền sửa nhân viên này");
- 							}
- 						}
- 				} catch (Exception e1) {
- 					// TODO Auto-generated catch block
- 					JOptionPane.showMessageDialog(null,e1.getMessage());
- 				}
-        	 }
+        btnSuaThongTin.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSuaThongTinMouseClicked(evt);
+            }
         });
 
         javax.swing.GroupLayout panelBorder_Basic1Layout = new javax.swing.GroupLayout(panelBorder_Basic1);
@@ -437,6 +397,60 @@ public class StaffInfor_Dialog extends javax.swing.JDialog {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSuaThongTinMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSuaThongTinMouseClicked
+        System.out.println("Fuck my life");
+        String name=txtTen.getText().trim();
+        String tel=txtSoDienThoai.getText().trim();
+        String address=txtDiaChi.getText().trim();
+        String username=txtUsername.getText().trim();
+        String password=txtMatKhau.getText().trim();
+        String role=(String) cbChucVu.getSelectedItem();
+        try {
+            if(!s.compare(name, tel, address) && a.compare(username, password, roleID)) {
+                    if(!a.getRoleID().equals(roleID) || (a.getRoleID().equals(roleID) && a.getPersonID()==userID)) {
+                            int diaRS=JOptionPane.showConfirmDialog(null,"Bạn có chắc muốn sửa thông tin nhân viên này?");
+                            if(diaRS==JOptionPane.YES_OPTION){
+                                    if(checkDataVal(name,tel,address,username,password)) {
+                                            s.setName(name);
+                                            s.setTel(tel);
+                                            s.setAddress(address);
+                                            a.setUsername(username);
+                                            a.setPwd(password);
+                                            a.setRoleID(role);
+                                            JOptionPane.showMessageDialog(null,sBLL.updateOneStaff(s,a));
+                                            addDefault(tab,roleID);
+                                            dispose();
+                                    }
+                            }
+                    }else {
+                            JOptionPane.showMessageDialog(null,"Bạn không có quyền sửa nhân viên này");
+                    }
+            }
+        } catch (Exception e1) {
+                // TODO Auto-generated catch block
+                JOptionPane.showMessageDialog(null,e1.getMessage());
+        }
+        	 
+    }//GEN-LAST:event_btnSuaThongTinMouseClicked
+
+    private void btnXoaNhanVienMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnXoaNhanVienMouseClicked
+        try {
+            if(!a.getRoleID().equals(roleID)) {
+                int diaRS=JOptionPane.showConfirmDialog(null,"Bạn có chắc xoá nhân viên này?");
+                            if(diaRS==JOptionPane.YES_OPTION){
+                                    JOptionPane.showConfirmDialog(null,sBLL.eraShowStaff(s));
+                                    addDefault(tab,roleID);
+                                    dispose();
+                            }
+            }else {
+                                    JOptionPane.showMessageDialog(null,"Bạn không có quyền xoá nhân viên này");
+                        }
+                } catch (Exception e1) {
+                        // TODO Auto-generated catch block
+                        JOptionPane.showMessageDialog(null,e1.getMessage());
+                }
+    }//GEN-LAST:event_btnXoaNhanVienMouseClicked
 
     /**
      * @param args the command line arguments
