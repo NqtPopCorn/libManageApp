@@ -357,7 +357,7 @@ public class BorrowCardDAO{
         if(ConnectDB.conn != null){
             try {
                 String sql = "UPDATE reader \n" +
-                                "SET fineDate = ?, isActive = 0\n" +
+                                "SET fineDate = ?\n" +
                                 "FROM reader\n" +
                                 "JOIN borrow_card bc ON bc.readerID = reader.id\n" +
                                 "WHERE bc.id = ?";
@@ -380,9 +380,8 @@ public class BorrowCardDAO{
         if(ConnectDB.conn != null){
             try {
                 String sql = "UPDATE reader \n" +
-                                "SET fineDate = NULL, isActive = 1\n" +
-                                "WHERE isActive = 0"+
-                                "AND DATEADD(DAY, 7, fineDate) <= GETDATE();";                             
+                                "SET fineDate = NULL\n" +
+                                "WHERE DATEADD(DAY, 7, fineDate) <= GETDATE();";                             
                 PreparedStatement pst = ConnectDB.conn.prepareCall(sql);
                 pst.executeUpdate();
                 
