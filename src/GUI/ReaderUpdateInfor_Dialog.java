@@ -52,7 +52,7 @@ public class ReaderUpdateInfor_Dialog extends javax.swing.JDialog {
         else btnSuaThongTin.setEnabled(false);
         if(rolePermissionBUS.hasPerDelete(user.getRoleID(), 6))
             btnXoaDocGia.setEnabled(true);
-        else btnSuaThongTin.setEnabled(false);
+        else btnXoaDocGia.setEnabled(false);
     }
 
     /**

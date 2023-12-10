@@ -120,6 +120,9 @@ public class Admin_GUI extends javax.swing.JPanel {
         for (Permission permission : listPermisson){
             permissionID = permission.getPermissionID();
             permissionName = permission.getPermissionName();
+            if(permissionID == 9 && roleID.equals("AD")){
+                continue;
+            }
             listPer  = rolePermissionBUS.hasPermission(permissionID,listRolePer);
             boolean A = (listPer.get(0) == 1);            
             boolean C = (listPer.get(1) == 1);

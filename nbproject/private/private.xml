@@ -8,11 +8,12 @@
             <file>file:/D:/HK1_(2023-2024)/CNPM/Library-Manage-App/src/GUI/Pay_GUI.java</file>
         </group>
         <group>
-            <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/GUI/StaffRole_Dialog.java</file>
-            <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/DAO/RoleDAO.java</file>
-            <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/BUS/RoleBUS.java</file>
-            <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/DTO/entities/Role.java</file>
-            <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/GUI/Admin_GUI.java</file>
+            <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/GUI/StaffAdd_Dialog.java</file>
+            <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/DTO/entities/Staff.java</file>
+            <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/GUI/Reader_GUI.java</file>
+            <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/GUI/Staff_GUI.java</file>
+            <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/DTO/entities/Reader.java</file>
+            <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/GUI/ReaderAdd_Dialog.java</file>
         </group>
     </open-files>
 </project-private>
