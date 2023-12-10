@@ -32,6 +32,15 @@ public class ReaderBUS {
         }
          return null;
      }
+     public Vector<Reader> getAllReaderCanBorrow() throws ClassNotFoundException, SQLException {
+        try {
+            readerDAO = new ReaderDAO();
+            return readerDAO.getAllReaderCanBorrow();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+         return null;
+     }
      public Vector<Reader> getReaderByName(String Name) throws ClassNotFoundException, SQLException
      {
           try {

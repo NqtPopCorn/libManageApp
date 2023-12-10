@@ -31,7 +31,7 @@ public class BorrowAddReader_Dialog extends javax.swing.JDialog {
      */
     public BorrowAddReader_Dialog(java.awt.Frame parent, boolean modal) throws ClassNotFoundException, SQLException {
         super(parent, modal);
-        getAllReaderIntoList(readerBLL.getAll());
+        getAllReaderIntoList(readerBLL.getAllReaderCanBorrow());
          setUndecorated(true);
         initComponents();
         tbDocGia.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

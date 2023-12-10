@@ -8,12 +8,10 @@
             <file>file:/D:/HK1_(2023-2024)/CNPM/Library-Manage-App/src/GUI/Pay_GUI.java</file>
         </group>
         <group>
-            <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/GUI/StaffAdd_Dialog.java</file>
-            <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/DTO/entities/Staff.java</file>
-            <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/GUI/Reader_GUI.java</file>
-            <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/GUI/Staff_GUI.java</file>
-            <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/DTO/entities/Reader.java</file>
-            <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/GUI/ReaderAdd_Dialog.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/CNPM10-12-UP/Library-Manage-App/src/DAO/ReaderDAO.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/CNPM10-12-UP/Library-Manage-App/src/connection/DB.properties</file>
+            <file>file:/C:/Users/ADMIN/Desktop/CNPM10-12-UP/Library-Manage-App/src/GUI/BorrowAddReader_Dialog.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/CNPM10-12-UP/Library-Manage-App/src/BUS/ReaderBUS.java</file>
         </group>
     </open-files>
 </project-private>
