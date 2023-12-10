@@ -17,6 +17,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -487,12 +489,12 @@ public class Pay_GUI extends javax.swing.JPanel {
                         break;
                     }
                 }
-
-                java.util.Date getDate = dtgNgayNhan.getDate();
-                java.sql.Date readDate = new java.sql.Date(getDate.getTime());
-
-                //Thêm 7 ngày
-                LocalDate localDate = readDate.toLocalDate().plusDays(7);
+            
+                if(dtgNgayNhan.getDate()!=null){
+                    java.util.Date getDate = dtgNgayNhan.getDate();
+                    java.sql.Date readDate = new java.sql.Date(getDate.getTime());
+                    //Thêm 7 ngày
+                    LocalDate localDate = readDate.toLocalDate().plusDays(7);
                 java.sql.Date banAccDate = java.sql.Date.valueOf(localDate);
 
                 long songayMuon = pbus.CacluteDate(bc.getStartDate(), bc.getExpReDate());
@@ -511,8 +513,12 @@ public class Pay_GUI extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(null, "Ngày nhận sai thực tế!");
                 }
             }else{
-                JOptionPane.showMessageDialog(null, "Vui lòng chọn phiếu mượn! ");
+                JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày nhận! ");
             }
+            }else{
+                JOptionPane.showMessageDialog(null, "Vui lòng chọn phiếu mượn! ");             
+            }
+            showBC();      
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -594,6 +600,7 @@ public class Pay_GUI extends javax.swing.JPanel {
     private void tbSachMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbSachMouseClicked
         try {
             // TODO add your handling code here:
+            int soluong = 0;
             list = pbus.getAll();
             Vector<DetailBC> listBook = new Vector<DetailBC>(list.get(n).getListBook());
             
@@ -605,12 +612,31 @@ public class Pay_GUI extends javax.swing.JPanel {
                     for (DetailBC detailBC : listBook) {
                         if(detailBC.getBookname().equals(bookName)){
                             dt__static = detailBC;
+                            soluong = detailBC.getNum();
                         }
                     }
-                    JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-                    
-                    PayReport_Dialog payReportDialog = new PayReport_Dialog(parent, true);
-                    payReportDialog.setVisible(true);
+                    if (soluong > 0) {
+                        JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+                        PayReport_Dialog payReportDialog = new PayReport_Dialog(parent, true);
+                        payReportDialog.setVisible(true);
+                        payReportDialog.addWindowListener(new WindowAdapter() {
+                            @Override
+                            public void windowClosed(WindowEvent e) {
+                                try {
+                                    showBooks(n);
+                                } catch (SQLException ex) {
+                                    Logger.getLogger(Pay_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (IOException ex) {
+                                    Logger.getLogger(Pay_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (Exception ex) {
+                                    Logger.getLogger(Pay_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                        });
+                    } else{
+                        JOptionPane.showMessageDialog(null, "Không còn sách để mất!");
+                    }
                 }
             }
         } catch (Exception ex) {
