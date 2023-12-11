@@ -14,6 +14,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import BUS.PublisherBUS;
+import DTO.entities.Account;
 import DTO.entities.Category;
 import DTO.entities.Publisher;
 import java.util.logging.Level;
@@ -26,6 +27,7 @@ import java.util.logging.Logger;
 public class WareHouseAddNXB_Dialog extends javax.swing.JDialog {
     static String nameFrame;
     static String action;
+    static Account user;
     /**
      * Creates new form WareHouseAddReader_Dialog
      */
@@ -36,7 +38,12 @@ public class WareHouseAddNXB_Dialog extends javax.swing.JDialog {
 
         initComponents();
     }
-
+    public WareHouseAddNXB_Dialog(java.awt.Frame parent, String nameFrame,Account user,boolean modal) throws SQLException, IOException, ClassNotFoundException {
+        super(parent, modal);
+        WareHouseAddNXB_Dialog.nameFrame = nameFrame;        
+        WareHouseAddNXB_Dialog.user = user;
+        initComponents();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

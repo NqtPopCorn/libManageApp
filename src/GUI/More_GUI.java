@@ -699,7 +699,8 @@ public class More_GUI extends javax.swing.JPanel {
         spTable3.getViewport().setBackground(Color.WHITE);
         p.setBackground(Color.WHITE);
         spTable3.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
-        if(rolePermissionBUS.hasPerCreate(this.user.getRoleID(), 8)){
+        System.out.println(user.getRoleID());
+        if(rolePermissionBUS.hasPerCreate(user.getRoleID(), 8)){
             lbThemNCC.setEnabled(true);
             lbThemNXB.setEnabled(true);
             lbThemTacGia.setEnabled(true);
@@ -711,7 +712,7 @@ public class More_GUI extends javax.swing.JPanel {
             lbThemTacGia.setEnabled(false);
             lbThemTheLoai.setEnabled(false);
         }
-        if(rolePermissionBUS.hasPerDelete(this.user.getRoleID(), 8)){
+        if(rolePermissionBUS.hasPerDelete(user.getRoleID(), 8)){
             lbXoaNCC.setEnabled(true);
             lbXoaNXB.setEnabled(true);
             lbXoaTacGia.setEnabled(true);
