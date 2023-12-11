@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import BUS.PublisherBUS;
 import BUS.SupplierBUS;
 import BUS.SupplyCardBUS;
+import DTO.entities.Account;
 import DTO.entities.Supplier;
 import DTO.entities.SupplyCard;
 import java.io.IOException;
@@ -27,14 +28,14 @@ import java.util.logging.Logger;
  */
 public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
     static String nameFrame;
-    static String action;
+    static Account user;
     /**
      * Creates new form WareHouseAddReader_Dialog
      */
-    public WareHouseAddNCC_Dialog(java.awt.Frame parent,String nameFrame,String action, boolean modal) throws SQLException, IOException, ClassNotFoundException {
+    public WareHouseAddNCC_Dialog(java.awt.Frame parent,String nameFrame,Account user, boolean modal) throws SQLException, IOException, ClassNotFoundException {
         super(parent,nameFrame ,modal);
         WareHouseAddNCC_Dialog.nameFrame = nameFrame;        
-        WareHouseAddNCC_Dialog.action = action;
+        WareHouseAddNCC_Dialog.user = user;
 
         try {
             initComponents();
@@ -84,43 +85,39 @@ public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
                     	Supplier p = new Supplier();
                         p.setSupplier_name(txtNhaCungCap.getText());
                         if (nameFrame == "more_gui"){
-                            
                             More_GUI gui;
-                            if(action == "add"){
-                                try {
-                                    gui = new More_GUI();
-                                    if(pub.getByNameAuthor(p.getSupplier_name())!=null)
-                                    {
-                                        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên NCC đã tồn tại!","Thông báo",JOptionPane.WARNING_MESSAGE);
-                                    }
-                                    else {
-                                        pub.saveInfo(p);
-                                        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);                                
-                                        List<Supplier> publisherList = pub.getAllName();
-                                        int stt = 1;
-                                        gui.suppliersModel.setRowCount(0);
-                                        for(Supplier item : publisherList)
-                                        {
-                                            if(item.getSupplier_status() == 1)
-                                                gui.suppliersModel.addRow(new Object[]{stt++,item.getSupplier_name()});
-                                        }
-                                        hide();
-                                        gui.setVisible(true);
-                                        
-                                    }
-                                } catch (SQLException e1) {
-                                    // TODO Auto-generated catch block
-                                    e1.printStackTrace();
-                                } catch (IOException e1) {
-                                    // TODO Auto-generated catch block
-                                    e1.printStackTrace();
-                                }catch (ClassNotFoundException e1) {
-                                    // TODO Auto-generated catch block
-                                    e1.printStackTrace();
+                            try {
+                                gui = new More_GUI(WareHouseAddNCC_Dialog.user);
+                                if(pub.getByNameAuthor(p.getSupplier_name())!=null)
+                                {
+                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên NCC đã tồn tại!","Thông báo",JOptionPane.WARNING_MESSAGE);
                                 }
+                                else {
+                                    pub.saveInfo(p);
+                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);                                
+                                    List<Supplier> publisherList = pub.getAllName();
+                                    int stt = 1;
+                                    gui.suppliersModel.setRowCount(0);
+                                    for(Supplier item : publisherList)
+                                    {
+                                        if(item.getSupplier_status() == 1)
+                                            gui.suppliersModel.addRow(new Object[]{stt++,item.getSupplier_name()});
+                                    }
+                                    hide();
+                                    gui.setVisible(true);
+                                    
+                                }
+                            } catch (SQLException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                            } catch (IOException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                            }catch (ClassNotFoundException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
                             }
-                            
-                        }
+                    }
                         else{
                             WareHouseImport_Dialog whid;
                             try {

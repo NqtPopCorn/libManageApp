@@ -435,7 +435,7 @@ public class StaffAdd_Dialog extends javax.swing.JDialog {
 
     private void lbChucVuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbChucVuMouseClicked
         try {
-            StaffRole_Dialog srd = new StaffRole_Dialog(this.user,new javax.swing.JFrame(), true);
+            StaffRole_Dialog srd = new StaffRole_Dialog(this.user,cbChucVu,new javax.swing.JFrame(), true);
             srd.setVisible(true);
             srd.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override

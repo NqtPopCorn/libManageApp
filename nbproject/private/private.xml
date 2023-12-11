@@ -8,11 +8,18 @@
             <file>file:/D:/HK1_(2023-2024)/CNPM/Library-Manage-App/src/GUI/Pay_GUI.java</file>
         </group>
         <group>
+<<<<<<< HEAD
             <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/DTO/entities/Staff.java</file>
             <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/DAO/AccountDAO.java</file>
             <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/GUI/HomePage.java</file>
             <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/GUI/StaffInfor_Dialog.java</file>
             <file>file:/D:/Learning/ProgramingLanguage/Java/JavaSwing/Library-Manage-App/src/DAO/StaffDAO.java</file>
+=======
+            <file>file:/C:/Users/ADMIN/Desktop/CNPM10-12-UP/Library-Manage-App/src/DAO/ReaderDAO.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/CNPM10-12-UP/Library-Manage-App/src/connection/DB.properties</file>
+            <file>file:/C:/Users/ADMIN/Desktop/CNPM10-12-UP/Library-Manage-App/src/GUI/BorrowAddReader_Dialog.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/CNPM10-12-UP/Library-Manage-App/src/BUS/ReaderBUS.java</file>
+>>>>>>> 262fab6b3675ebc8df6c1e9526c0490cf38da276
         </group>
     </open-files>
 </project-private>

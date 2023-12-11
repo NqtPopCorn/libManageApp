@@ -61,12 +61,45 @@ public class ReaderDAO extends ConnectDB {
         }
         return result;
 }
+          public Vector<Reader> getAllReaderCanBorrow() throws ClassNotFoundException, SQLException, IOException {
+        Vector<Reader> result = new Vector<>();
+        connectDB.connect();
+        if (ConnectDB.conn != null) {
+            try {
+                String sql = "SELECT reader.* FROM Reader where isActive = 1 and fineDate is null";
+                //Bước 2: tạo đối tượng preparedStatement
+                PreparedStatement stmt = connectDB.conn.prepareStatement(sql);  
+
+                ResultSet rs = stmt.executeQuery();
+                //Bước 3: lấy dữ liệu
+                while(rs.next()) {
+                    Reader u = new Reader();
+                    u.setPersonID(rs.getInt(1));
+                    u.setName(rs.getString(2));
+                    u.setTel(rs.getString(3));
+                    u.setAddress(rs.getString(4));
+                    Date lDate = rs.getDate(5);
+                    if(lDate==null) {
+                    	u.setFineDate(null);
+                    }else {
+                    	u.setFineDate(lDate.toLocalDate());
+                    }
+                    result.add(u);
+                }
+            } catch (SQLException ex) {
+                //Logger.getLogger(ChiTietPhieuNhapDAL.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                connectDB.disconnect();
+            }
+        }
+        return result;
+}
      public Vector<Reader> getReaderById(String id) throws ClassNotFoundException, SQLException {
         Vector<Reader> result = new Vector<>();
         connectDB.connect();
         if (ConnectDB.conn != null) {
             try {
-                String sql = "SELECT Reader.* FROM Reader where isActive =1 AND id LIKE N'%"+id+"%'";
+                String sql = "SELECT Reader.* FROM Reader where isActive =1 and fineDate is null AND id LIKE N'%"+id+"%'";
                 PreparedStatement stmt = ConnectDB.conn.prepareStatement(sql);  
                 ResultSet rs = stmt.executeQuery();
                 while(rs.next()) {
@@ -93,7 +126,7 @@ public class ReaderDAO extends ConnectDB {
         if (connectDB.conn != null) {
             
             try {
-                String sql = "SELECT reader.* FROM reader where isActive =1 AND name LIKE N'%"+Name+"%'";
+                String sql = "SELECT reader.* FROM reader where isActive =1 and fineDate is null AND name LIKE N'%"+Name+"%'";
                 
                 //Bước 2: tạo đối tượng preparedStatement
                 PreparedStatement stmt = connectDB.conn.prepareStatement(sql);  

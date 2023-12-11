@@ -432,7 +432,7 @@ public class More_GUI extends javax.swing.JPanel {
             setVisible(false);
             WareHouseAddNewReader_Dialog r;
            try { 
-               r = new WareHouseAddNewReader_Dialog(null,"more_gui", true);
+               r = new WareHouseAddNewReader_Dialog(null,"more_gui",this.user, true);
                r.setVisible(true);
            } catch (SQLException ex) {
                Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -450,7 +450,7 @@ public class More_GUI extends javax.swing.JPanel {
             setVisible(false);
             WareHouseAddNewTypeBook_Dialog r;
            try { 
-               r = new WareHouseAddNewTypeBook_Dialog(null,"more_gui", true);
+               r = new WareHouseAddNewTypeBook_Dialog(null,"more_gui",this.user, true);
                r.setVisible(true);
            } catch (SQLException ex) {
                Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -468,7 +468,7 @@ public class More_GUI extends javax.swing.JPanel {
             setVisible(false);
             WareHouseAddNCC_Dialog r;
            try { 
-               r = new WareHouseAddNCC_Dialog(null,"more_gui","add", true);
+               r = new WareHouseAddNCC_Dialog(null,"more_gui",this.user, true);
                r.setVisible(true);
            } catch (SQLException ex) {
                Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -486,7 +486,7 @@ public class More_GUI extends javax.swing.JPanel {
             setVisible(false);
             WareHouseAddNXB_Dialog r;
            try { 
-               r = new WareHouseAddNXB_Dialog(null,"more_gui","add  ", true);
+               r = new WareHouseAddNXB_Dialog(null,"more_gui",this.user, true);
                r.setVisible(true);
            } catch (SQLException ex) {
                Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -572,7 +572,7 @@ public class More_GUI extends javax.swing.JPanel {
                         check = supplierBUS.deteleBySupplierName(supplier);
                         if(check == true){
                             JOptionPane.showMessageDialog(panelBorder1, "Đã xóa thành công", "Xác nhận xóa", HEIGHT);
-                            DefaultTableModel model = (DefaultTableModel) tbTheLoaiSach.getModel();
+                            DefaultTableModel model = (DefaultTableModel) tbNhaCungCap.getModel();
                             model.setRowCount(0);
                             initTableCategory();
                         }
