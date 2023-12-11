@@ -78,9 +78,10 @@ public class Pay_GUI extends javax.swing.JPanel {
         p.setBackground(Color.WHITE);
         spTicketDetail.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
         spTable1.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
+        Calendar minDate = Calendar.getInstance();
+        dtgNgayNhan.setMaxSelectableDate(minDate.getTime());
         if(rolePermissionBUS.hasPerEdit(this.user.getRoleID(), 2)){
-            btnChoMuon.setEnabled(true);
-            
+            btnChoMuon.setEnabled(true);       
         }
         else btnChoMuon.setEnabled(false);
     }
@@ -512,13 +513,13 @@ public class Pay_GUI extends javax.swing.JPanel {
                 else{
                     JOptionPane.showMessageDialog(null, "Ngày nhận sai thực tế!");
                 }
+                showBC();     
             }else{
                 JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày nhận! ");
             }
             }else{
                 JOptionPane.showMessageDialog(null, "Vui lòng chọn phiếu mượn! ");             
-            }
-            showBC();      
+            } 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
