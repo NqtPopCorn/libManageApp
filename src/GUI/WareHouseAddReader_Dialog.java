@@ -133,6 +133,7 @@ public class WareHouseAddReader_Dialog extends javax.swing.JDialog {
 				cbTgia.removeAllItems();
     			try {
 					List<Author> authorList = au.getAllName();
+					cbTgia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tác giả" }));
 					for(Author item : authorList)
 					{
 						cbTgia.addItem(item.getName());
