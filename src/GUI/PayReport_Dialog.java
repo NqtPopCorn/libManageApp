@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JSpinner.DefaultEditor;
 
 
 /**
@@ -37,6 +39,7 @@ public class PayReport_Dialog extends javax.swing.JDialog {
         super(parent, modal);
         setLocation(600,150);
         initComponents();
+        ((DefaultEditor) snSoLuongMat1.getEditor()).getTextField().setEditable(false);
         
         txtTenSach1.setText(dt__static.getBookname());
         
@@ -101,6 +104,7 @@ public class PayReport_Dialog extends javax.swing.JDialog {
         txtGiaCuon1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 229, 229)));
         txtGiaCuon1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtGiaCuon1.setText("20.000");
+        txtGiaCuon1.setEnabled(false);
 
         lbLine1.setForeground(new java.awt.Color(204, 204, 204));
         lbLine1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(204, 204, 204)));
@@ -122,6 +126,8 @@ public class PayReport_Dialog extends javax.swing.JDialog {
             }
         });
 
+        snSoLuongMat1.setModel(new javax.swing.SpinnerNumberModel());
+        snSoLuongMat1.setEditor(new javax.swing.JSpinner.NumberEditor(snSoLuongMat1, ""));
         snSoLuongMat1.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 snSoLuongMat1StateChanged(evt);
@@ -240,15 +246,19 @@ public class PayReport_Dialog extends javax.swing.JDialog {
 
             int soLuong = (int) snSoLuongMat1.getValue();
             float total = soLuong * dt__static.getBookCost();
-
-            PayBUS pbus =new PayBUS();
-
-            pbus.BooksLost(bc__static, soLuong, dt__static.getISBN());
-
+            
+            if(soLuong>0){
+                PayBUS pbus =new PayBUS();
+                pbus.BooksLost(bc__static, soLuong, dt__static.getISBN());
+                
+                JOptionPane.showMessageDialog(null, "Báo mất sách thành công!");
+                dispose();
+            }else{
+                JOptionPane.showMessageDialog(null, "Số lượng sách mất phải lớn hơn 1");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        dispose();
     }//GEN-LAST:event_myButton2MouseClicked
 
     private void snSoLuongMat1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_snSoLuongMat1StateChanged

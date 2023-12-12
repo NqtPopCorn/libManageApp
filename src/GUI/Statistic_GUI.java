@@ -14,6 +14,7 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.JMenuItem;
@@ -32,6 +33,7 @@ public class Statistic_GUI extends javax.swing.JPanel {
     private int quarterSTT;
     private int monthSTT;
     DefaultTableModel tableModel;
+    private  DecimalFormat decimalFormat = new DecimalFormat("#,###");
     /**
      * Creates new form statistic_GUI
      */
@@ -146,7 +148,7 @@ public class Statistic_GUI extends javax.swing.JPanel {
         try {
             sBus = new StatisticsBUS();
             Vector<StatisticDTO> datas = sBus.getAll();
-            float soTienThu = 0;
+            double soTienThu = 0;
             int soLuotMuon = 0;
             int soLuotTra = 0;
             float phanTramTra = 100;
@@ -168,7 +170,7 @@ public class Statistic_GUI extends javax.swing.JPanel {
                 phanTramTra = (soLuotTra * 100) / soLuotMuon;
             }
 
-            lbKhoangThu.setText(String.valueOf(soTienThu) + "đ");
+            lbKhoangThu.setText(decimalFormat.format (soTienThu) + "đ");
             lbSoLuotMuon.setText(String.valueOf(soLuotMuon));
             lbTiLeHoanTra.setText(String.valueOf(phanTramTra) + "%");
             lbSoSachMat.setText(String.valueOf(soSachMat));
@@ -182,7 +184,7 @@ public class Statistic_GUI extends javax.swing.JPanel {
         try {
             sBus = new StatisticsBUS();
             Vector<StatisticDTO> datas = sBus.getAll();
-            float soTienThu = 0;
+            double soTienThu = 0;
             int soLuotMuon = 0;
             int soLuotTra = 0;
             float phanTramTra = 100;
@@ -207,7 +209,7 @@ public class Statistic_GUI extends javax.swing.JPanel {
                 phanTramTra = (soLuotTra * 100) / soLuotMuon;
             }
 
-            lbKhoangThu.setText(String.valueOf(soTienThu) + "đ");
+            lbKhoangThu.setText(decimalFormat.format (soTienThu) + "đ");;
             lbSoLuotMuon.setText(String.valueOf(soLuotMuon));
             lbTiLeHoanTra.setText(String.valueOf(phanTramTra) + "%");
             lbSoSachMat.setText(String.valueOf(soSachMat));
@@ -221,7 +223,7 @@ public class Statistic_GUI extends javax.swing.JPanel {
         try {
             sBus = new StatisticsBUS();
             Vector<StatisticDTO> datas = sBus.getAll();
-            float soTienThu = 0;
+            double soTienThu = 0;
             int soLuotMuon = 0;
             int soLuotTra = 0;
             float phanTramTra = 100;
@@ -243,7 +245,7 @@ public class Statistic_GUI extends javax.swing.JPanel {
                 phanTramTra = (soLuotTra * 100) / soLuotMuon;
             }
 
-            lbKhoangThu.setText(String.valueOf(soTienThu) + "đ");
+            lbKhoangThu.setText(decimalFormat.format (soTienThu) + "đ");
             lbSoLuotMuon.setText(String.valueOf(soLuotMuon));
             lbTiLeHoanTra.setText(String.valueOf(phanTramTra) + "%");
             lbSoSachMat.setText(String.valueOf(soSachMat));
@@ -295,7 +297,6 @@ public class Statistic_GUI extends javax.swing.JPanel {
 
         lbThanhVienMoi.setFont(new java.awt.Font("SansSerif", 1, 48)); // NOI18N
         lbThanhVienMoi.setForeground(new java.awt.Color(22, 113, 221));
-        lbThanhVienMoi.setText("17");
 
         javax.swing.GroupLayout pnThanhVienMoiLayout = new javax.swing.GroupLayout(pnThanhVienMoi);
         pnThanhVienMoi.setLayout(pnThanhVienMoiLayout);
@@ -356,7 +357,6 @@ public class Statistic_GUI extends javax.swing.JPanel {
 
         lbSoLuotMuon.setFont(new java.awt.Font("SansSerif", 1, 48)); // NOI18N
         lbSoLuotMuon.setForeground(new java.awt.Color(255, 255, 255));
-        lbSoLuotMuon.setText("120");
 
         javax.swing.GroupLayout pnSoLuotMuonLayout = new javax.swing.GroupLayout(pnSoLuotMuon);
         pnSoLuotMuon.setLayout(pnSoLuotMuonLayout);
@@ -365,7 +365,7 @@ public class Statistic_GUI extends javax.swing.JPanel {
             .addGroup(pnSoLuotMuonLayout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
                 .addComponent(lbSoLuotMuon)
                 .addContainerGap())
         );
@@ -376,7 +376,7 @@ public class Statistic_GUI extends javax.swing.JPanel {
                 .addComponent(jLabel6)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnSoLuotMuonLayout.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
+                .addContainerGap(87, Short.MAX_VALUE)
                 .addComponent(lbSoLuotMuon)
                 .addGap(5, 5, 5))
         );
@@ -399,7 +399,6 @@ public class Statistic_GUI extends javax.swing.JPanel {
 
         lbKhoangThu.setFont(new java.awt.Font("SansSerif", 1, 48)); // NOI18N
         lbKhoangThu.setForeground(new java.awt.Color(22, 113, 221));
-        lbKhoangThu.setText("120.000.000đ");
 
         javax.swing.GroupLayout pnKhoangThuLayout = new javax.swing.GroupLayout(pnKhoangThu);
         pnKhoangThu.setLayout(pnKhoangThuLayout);
@@ -408,7 +407,7 @@ public class Statistic_GUI extends javax.swing.JPanel {
             .addGroup(pnKhoangThuLayout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 345, Short.MAX_VALUE)
                 .addComponent(lbKhoangThu)
                 .addGap(14, 14, 14))
         );
@@ -419,7 +418,7 @@ public class Statistic_GUI extends javax.swing.JPanel {
                 .addComponent(jLabel2)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnKhoangThuLayout.createSequentialGroup()
-                .addContainerGap(24, Short.MAX_VALUE)
+                .addContainerGap(86, Short.MAX_VALUE)
                 .addComponent(lbKhoangThu)
                 .addContainerGap())
         );
@@ -432,7 +431,6 @@ public class Statistic_GUI extends javax.swing.JPanel {
 
         lbSoSachMat.setFont(new java.awt.Font("SansSerif", 1, 48)); // NOI18N
         lbSoSachMat.setForeground(new java.awt.Color(248, 67, 67));
-        lbSoSachMat.setText("5");
 
         javax.swing.GroupLayout pnSoSachMatLayout = new javax.swing.GroupLayout(pnSoSachMat);
         pnSoSachMat.setLayout(pnSoSachMatLayout);
@@ -441,7 +439,7 @@ public class Statistic_GUI extends javax.swing.JPanel {
             .addGroup(pnSoSachMatLayout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
                 .addComponent(lbSoSachMat)
                 .addContainerGap())
         );
@@ -452,7 +450,7 @@ public class Statistic_GUI extends javax.swing.JPanel {
                 .addComponent(jLabel7)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnSoSachMatLayout.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
+                .addContainerGap(87, Short.MAX_VALUE)
                 .addComponent(lbSoSachMat)
                 .addGap(5, 5, 5))
         );
@@ -464,7 +462,6 @@ public class Statistic_GUI extends javax.swing.JPanel {
 
         lbTiLeHoanTra.setFont(new java.awt.Font("SansSerif", 1, 48)); // NOI18N
         lbTiLeHoanTra.setForeground(new java.awt.Color(22, 113, 221));
-        lbTiLeHoanTra.setText("100%");
 
         javax.swing.GroupLayout pnTiLeHoanTraLayout = new javax.swing.GroupLayout(pnTiLeHoanTra);
         pnTiLeHoanTra.setLayout(pnTiLeHoanTraLayout);
@@ -475,7 +472,7 @@ public class Statistic_GUI extends javax.swing.JPanel {
                 .addComponent(jLabel3)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnTiLeHoanTraLayout.createSequentialGroup()
-                .addContainerGap(88, Short.MAX_VALUE)
+                .addContainerGap(211, Short.MAX_VALUE)
                 .addComponent(lbTiLeHoanTra)
                 .addContainerGap())
         );

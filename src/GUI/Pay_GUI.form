@@ -238,16 +238,8 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="109" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="lbLine" min="-2" pref="193" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
+                                  <Component id="lbLine" min="-2" pref="193" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
                               </Group>
                               <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel24" alignment="0" min="-2" pref="86" max="-2" attributes="0"/>
@@ -293,6 +285,11 @@
                           <Component id="spTable1" min="-2" pref="207" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
+                          <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -327,7 +324,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="lbLine" min="-2" pref="7" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="spTable1" pref="221" max="32767" attributes="0"/>
+                          <Component id="spTable1" pref="253" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jLabel24" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -346,7 +343,6 @@
                       <Color blue="dd" green="71" red="16" type="rgb"/>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="0"/>
-                    <Property name="text" type="java.lang.String" value="#LB01"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel3">
@@ -378,9 +374,6 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="txtDocGia">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Nguy&#x1ec5;n Tu&#x1ea5;n"/>
-                  </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel4">
                   <Properties>
@@ -407,21 +400,14 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="txtNgayMuon">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="19/08/2003"/>
-                  </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="txtThuKho">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Qu&#x1ed1;c V&#x129;"/>
-                  </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="txtTienCoc">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="SansSerif" size="13" style="1"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="12.000&#x111;"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbLine">
