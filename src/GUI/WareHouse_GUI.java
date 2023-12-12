@@ -11,6 +11,8 @@ import connection.ConnectDB;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -28,12 +30,17 @@ import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
 import BUS.SupplyCardWithStaffBUS;
+import DAO.BookDAO;
+import DAO.PublisherDAO;
 import DAO.StaffDAO;
 import DAO.SupplyCardDAO;
 import DAO.SupplyCardDetailDAO;
+import DAO.WarehouseDAO;
 import DTO.entities.Account;
 import DTO.entities.SupplyCardDetail;
 import DTO.entities.SupplyCardWithStaff;
+
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,6 +55,8 @@ public class WareHouse_GUI extends javax.swing.JPanel {
     private RolePermissionBUS rolePermissionBUS;
     private SupplyCardWithStaffBUS supplyCardWithStaffBUS;
     private SupplyCardDetailDAO supplyCardDetailDAO;
+    private WarehouseDAO warehouseDAO;
+    
 	/**
      * Creates new form WareHouse_GUI
      */
@@ -65,6 +74,7 @@ public class WareHouse_GUI extends javax.swing.JPanel {
         spTable2.setVerticalScrollBar(new ScrollBar());
         spTable2.getVerticalScrollBar().setBackground(Color.WHITE);
         spTable2.getViewport().setBackground(Color.WHITE);
+        spTable2.setViewportView(tbSach);
         p.setBackground(Color.WHITE);
         spTable2.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
     }
@@ -77,7 +87,7 @@ public class WareHouse_GUI extends javax.swing.JPanel {
         p.setBackground(Color.WHITE);
         spTable.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
         spTable.setViewportView(tbLichSuNhapHang);
-        spTable2.setViewportView(tbChiTietPhieuNhap);
+        spTable2.setViewportView(tbSach);
         spTable2.setVerticalScrollBar(new ScrollBar());
         spTable2.getVerticalScrollBar().setBackground(Color.WHITE);
         spTable2.getViewport().setBackground(Color.WHITE);
@@ -104,9 +114,15 @@ public class WareHouse_GUI extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         spTable = new javax.swing.JScrollPane();
         tbLichSuNhapHang = new MyDesign.MyTable();
+        tbSach = new MyDesign.MyTable();
         
         SupplyCardDAO supplyCardDAO = new SupplyCardDAO(connectDB);
         StaffDAO staffDAO = new StaffDAO();
+        
+        WarehouseDAO warehouseDAO = new WarehouseDAO(connectDB);
+        BookDAO bookDAO = new BookDAO();
+        PublisherDAO publisherDAO = new PublisherDAO(connectDB);
+        
         SupplyCardDetailDAO supplyCardDetailDAO = new SupplyCardDetailDAO(connectDB);
        
         List<SupplyCardWithStaff> supplyCardWithStaffList = new ArrayList<>();
@@ -115,7 +131,6 @@ public class WareHouse_GUI extends javax.swing.JPanel {
         supplyCardWithStaffList = supplyCardDAO.getAllSupplyCardWithStaff();
         jLabel7 = new javax.swing.JLabel();
         spTable2 = new javax.swing.JScrollPane();
-        tbChiTietPhieuNhap = new MyDesign.MyTable();
         panelBorder_Basic1 = new MyDesign.PanelBorder_Basic();
         jLabel8 = new javax.swing.JLabel();
         txtTimKiem = new MyDesign.SearchText();
@@ -162,18 +177,53 @@ public class WareHouse_GUI extends javax.swing.JPanel {
             model.addRow(rowData);
         }
         
+        tbLichSuNhapHang.addMouseListener(new MouseAdapter() {
+        	public void mouseClicked(MouseEvent e)
+        	{
+                if (e.getClickCount() == 1 || e.getClickCount() == 2) {
+                    DefaultTableModel model = (DefaultTableModel) tbLichSuNhapHang.getModel();
+                    int selectedRow = tbLichSuNhapHang.getSelectedRow();
+                    if (selectedRow >= 0) {
+                        Object ngayNhap = tbLichSuNhapHang.getValueAt(selectedRow, 1);
+
+                        // Chuyển đổi ngày nhập từ Object sang định dạng phù hợp để truy vấn cơ sở dữ liệu
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        String ngayNhapString = dateFormat.format(ngayNhap); // Định dạng ngày nhập
+
+                        // Gọi phương thức trong DAO để lấy danh sách chi tiết phiếu nhập dựa trên ngày nhập
+                        List<SupplyCardDetail> supplyCardDetails = supplyCardDetailDAO.getSupplyCardDetailsByDate(ngayNhapString);
+
+                        // Xóa các dòng hiện tại trong bảng tbChiTietPhieuNhap
+                        DefaultTableModel model2 = (DefaultTableModel) tbSach.getModel();
+                        model2.setRowCount(0);
+
+                        // Thêm các chi tiết phiếu nhập mới vào bảng tbChiTietPhieuNhap
+                        for (SupplyCardDetail detail : supplyCardDetails) {
+                            Object[] rowData = {
+                            		(Object)(model2.getRowCount()+1),
+                                    detail.getScID(),
+                                    detail.getISBN(),
+                                    detail.getNum()
+                            };
+                            model2.addRow(rowData);
+                        }
+                    }
+                }
+            }
+        });
+        
         jLabel7.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(127, 127, 127));
         jLabel7.setText("Chi tiết phiếu nhập");
 
         spTable2.setBorder(null);
 
-        tbChiTietPhieuNhap.setModel(new javax.swing.table.DefaultTableModel(
+        tbSach.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-            		"Mã Phiếu Nhập", "Mã ISBN", "Số lượng"
+            		"STT", "Mã phiếu nhập", "Mã ISBN", "Số lượng nhập sách"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -184,15 +234,17 @@ public class WareHouse_GUI extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        
-        DefaultTableModel model2 = (DefaultTableModel) tbChiTietPhieuNhap.getModel();
+    
+        DefaultTableModel model2 = (DefaultTableModel) tbSach.getModel();
+        model2.setRowCount(0);
 
-        for (SupplyCardDetail i : supplyCardDetail) {
-            // Tạo một mảng các Object chứa thông tin cần hiển thị
+        // Thêm các chi tiết phiếu nhập mới vào bảng tbChiTietPhieuNhap
+        for (SupplyCardDetail detail : supplyCardDetail) {
             Object[] rowData = {
-            		i.getScID(),
-            		i.getISBN(),
-            		i.getNum()
+            		(Object)(model2.getRowCount()+1),
+                    detail.getScID(),
+                    detail.getISBN(),
+                    detail.getNum()
             };
             model2.addRow(rowData);
         }
@@ -207,7 +259,7 @@ public class WareHouse_GUI extends javax.swing.JPanel {
 
                     String searchInput = txtTimKiem.getText().trim();
                     String key = "NXB";
-                    String keyDate = "20-";
+                    String keyDate = "2023-";
                     if (!searchInput.isEmpty()) {
                     	if(!isNumeric(searchInput))
                     	{
@@ -224,6 +276,32 @@ public class WareHouse_GUI extends javax.swing.JPanel {
                 }
             }
         });        
+        
+        txtTimKiem.addKeyListener(new KeyAdapter() {
+        	public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    // Xử lý khi người dùng nhấn Enter
+                    DefaultTableModel model = (DefaultTableModel) tbLichSuNhapHang.getModel(); // Lấy model của JTable
+
+                    String searchInput = txtTimKiem.getText().trim();
+                    String key = "NXB";
+                    String keyDate = "2023-";
+                    if (!searchInput.isEmpty()) {
+                    	if(!isNumeric(searchInput))
+                    	{
+                    		if(containsString(searchInput, keyDate)) {
+                    			timkiemSupDate();
+                    		}
+                    		else {
+                    			timkiemNameStaff();
+                    		}
+                    	}
+                    }else {
+                    	loadAll();
+                    }
+                }
+            }
+		});
         javax.swing.GroupLayout panelBorder_Basic1Layout = new javax.swing.GroupLayout(panelBorder_Basic1);
         panelBorder_Basic1.setLayout(panelBorder_Basic1Layout);
         panelBorder_Basic1Layout.setHorizontalGroup(
@@ -267,6 +345,39 @@ public class WareHouse_GUI extends javax.swing.JPanel {
                 try {
                     whid = new WareHouseImport_Dialog(null, getFocusTraversalKeysEnabled());
                     whid.setVisible(true);
+                    if (whid != null && !whid.isVisible()) {
+    			        // Dialog đã đóng, thực hiện các thao tác tiếp theo
+                    	DefaultTableModel model = (DefaultTableModel) tbLichSuNhapHang.getModel();
+                    	List<SupplyCardWithStaff> supplyCardWithStaffList = new ArrayList<>();
+                    	supplyCardWithStaffList = supplyCardDAO.getAllSupplyCardWithStaff();
+                    	model.setRowCount(0);
+                    	for (SupplyCardWithStaff supplyCardWithStaff : supplyCardWithStaffList) {
+                            // Tạo một mảng các Object chứa thông tin cần hiển thị
+                            Object[] rowData = {
+                            	(Object)(model.getRowCount()+1),
+                                supplyCardWithStaff.getSupply_Card().getSupDate(),
+                                supplyCardWithStaff.getSupply_Card().getProvider(),
+                                supplyCardWithStaff.getSupply_Card().getTongchi(),
+                                supplyCardWithStaff.getStaff().getName()
+                            };
+                            model.addRow(rowData);
+                        }
+                    	
+                    	DefaultTableModel model2 = (DefaultTableModel) tbSach.getModel();
+                    	List<SupplyCardDetail> supplyCardDetail = new ArrayList<>();
+                    	supplyCardDetail = supplyCardDetailDAO.getAllSupplyCardDetail();
+                        model2.setRowCount(0);
+                    	for (SupplyCardDetail i : supplyCardDetail) {
+                            // Tạo một mảng các Object chứa thông tin cần hiển thị
+                            Object[] rowData = {
+                            	(Object)(model2.getRowCount()+1),
+                            	i.getScID(),
+                                i.getISBN(),
+                                i.getNum()
+                            };
+                            model2.addRow(rowData);
+                        }
+    			    }
                 } catch (ClassNotFoundException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
@@ -451,7 +562,7 @@ public class WareHouse_GUI extends javax.swing.JPanel {
     private MyDesign.PanelBorder_Basic panelBorder_Basic1;
     private javax.swing.JScrollPane spTable;
     private javax.swing.JScrollPane spTable2;
-    private MyDesign.MyTable tbChiTietPhieuNhap;
+    public MyDesign.MyTable tbSach;
     public MyDesign.MyTable tbLichSuNhapHang;
     private MyDesign.SearchText txtTimKiem;
     private ConnectDB connectDB;

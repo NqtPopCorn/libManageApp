@@ -87,5 +87,38 @@ public class SupplyCardDetailDAO {
 	        e.printStackTrace();
 	    }
     }
-    
+    public List<SupplyCardDetail> getSupplyCardDetailsByDate(String ngayNhap) {
+    	List<SupplyCardDetail> supplyCardDetailList = new ArrayList<>();
+        StringBuilder queryBuilder = new StringBuilder();
+                    queryBuilder.append("SELECT detail_supply_card.scID, detail_supply_card.ISBN, detail_supply_card.num ")
+                                .append("FROM supply_card ")
+                                .append("INNER JOIN detail_supply_card ON supply_card.id = detail_supply_card.scID ")
+                                .append("WHERE CAST(supply_card.supDate AS DATE) = ?");
+                    String query = queryBuilder.toString();
+
+
+        try {
+            connectDB.connect();
+            Connection connection = connectDB.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, ngayNhap);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                SupplyCardDetail supplyCardDetail = new SupplyCardDetail();
+                supplyCardDetail.setScID(resultSet.getInt("scID"));
+                supplyCardDetail.setISBN(resultSet.getString("ISBN"));
+                supplyCardDetail.setNum(resultSet.getInt("num"));
+
+                supplyCardDetailList.add(supplyCardDetail); // Thêm dữ liệu SupplyCardDetail vào danh sách
+            }
+
+            connection.close(); // Đóng kết nối sau khi sử dụng
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return supplyCardDetailList; // Trả về danh sách SupplyCardDetail
+    }
 }
