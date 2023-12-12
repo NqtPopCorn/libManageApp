@@ -101,14 +101,27 @@ public class HomePage extends javax.swing.JFrame {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } 
-                else if (index == 6 && homePageBUS.hasPerAccess(user.getRoleID(), 7)) {
+                else if (index == 6 && homePageBUS.hasPerAccess(user.getRoleID(), 8)) {
+                    try {
+                        setForm(new Book_GUI(user));
+                    } catch (SQLException ex) {
+                        Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                else if (index == 7 && homePageBUS.hasPerAccess(user.getRoleID(), 7)) {
                     try {
                         setForm(new Staff_GUI(user));
                     } catch (Exception ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } 
-                else if (index == 7 && homePageBUS.hasPerAccess(user.getRoleID(), 8)) {
+                else if (index == 8 && homePageBUS.hasPerAccess(user.getRoleID(), 8)) {
                     try {
                         setForm(new More_GUI(user));
                     } catch (SQLException ex) {
@@ -119,7 +132,7 @@ public class HomePage extends javax.swing.JFrame {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } 
-                else if (index == 8 && homePageBUS.hasPerAccess(user.getRoleID(), 9)) {
+                else if (index == 9 && homePageBUS.hasPerAccess(user.getRoleID(), 9)) {
                     try {
                         setForm(new Admin_GUI(user));
                     } catch (ClassNotFoundException ex) {
@@ -132,7 +145,7 @@ public class HomePage extends javax.swing.JFrame {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } 
-                else if (index == 11) {
+                else if (index == 12) {
                     System.exit(0);
                 }
                 else JOptionPane.showMessageDialog(HomePage.this, "Bạn không được phép truy cập vào chức năng này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
