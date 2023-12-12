@@ -18,6 +18,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageProducer;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -68,6 +69,8 @@ import DTO.entities.BookCategory;
 import DTO.entities.SupplyCard;
 import DTO.entities.SupplyCardDetail;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.GroupLayout;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -79,6 +82,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import MyDesign.MyButton;
 import java.awt.Font;
+import java.awt.Image;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
@@ -182,38 +186,51 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
             @Override
             public void mouseClicked(MouseEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle("Chọn tệp ảnh .png, .jpg");            
+                fileChooser.setDialogTitle("Chọn tệp ảnh .png, .jpg");
                 FileNameExtensionFilter filter = new FileNameExtensionFilter("Tệp ảnh .png, .jpg", "png", "jpg");
                 fileChooser.setFileFilter(filter);
+
                 int result = fileChooser.showOpenDialog(null);
                 if (result == JFileChooser.APPROVE_OPTION) {
-                    String selectedImagePath = fileChooser.getSelectedFile().getAbsolutePath();
-                    if(selectedImagePath==null)
-                    {
-                    	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Không tìm thấy ảnh.","Thông Báo",JOptionPane.INFORMATION_MESSAGE);
-                    	lbImageBook.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/AddImage.png")));
-                    }else {
-                    	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Đã chọn ảnh: " + selectedImagePath);
-                        lbImageBook.setIcon(new javax.swing.ImageIcon(selectedImagePath));
+                    File selectedImageFile = fileChooser.getSelectedFile();
+                    anh = selectedImageFile.getAbsolutePath(); // Lấy đường dẫn tệp ảnh
+
+                    try {
+                        BufferedImage image = ImageIO.read(selectedImageFile);
+
+                        if (image != null) {
+                            int newWidth = 190;
+                            int newHeight = 190;
+
+                            // Thay đổi kích thước ảnh
+                            Image resizedImage = image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+                            BufferedImage bufferedResizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+                            bufferedResizedImage.getGraphics().drawImage(resizedImage, 0, 0, null);
+
+                            // Hiển thị ảnh thay đổi kích thước trong JLabel
+                            lbImageBook.setIcon(new javax.swing.ImageIcon(bufferedResizedImage));
+                        }
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Đã xảy ra lỗi khi đọc ảnh.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        ex.printStackTrace();
                     }
+                } else {
+                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Không tìm thấy ảnh.", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
+                    lbImageBook.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/AddImage.png")));
                 }
             }
         });
+
         
         
         javax.swing.GroupLayout pnImageBookLayout = new javax.swing.GroupLayout(pnImageBook);
         pnImageBookLayout.setHorizontalGroup(
-        	pnImageBookLayout.createParallelGroup(Alignment.LEADING)
-        		.addGroup(Alignment.TRAILING, pnImageBookLayout.createSequentialGroup()
-        			.addGap(52)
-        			.addComponent(lbImageBook, GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
-        			.addContainerGap())
+        	pnImageBookLayout.createParallelGroup(Alignment.TRAILING)
+        		.addComponent(lbImageBook, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
         );
         pnImageBookLayout.setVerticalGroup(
-        	pnImageBookLayout.createParallelGroup(Alignment.LEADING)
-        		.addGroup(Alignment.TRAILING, pnImageBookLayout.createSequentialGroup()
-        			.addContainerGap()
-        			.addComponent(lbImageBook, GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE))
+        	pnImageBookLayout.createParallelGroup(Alignment.TRAILING)
+        		.addComponent(lbImageBook, GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
         );
         pnImageBook.setLayout(pnImageBookLayout);
 
@@ -273,115 +290,62 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					}
-					File imageFile = new File(img);
-		            if (imageFile.exists() && imageFile.canRead()) {
-		                try {
-		                    BufferedImage image = ImageIO.read(imageFile);
-		                    if (image != null && isbn!=null) {
-		                    	//TRUYỀN ĐƯỜNG DẪN TUYỆT ĐỐI (ĐỐI VỚI MÁY MÌNH, CÒN MÁY KHÁC NỄU CHẠY ĐƯỢC THÌ KHỎI SỬA DB)
-		                        lbImageBook.setIcon(new javax.swing.ImageIcon(image));
-		                        txtISBN.setText(isbn);
-		                        txtEdition.setText(edition);
-		                        txtGia.setText(cost);
-		                        txtISBN.setEditable(false);
-		                        txtEdition.setEditable(false);
-		                        if(tacgia == null)
-		                        {
-		                        	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tác phẩm này bị thiếu phần tác giả","Thông báo", JOptionPane.INFORMATION_MESSAGE);
-		                        }else {
-		                        	addToComboBoxCheckTg(tacgia);
-				                    cbTacGia.setSelectedItem(tacgia);
-				                    cbTacGia.setEnabled(false);
-		                        }
-		                        if(theloai == null)
-		                        {
-		                        	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tác phẩm này bị thiếu phần thể loại","Thông báo", JOptionPane.INFORMATION_MESSAGE);
-		                        }else {
-		                        	addToComboBoxCheckTl(theloai);
-				                    cbTheLoai.setSelectedItem(theloai);
-				                    cbTheLoai.setEnabled(false);
-		                        }
- 
-		                        cbNXB.setSelectedItem(nxb);
-		                        cbNXB.setEnabled(false);
-//		                        txtISBN.setEditable(false);
-//		                        lblicon_img.setEnabled(false);
-		                    }else {
-		                    	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Chưa có dữ liệu cho cuốn sách này!","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-		                    	cbTacGia.setEnabled(true);
-		                    	cbTheLoai.setEnabled(true);
-		                    	cbNXB.setEnabled(true);
-		                    }
-		                } catch (IOException e1) {
-		                    System.out.println(e1);
-		                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Không thể đọc tệp ảnh.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-		                }
-		            } else {
-		                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tệp ảnh không tồn tại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-		            }
+					    File imageFile = new File(img);
+					    if (imageFile.exists() && imageFile.canRead()) {
+					        try {
+					            BufferedImage image = ImageIO.read(imageFile);
+					            if (image != null && isbn!=null) {
+					                // Kích thước mới (ví dụ: 200x200)
+					                int newWidth = 190;
+					                int newHeight = 190;
+	
+					                // Tạo ảnh mới với kích thước đã chỉ định
+					                Image resizedImage = image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+					                BufferedImage bufferedResizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+					                bufferedResizedImage.getGraphics().drawImage(resizedImage, 0, 0, null);
+	
+					                // Gán ảnh đã thay đổi kích thước vào JLabel
+					                lbImageBook.setIcon(new javax.swing.ImageIcon(bufferedResizedImage));
+			                        txtISBN.setText(isbn);
+			                        txtEdition.setText(edition);
+			                        txtGia.setText(cost);
+			                        txtISBN.setEditable(false);
+			                        txtEdition.setEditable(false);
+			                        if(tacgia == null)
+			                        {
+			                        	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tác phẩm này bị thiếu phần tác giả","Thông báo", JOptionPane.INFORMATION_MESSAGE);
+			                        }else {
+			                        	addToComboBoxCheckTg(tacgia);
+					                    cbTacGia.setSelectedItem(tacgia);
+					                    cbTacGia.setEnabled(false);
+			                        }
+			                        if(theloai == null)
+			                        {
+			                        	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tác phẩm này bị thiếu phần thể loại","Thông báo", JOptionPane.INFORMATION_MESSAGE);
+			                        }else {
+			                        	addToComboBoxCheckTl(theloai);
+					                    cbTheLoai.setSelectedItem(theloai);
+					                    cbTheLoai.setEnabled(false);
+			                        }
+	 
+			                        cbNXB.setSelectedItem(nxb);
+			                        cbNXB.setEnabled(false);
+//			                        txtISBN.setEditable(false);
+//			                        lblicon_img.setEnabled(false);
+			                    }else {
+			                    	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Chưa có dữ liệu cho cuốn sách này!","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+			                    	cbTacGia.setEnabled(true);
+			                    	cbTheLoai.setEnabled(true);
+			                    	cbNXB.setEnabled(true);
+			                    }
+			                } catch (IOException e1) {
+			                    System.out.println(e1);
+			                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Không thể đọc tệp ảnh.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+			                }
+					 }
                 }
 			}
-		});
-//        txtTenSach.addKeyListener(new KeyListener() {
-//    			
-//    		@Override
-//    		public void keyTyped(KeyEvent e) {
-//    			// TODO Auto-generated method stub
-//    		}
-//    			
-//    		@Override
-//    		public void keyReleased(KeyEvent e) {
-//    			// TODO Auto-generated method stub
-//    				
-//    		}
-//    			
-//    		@Override
-//    		public void keyPressed(KeyEvent e) {
-//    			final String name = txtTenSach.getText();
-//    			// TODO Auto-generated method stub
-//    			try {
-//					if(e.getKeyCode()==KeyEvent.VK_ENTER)
-//					{
-//						String img = supplyCard.getByImg(name);
-//						String isbn = supplyCard.getByISBN(name);
-//						String edition = supplyCard.getByEdition(name);
-//						String cost = String.valueOf(supplyCard.getByCost(name));
-//						File imageFile = new File(img);
-//			            if (imageFile.exists() && imageFile.canRead()) {
-//			                try {
-//			                    BufferedImage image = ImageIO.read(imageFile);
-//			                    if (image != null && isbn!=null) {
-//			                    	//TRUYỀN ĐƯỜNG DẪN TUYỆT ĐỐI (ĐỐI VỚI MÁY MÌNH, CÒN MÁY KHÁC NỄU CHẠY ĐƯỢC THÌ KHỎI SỬA DB)
-//			                        lbImageBook.setIcon(new javax.swing.ImageIcon(image));
-//			                        txtISBN.setText(isbn);
-//			                        txtEdition.setText(edition);
-//			                        txtISBN.setEditable(false);
-//			                        txtGia.setText(cost);
-////			                        txtISBN.setEditable(false);
-////			                        lblicon_img.setEnabled(false);
-//			                    } else {
-//			                        System.out.println("Không thể đọc hình ảnh.");
-//			                        System.out.println("Không thể tìm thấy mã ISBN.");
-//			                    }
-//			                } catch (IOException e1) {
-//			                    System.out.println(e1);
-//			                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Không thể đọc tệp ảnh.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//			                }
-//			            } else {
-//			                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tệp ảnh không tồn tại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//			            }
-//			            if(name==null)
-//			            {
-//			            	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên sách không được bỏ trống", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
-//			            }
-//			        }
-//				} catch (Exception e1) {
-//					// TODO Auto-generated catch block
-////    				JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên sách không đúng hoặc Tên Sách không tồn tại.","Cảnh Báo",JOptionPane.WARNING_MESSAGE);
-//					System.out.println(e1);
-//				}
-//    		}
-//    	});       
+		});      
         
         txtGia.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 229, 229)));
         txtGia.setFont(new java.awt.Font("SansSerif", 1, 13));
@@ -421,7 +385,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 					else {
 						JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Nội dung không thể chứa cả chữ và số. ","Cảnh Báo",JOptionPane.WARNING_MESSAGE);
 					}
-					if(g==null)
+					if(g.isEmpty())
 					{
 						JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Giá không được bỏ trống", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
 					}
@@ -467,7 +431,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 					else {
 						JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Nội dung không thể chứa cả chữ và số. ","Cảnh Báo",JOptionPane.WARNING_MESSAGE);
 					}
-					if(sl==null)
+					if(sl.isEmpty())
 					{
 						JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Số lượng không được bỏ trống","Cảnh báo",JOptionPane.WARNING_MESSAGE);
 					}
@@ -669,21 +633,34 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 						{
 							JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Nội dung là số không phải là chữ!","Cảnh Báo",JOptionPane.WARNING_MESSAGE);
 						}
+				        if(isbn.isEmpty())
+				        {
+				        	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "ISBN không được bỏ trống", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+				        }
 						else
 						{
-							File imageFile = new File(img);
-					        if (imageFile.exists() && imageFile.canRead()) {
-					            try {
-					                BufferedImage image = ImageIO.read(imageFile);
-					                if (image != null && isbn!=null) {
-					                	//TRUYỀN ĐƯỜNG DẪN TUYỆT ĐỐI (ĐỐI VỚI MÁY MÌNH, CÒN MÁY KHÁC NỄU CHẠY ĐƯỢC THÌ KHỎI SỬA DB)
-					                    lbImageBook.setIcon(new javax.swing.ImageIcon(image));
-					                    cbSach.setSelectedItem(book);
-					                    txtEdition.setText(edition);
-					                    txtGia.setText(cost);
-					                    txtISBN.setEditable(false);
-					                    txtEdition.setEditable(false);
-					                    if(tacgia == null)
+						    File imageFile = new File(img);
+						    if (imageFile.exists() && imageFile.canRead()) {
+						        try { 	
+						            BufferedImage image = ImageIO.read(imageFile);
+						            if (image != null && isbn!=null) {
+						                // Kích thước mới (ví dụ: 200x200)
+						                int newWidth = 190;
+						                int newHeight = 190;
+		
+						                // Tạo ảnh mới với kích thước đã chỉ định
+						                Image resizedImage = image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+						                BufferedImage bufferedResizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+						                bufferedResizedImage.getGraphics().drawImage(resizedImage, 0, 0, null);
+		
+						                // Gán ảnh đã thay đổi kích thước vào JLabel
+						                lbImageBook.setIcon(new javax.swing.ImageIcon(bufferedResizedImage));
+				                        txtISBN.setText(isbn);
+				                        txtEdition.setText(edition);
+				                        txtGia.setText(cost);
+				                        txtISBN.setEditable(false);
+				                        txtEdition.setEditable(false);
+				                        if(tacgia == null)
 				                        {
 				                        	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tác phẩm này bị thiếu phần tác giả","Thông báo", JOptionPane.INFORMATION_MESSAGE);
 				                        }else {
@@ -699,28 +676,25 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 						                    cbTheLoai.setSelectedItem(theloai);
 						                    cbTheLoai.setEnabled(false);
 				                        }
-					                    cbNXB.setSelectedItem(nxb);
-					                    cbNXB.setEnabled(false);
-//					                    txtTenSach.setEditable(false);
-//					                    lblicon_img.setEnabled(false);
-					                } else {
-					                	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Chưa có dữ liệu cho cuốn sách này!","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-					                    cbTacGia.setEnabled(true);
-					                    cbTheLoai.setEnabled(true);
-					                    cbNXB.setEnabled(true);
-					                }
-					            } catch (IOException e1) {
-					                System.out.println(e1);
-					                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Không thể đọc tệp ảnh.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-					            }
-					        } 
+		 
+				                        cbNXB.setSelectedItem(nxb);
+				                        cbNXB.setEnabled(false);
+//				                        txtISBN.setEditable(false);
+//				                        lblicon_img.setEnabled(false);
+				                    }else {
+				                    	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Chưa có dữ liệu cho cuốn sách này!","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+				                    	cbTacGia.setEnabled(true);
+				                    	cbTheLoai.setEnabled(true);
+				                    	cbNXB.setEnabled(true);
+				                    }
+				                } catch (IOException e1) {
+				                    System.out.println(e1);
+				                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Không thể đọc tệp ảnh.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+				                }
+						 }
 //					        else {
 //					            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tệp ảnh không tồn tại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
 //					        }
-					        if(isbn==null)
-					        {
-					        	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "ISBN không được bỏ trống", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
-					        }
 						}
 //						else {
 //							JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Nội dung không thể chứa cả chữ và số. ","Cảnh Báo",JOptionPane.WARNING_MESSAGE);
@@ -875,7 +849,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 
             },
             new String [] {
-                "STT", "ISBN", "Tên sách", "Tác giả", "Tái Bản", "NXB", "Thể loại", "Giá", "Số lượng"
+                "STT", "ISBN", "Tên sách", "Tác giả", "Tái Bản", "NXB", "Thể loại", "Giá", "Số lượng","Ảnh"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -926,7 +900,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 					nxb = String.valueOf(cbNXB.getSelectedItem());
 					theloai = String.valueOf(cbTheLoai.getSelectedItem());
 					ncc = String.valueOf(cbNhaCungCap.getSelectedItem());
-					String[] rowData = {Integer.toString(model.getRowCount() + 1), isbn, tensach, tgia, edition, nxb, theloai, gia, soluong};
+					String[] rowData = {Integer.toString(model.getRowCount() + 1), isbn, tensach, tgia, edition, nxb, theloai, gia, soluong, anh};
 					model.addRow(rowData);
 					tongchi = tongchi + (Integer.parseInt(gia) * Integer.parseInt(soluong));
 					tongsoluong = tongsoluong + (Integer.parseInt(soluong));
@@ -1006,6 +980,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 				txtEdition.setEditable(true);
 				txtISBN.setEditable(true);
 				cbNXB.setEnabled(true);
+				cbNhaCungCap.setEnabled(true);
 				cbTacGia.setEnabled(true);
 				cbTheLoai.setEnabled(true);
 				txtGia.setText("");
@@ -1046,7 +1021,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         				Object g = tbSachDuocNhap.getValueAt(seclectedRow, 7).toString();
         				Object sl = tbSachDuocNhap.getValueAt(seclectedRow, 8).toString();
         				if(sach!=null && tg!=null && nhaxuatban!=null && tl!=null && g!=null && sl!=null)
-        				{
+        				{      					
     			            txtGia.setText(String.valueOf(g));
     			            txtGia.setEditable(false);
     			            txtSoLuong.setText(String.valueOf(sl));
@@ -1067,31 +1042,43 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
             				cbNhaCungCap.setSelectedItem(ncc);
         					cbNhaCungCap.setEnabled(false);
         					
-        					String img;
-                            try {
-                                img = supplyCard.getByImg(String.valueOf(sach));
-                                File imageFile = new File(img);
-                                if (imageFile.exists() && imageFile.canRead()) {
-                                    try {
-                                        BufferedImage image = ImageIO.read(imageFile);
-                                        if (image != null) {
-                                            //TRUYỀN ĐƯỜNG DẪN TUYỆT ĐỐI (ĐỐI VỚI MÁY MÌNH, CÒN MÁY KHÁC NỄU CHẠY ĐƯỢC THÌ KHỎI SỬA DB)
-                                            lbImageBook.setIcon(new javax.swing.ImageIcon(image));
-                                        }
-                                    } catch (IOException e1) {
-                                        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Không thể đọc tệp ảnh.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                                    }
-                                } 
+        						String img;
+    							try {
+    								img = supplyCard.getByImg(String.valueOf(sach));
+    								File imageFile = new File(img);
+    								if (imageFile.exists() && imageFile.canRead()) {
+    									try {
+    										BufferedImage imagebook = ImageIO.read(imageFile);
+    										if (imagebook != null) {
+    											int newWidth = 190;
+    											int newHeight = 190;
+    							
+    											// Tạo ảnh mới với kích thước đã chỉ định
+    											Image resizedImage = imagebook.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+    											BufferedImage bufferedResizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+    											bufferedResizedImage.getGraphics().drawImage(resizedImage, 0, 0, null);
+    							
+    											// Gán ảnh đã thay đổi kích thước vào JLabel
+    											lbImageBook.setIcon(new javax.swing.ImageIcon(bufferedResizedImage));
+    										}
+    									} catch (IOException e1) {
+    										JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Không thể đọc tệp ảnh.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+    									}
+    								}
+    							} catch (Exception ex) {
+    								ex.printStackTrace();
+    							}
+						
 //                                else {
 //                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tệp ảnh không tồn tại hoặc không thể đọc.", "Lỗi", JOptionPane.ERROR_MESSAGE);
 //                                }
-                            } catch (SQLException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            } catch (IOException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }
+                            // } catch (SQLException e1) {
+                            //     // TODO Auto-generated catch block
+                            //     e1.printStackTrace();
+                            // } catch (IOException e1) {
+                            //     // TODO Auto-generated catch block
+                            //     e1.printStackTrace();
+                            // }
     						
         				}
         			}
@@ -1218,45 +1205,6 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-//				int rs = JOptionPane.showConfirmDialog(JOptionPane.getRootFrame(), "Bạn có muốn nhập qua sheet không?","Xác nhận",JOptionPane.YES_NO_OPTION);
-//				if(rs == JOptionPane.YES_OPTION)
-//				{
-//					boolean hasEmpty = hasEmptyCell(tbSachDuocNhap);
-//			        if (hasEmpty) {
-//			            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thông tin trong bảng trống, không thể nhập vào sheet","Lỗi",JOptionPane.ERROR_MESSAGE);
-//			        } else {
-//			        	try {
-//			                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//			                Random random = new Random();
-//			                String randomFileName = "C:\\Users\\Hi\\Documents\\Excel\\SupplyCard_" + dateFormat.format(new Date()) + "_" + random.nextInt(1000) + ".xlsx";
-//
-//			                File excelFile = new File(randomFileName);
-//			                XSSFWorkbook workbook = new XSSFWorkbook();
-//			                XSSFSheet sheet = workbook.createSheet(String.valueOf(dateFormat.format(new Date())));
-//			                XSSFRow titleRow = sheet.createRow(0);
-//			                for(int j = 0; j < tbSachDuocNhap.getColumnCount(); j++)
-//			                {
-//			                	XSSFCell cell = titleRow.createCell(j);
-//			                	cell.setCellValue(tbSachDuocNhap.getColumnName(j));
-//			                }
-//			                for (int i = 0; i < tbSachDuocNhap.getRowCount(); i++) {
-//			                    XSSFRow row = sheet.createRow(i+1);
-//			                    for (int j = 0; j < tbSachDuocNhap.getColumnCount(); j++) {
-//			                        XSSFCell cell = row.createCell(j);
-//			                        cell.setCellValue(tbSachDuocNhap.getValueAt(i, j).toString());
-//			                    }
-//			                }
-//			                FileOutputStream outFile = new FileOutputStream(excelFile);
-//			                workbook.write(outFile);
-//			                outFile.close();
-//			                workbook.close();
-//			                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Dữ liệu đã được ghi vào tệp Excel: " + randomFileName);
-//			            } catch (Exception ex) {
-//			                ex.printStackTrace();
-//			            }
-//			        }
-//				}
-//				else {
 				    // LƯU DỮ LIỆU VÀO DATABASE
 		            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		            Date currentDate = new Date();
@@ -1317,6 +1265,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 						      k.setEdition(edition);
 						      k.setPublisherID(pubID);
 						      k.setCost(Long.parseLong(gia));
+						      k.setImg(String.valueOf(tbSachDuocNhap.getValueAt(i, 9).toString()));
 						      cB.savecpB(k);
 						      	
 						      	//Thêm vào Chi Tiết Đơn Nhập
@@ -1658,7 +1607,8 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
     protected String gia, soluong;
     private String[] rowdata;
     protected String tensach;
-    protected String tgia, nxb, ncc, theloai, edition, isbn;
+    protected String tgia, nxb, ncc, theloai, edition, isbn, anh;
+    protected Icon img;
     private Date supDate;
     protected MyDesign.MyTextField_Basic txtEdition;
     protected MyDesign.MyTextField_Basic txtISBN;
