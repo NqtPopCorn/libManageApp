@@ -46,6 +46,11 @@ public class PublisherBUS {
             pdao = new PublisherDAO(connectDB);
             return pdao.getByNamePub(name);
     }
+    public String getByIDPubName(String isbn) throws SQLException, IOException
+    {
+    		pdao = new PublisherDAO(connectDB);
+    		return pdao.getByIDPubName(isbn);
+    }
     public boolean deleteByPublisherName (String name) throws SQLException, IOException{
         pdao = new PublisherDAO(connectDB);
         pdao.deleteByName(name);

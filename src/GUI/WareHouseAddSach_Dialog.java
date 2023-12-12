@@ -7,18 +7,16 @@ package GUI;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import BUS.BookBUS;
 import BUS.PublisherBUS;
-import BUS.SupplierBUS;
-import BUS.SupplyCardBUS;
-import DTO.entities.Account;
-import DTO.entities.Supplier;
-import DTO.entities.SupplyCard;
-import java.io.IOException;
-import java.sql.SQLException;
+import DTO.entities.Book;
+import DTO.entities.Publisher;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,22 +24,15 @@ import java.util.logging.Logger;
  *
  * @author QUANG DIEN
  */
-public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
+public class WareHouseAddSach_Dialog extends javax.swing.JDialog {
     static String nameFrame;
-    static Account user;
     /**
      * Creates new form WareHouseAddReader_Dialog
      */
-    public WareHouseAddNCC_Dialog(java.awt.Frame parent,String nameFrame,Account user, boolean modal) throws SQLException, IOException, ClassNotFoundException {
-        super(parent,nameFrame ,modal);
-        WareHouseAddNCC_Dialog.nameFrame = nameFrame;        
-        WareHouseAddNCC_Dialog.user = user;
-
-        try {
-            initComponents();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(WareHouseAddNCC_Dialog.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public WareHouseAddSach_Dialog(java.awt.Frame parent, String nameFrame,boolean modal) throws SQLException, IOException, ClassNotFoundException {
+        super(parent, modal);
+        WareHouseAddSach_Dialog.nameFrame = nameFrame;
+        initComponents();
     }
 
     /**
@@ -51,100 +42,77 @@ public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() throws SQLException, IOException, ClassNotFoundException{
+    private void initComponents()throws SQLException, IOException, ClassNotFoundException {
 
         panelBorder_Statistic_Blue1 = new MyDesign.PanelBorder_Statistic_Blue();
         panelBorder_Basic1 = new MyDesign.PanelBorder_Basic();
         jLabel8 = new javax.swing.JLabel();
-        txtNhaCungCap = new MyDesign.MyTextField_Basic();
-        btnThemNhaCungCap = new MyDesign.MyButton();
+        txtTenSach = new MyDesign.MyTextField_Basic();
+        btnThemNhaXuatBan = new MyDesign.MyButton();
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel8.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        jLabel8.setText("Nhà cung cấp");
+        jLabel8.setText("Tên sách");
 
-        txtNhaCungCap.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 229, 229)));
+        txtTenSach.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 229, 229)));
 
-        btnThemNhaCungCap.setBackground(new java.awt.Color(22, 113, 221));
-        btnThemNhaCungCap.setForeground(new java.awt.Color(255, 255, 255));
-        btnThemNhaCungCap.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/action-add-white.png"))); // NOI18N
-        btnThemNhaCungCap.setText("Thêm nhà cung cấp");
-        btnThemNhaCungCap.setBorderColor(new java.awt.Color(22, 113, 221));
-        btnThemNhaCungCap.setColor(new java.awt.Color(22, 113, 221));
-        btnThemNhaCungCap.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        btnThemNhaXuatBan.setBackground(new java.awt.Color(22, 113, 221));
+        btnThemNhaXuatBan.setForeground(new java.awt.Color(255, 255, 255));
+        btnThemNhaXuatBan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/action-add-white.png"))); // NOI18N
+        btnThemNhaXuatBan.setText("Thêm tên sách");
+        btnThemNhaXuatBan.setBorderColor(new java.awt.Color(22, 113, 221));
+        btnThemNhaXuatBan.setColor(new java.awt.Color(22, 113, 221));
+        btnThemNhaXuatBan.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         
-        btnThemNhaCungCap.addActionListener(new ActionListener() {
+        btnThemNhaXuatBan.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (txtNhaCungCap.getText().equals("")) {
+                if (txtTenSach.getText().equals("")) {
                     JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Vui lòng điền đầy đủ thông tin.", "Cảnh Báo", JOptionPane.WARNING_MESSAGE);
                 } else {
                     try {
-                    	Supplier p = new Supplier();
-                        p.setSupplier_name(txtNhaCungCap.getText());
-                        if (nameFrame == "more_gui"){
-                            More_GUI gui;
-                            try {
-                                gui = new More_GUI(WareHouseAddNCC_Dialog.user);
-                                if(pub.getByNameAuthor(p.getSupplier_name())!=null)
-                                {
-                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên NCC đã tồn tại!","Thông báo",JOptionPane.WARNING_MESSAGE);
-                                }
-                                else {
-                                    pub.saveInfo(p);
-                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);                                
-                                    List<Supplier> publisherList = pub.getAllName();
-                                    int stt = 1;
-                                    gui.suppliersModel.setRowCount(0);
-                                    for(Supplier item : publisherList)
-                                    {
-                                        if(item.getSupplier_status() == 1)
-                                            gui.suppliersModel.addRow(new Object[]{stt++,item.getSupplier_name()});
-                                    }
-                                    hide();
-                                    gui.setVisible(true);
-                                    
-                                }
-                            } catch (SQLException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            } catch (IOException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }catch (ClassNotFoundException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }
-                    }
-                        else{
+                    	Book b = new Book();
+                        b.setName(txtTenSach.getText());
+//                        if (nameFrame == "more_gui"){
+//                            System.out.print("More_GUI");
+//                            More_GUI gui;
+//                            try {
+//                                gui = new More_GUI();
+//                                if(pub.getByNamePub(p.getName())!=null)
+//                                {
+//                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên NXB đã tồn tại!","Thông báo",JOptionPane.WARNING_MESSAGE);
+//                                }
+//                                else {
+//                                    pub.saveInfo(p);
+//                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);                                
+//                                    gui.initTableAuthor();
+//                                    hide();
+//                                    gui.setVisible(true);
+//                                    
+//                                }
+//                            } catch (SQLException e1) {
+//                                // TODO Auto-generated catch block
+//                                e1.printStackTrace();
+//                            } catch (IOException e1) {
+//                                // TODO Auto-generated catch block
+//                                e1.printStackTrace();
+//                            }
+//                        } else{
                             WareHouseImport_Dialog whid;
                             try {
                                 whid = new WareHouseImport_Dialog(null, rootPaneCheckingEnabled);
-                                if(pub.getByNameAuthor(p.getSupplier_name())!=null)
+                                if(bb.getByNameBook(b.getName())!=null)
                                 {
-                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên NCC đã tồn tại!","Thông báo",JOptionPane.WARNING_MESSAGE);
+                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên Sách đã tồn tại!","Thông báo",JOptionPane.WARNING_MESSAGE);
                                     
                                 }
                                 else {
-                                    pub.saveInfo(p);
+                                    bb.saveInfo(b);
+                                    String value = txtTenSach.getText();
+                                    whid.addToComboBox(value);
                                     JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
-                                    List<Supplier> publisherList = pub.getAllName();
-                                    whid.cbNhaCungCap.removeAllItems();
-                                    whid.cbNXB.removeAllItems();
-                                    for(Supplier item : publisherList)
-                                    {
-                                        if(item.getSupplier_status() == 1)
-                                            whid.cbNXB.addItem(item.getSupplier_name());
-                                    }
-                                    for(Supplier item : publisherList)
-                                    {
-                                        if(item.getSupplier_status() == 1)
-                                            whid.cbNhaCungCap.addItem(item.getSupplier_name());
-                                    }
-                                    hide();
-                                    whid.setVisible(true);
                                 }
                             } catch (ClassNotFoundException e1) {
                                 // TODO Auto-generated catch block
@@ -156,7 +124,7 @@ public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
                                 // TODO Auto-generated catch block
                                 e1.printStackTrace();
                             }
-                        }
+//                        }
                     } catch (HeadlessException e1) {
                         JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Lỗi Thêm NXB.", "ERROR", JOptionPane.ERROR_MESSAGE);
                         System.out.println(e1);
@@ -164,6 +132,7 @@ public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
                 }
             }
         });
+
         
         javax.swing.GroupLayout panelBorder_Basic1Layout = new javax.swing.GroupLayout(panelBorder_Basic1);
         panelBorder_Basic1.setLayout(panelBorder_Basic1Layout);
@@ -172,11 +141,11 @@ public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
             .addGroup(panelBorder_Basic1Layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addGroup(panelBorder_Basic1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnThemNhaCungCap, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnThemNhaXuatBan, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelBorder_Basic1Layout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtNhaCungCap, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(txtTenSach, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
         panelBorder_Basic1Layout.setVerticalGroup(
@@ -185,17 +154,17 @@ public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
                 .addGap(28, 28, 28)
                 .addGroup(panelBorder_Basic1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(txtNhaCungCap, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTenSach, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(btnThemNhaCungCap, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnThemNhaXuatBan, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/warehouse-white.png"))); // NOI18N
-        jLabel4.setText("Nhà cung cấp");
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/nav-reader.png"))); // NOI18N
+        jLabel4.setText("Tên sách");
 
         javax.swing.GroupLayout panelBorder_Statistic_Blue1Layout = new javax.swing.GroupLayout(panelBorder_Statistic_Blue1);
         panelBorder_Statistic_Blue1.setLayout(panelBorder_Statistic_Blue1Layout);
@@ -235,16 +204,62 @@ public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
-        
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(WareHouseAddSach_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(WareHouseAddSach_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(WareHouseAddSach_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(WareHouseAddSach_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the dialog */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    WareHouseAddSach_Dialog dialog = new WareHouseAddSach_Dialog(new javax.swing.JFrame(),nameFrame, true);
+                    dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosing(java.awt.event.WindowEvent e) {
+                            
+                            System.exit(0);
+                        }
+                    });
+                    dialog.setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(WareHouseAddSach_Dialog.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(WareHouseAddSach_Dialog.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(WareHouseAddSach_Dialog.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private MyDesign.MyButton btnThemNhaCungCap;
+    private MyDesign.MyButton btnThemNhaXuatBan;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel8;
     private MyDesign.PanelBorder_Basic panelBorder_Basic1;
     private MyDesign.PanelBorder_Statistic_Blue panelBorder_Statistic_Blue1;
-    MyDesign.MyTextField_Basic txtNhaCungCap;
-    private SupplyCardBUS scb = new SupplyCardBUS();
-    private SupplierBUS pub = new SupplierBUS();
+    protected MyDesign.MyTextField_Basic txtTenSach;
+    private BookBUS bb = new BookBUS();
     // End of variables declaration//GEN-END:variables
 }

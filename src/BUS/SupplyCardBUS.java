@@ -98,11 +98,6 @@ public class SupplyCardBUS {
 //            scd = new SupplyCardDAO(connectDB);
 //            return scd.getByNameProvider(name);
 //    }
-    public void saveProvider(SupplyCard sc) throws SQLException, IOException
-    {
-            scd = new SupplyCardDAO(connectDB);
-            scd.saveProvider(sc);
-    }
     public List<SupplyCard> getAllSC(){
             return scd.getAllSC();
     }

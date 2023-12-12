@@ -56,11 +56,4 @@ public class AccountBUS {
         return true;
     }
     
-    public static void signUp(Account user) throws NoSuchAlgorithmException, ClassNotFoundException, SQLException{
-        user.setPwd(Account.hashPassword(user.getPwd()));
-        userDAO.create(user);
-        list.add(user);  
-        quantity = list.size();
-    }
-    
 }

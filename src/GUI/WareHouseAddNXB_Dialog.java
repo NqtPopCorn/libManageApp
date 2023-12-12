@@ -231,7 +231,7 @@ public class WareHouseAddNXB_Dialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel8;
     private MyDesign.PanelBorder_Basic panelBorder_Basic1;
     private MyDesign.PanelBorder_Statistic_Blue panelBorder_Statistic_Blue1;
-    private MyDesign.MyTextField_Basic txtNhaXuatBan;
+    MyDesign.MyTextField_Basic txtNhaXuatBan;
     private PublisherBUS pub = new PublisherBUS();
     // End of variables declaration//GEN-END:variables
 }

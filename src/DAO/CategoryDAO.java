@@ -53,6 +53,25 @@ public class CategoryDAO {
 	    } 
 	    return status;
 	}
+        public String getByName(String isbn) throws SQLException {
+        String status = null;
+        String query = "SELECT category.name FROM category INNER JOIN book_category ON category.id = book_category.categoryID WHERE book_category.ISBN COLLATE Latin1_General_BIN = ? COLLATE Latin1_General_BIN";
+        connectDB.connect();
+        try {
+            Connection connection = connectDB.getConnection();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, isbn);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        status = resultSet.getString("name");
+                    }
+                }
+            } 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        return status;
+    }
     public void saveProvider(Category c) {
         String query = "INSERT INTO category (name) VALUES (?)";
         try {

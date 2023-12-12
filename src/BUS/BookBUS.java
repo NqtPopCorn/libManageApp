@@ -6,18 +6,28 @@ package BUS;
 import DAO.BookDAO;
 import DTO.entities.Book;
 import DTO.entities.Book1;
+import connection.ConnectDB;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 /**
  *
  * @author ADMIN
  */
 public class BookBUS {
     protected static BookDAO bookDAO ;
-        private ArrayList<Book1> listAll= new ArrayList<>();  //THEM CAI NAY
-    public BookBUS() throws ClassNotFoundException, SQLException {
-        
+        private ArrayList<Book1> listAll= new ArrayList<>();
+        private ConnectDB connectDB;//THEM CAI NAY
+    public BookBUS() throws ClassNotFoundException, SQLException, IOException {
+        ConnectDB connectDB = null;
+		try {
+		    connectDB = new ConnectDB();
+		    bookDAO = new BookDAO(connectDB);
+		} catch (ClassNotFoundException | SQLException e) {
+		    e.printStackTrace();
+		}
+
     }   
     public ArrayList<Book1> getAll() throws ClassNotFoundException, SQLException, IOException                   //Sua lai cai nay
     {   
@@ -34,7 +44,14 @@ public class BookBUS {
        }
        return null;
     }
-
+    public List<Book> getAllName() throws SQLException{
+        return bookDAO.getAllName();
+    }
+    public String getByNameBook(String name) throws SQLException, IOException, ClassNotFoundException
+    {
+            bookDAO = new BookDAO(connectDB);
+            return bookDAO.getByNameBook(name);
+    }
      public ArrayList<Book1> getAllByCondition(String nameBook,String nameAuthor,String namePublisher) throws ClassNotFoundException, SQLException, IOException
      {
          ArrayList<Book1> result = new ArrayList<>();
@@ -90,6 +107,10 @@ public class BookBUS {
 }
      
     public void saveInfo(Book1 b) throws ClassNotFoundException, SQLException, IOException{
+        bookDAO = new BookDAO();
+        bookDAO.saveInfo(b);
+    }
+    public void saveInfo(Book b) throws ClassNotFoundException, SQLException, IOException{
         bookDAO = new BookDAO();
         bookDAO.saveInfo(b);
     }

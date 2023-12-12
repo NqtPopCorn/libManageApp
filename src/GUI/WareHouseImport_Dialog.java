@@ -15,6 +15,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -42,6 +44,8 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.aspose.pdf.internal.imaging.internal.bouncycastle.jcajce.provider.symmetric.AES.CBC;
+
 import BUS.BookBUS;
 import BUS.AuthorBUS;
 import BUS.CategoryBUS;
@@ -52,6 +56,7 @@ import BUS.SupplyCardBUS;
 import BUS.WarehouseBUS;
 import DTO.entities.Account;
 import DTO.entities.Author;
+import DTO.entities.Book;
 import DTO.entities.Category;
 import DTO.entities.Warehouse;
 import DTO.entities.Publisher;
@@ -65,6 +70,7 @@ import DTO.entities.SupplyCardDetail;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import javax.swing.JTextField;
@@ -73,6 +79,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import MyDesign.MyButton;
 import java.awt.Font;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import javax.swing.JButton;
 
 /**
  *
@@ -94,6 +103,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
             JPanel p = new JPanel();
             p.setBackground(Color.WHITE);
             spTable.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
+            
         } catch (IOException ex) {
             Logger.getLogger(WareHouseImport_Dialog.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -125,7 +135,6 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         jLabel8 = new javax.swing.JLabel();
         jLabel8_1 = new javax.swing.JLabel();
         jLabel8_2 = new javax.swing.JLabel();
-        txtTenSach = new MyDesign.MyTextField_Basic();
         txtISBN = new MyDesign.MyTextField_Basic();
         txtEdition = new MyDesign.MyTextField_Basic();
         txtGia = new MyDesign.MyTextField_Basic();
@@ -134,6 +143,9 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         List<Author> authorList = author.getAllName();
         cbTacGia = new javax.swing.JComboBox<>();
         lbThemTacGia = new javax.swing.JLabel();
+        bB = new BookBUS();
+        List<Book> bookList = bB.getAllName();
+        cbSach = new javax.swing.JComboBox<>();
         publisher = new PublisherBUS();
         final List<Publisher> publisherList = publisher.getAllName();
         cbNXB = new javax.swing.JComboBox<>();
@@ -146,15 +158,12 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         jLabel9 = new javax.swing.JLabel();
         spTable = new javax.swing.JScrollPane();
         tbSachDuocNhap = new MyDesign.MyTable();
-        btnNhapQuaSheet = new MyDesign.MyButton();
-        btnLoadNCCNXB = new MyDesign.MyButton();
         jLabel10 = new javax.swing.JLabel();
         supplyCard = new SupplyCardBUS();
         List<SupplyCard> supplyCardList = supplyCard.getAllName();
         List<Supplier> supplierList = spB.getAllName();
         cbNhaCungCap = new javax.swing.JComboBox<>();
         lbThemNhaCungCap = new javax.swing.JLabel();
-        lblicon_img = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         txtTongChi = new javax.swing.JLabel();
         btnXacNhan = new MyDesign.MyButton();
@@ -193,15 +202,20 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         
         
         javax.swing.GroupLayout pnImageBookLayout = new javax.swing.GroupLayout(pnImageBook);
-        pnImageBook.setLayout(pnImageBookLayout);
         pnImageBookLayout.setHorizontalGroup(
-            pnImageBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lbImageBook, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+        	pnImageBookLayout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(Alignment.TRAILING, pnImageBookLayout.createSequentialGroup()
+        			.addGap(52)
+        			.addComponent(lbImageBook, GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+        			.addContainerGap())
         );
         pnImageBookLayout.setVerticalGroup(
-            pnImageBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lbImageBook, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+        	pnImageBookLayout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(Alignment.TRAILING, pnImageBookLayout.createSequentialGroup()
+        			.addContainerGap()
+        			.addComponent(lbImageBook, GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE))
         );
+        pnImageBook.setLayout(pnImageBookLayout);
 
         jLabel2.setFont(new java.awt.Font("SansSerif", 1, 13)); // NOI18N
         jLabel2.setText("Số lượng");
@@ -227,70 +241,147 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         jLabel8.setFont(new java.awt.Font("SansSerif", 1, 13)); // NOI18N
         jLabel8.setText("Tên sách");
         
-        txtTenSach.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 229, 229)));
-        txtTenSach.setFont(new java.awt.Font("SansSerif", 1, 13));
+        cbSach.setBackground(new java.awt.Color(246, 250, 255));
+        cbSach.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        for(Book item : bookList)
+        {
+        	cbSach.addItem(item.getName());
+        }
+        cbSach.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 229, 229)));
+        cbSach.setOpaque(true);
         
-        //GÕ ENTER SAU KHI NHẬP TÊN SÁCH
-        txtTenSach.addKeyListener(new KeyListener() {
-    			
-    		@Override
-    		public void keyTyped(KeyEvent e) {
-    			// TODO Auto-generated method stub
-    		}
-    			
-    		@Override
-    		public void keyReleased(KeyEvent e) {
-    			// TODO Auto-generated method stub
-    				
-    		}
-    			
-    		@Override
-    		public void keyPressed(KeyEvent e) {
-    			final String name = txtTenSach.getText();
-    			// TODO Auto-generated method stub
-    			try {
-					if(e.getKeyCode()==KeyEvent.VK_ENTER)
-					{
-						String img = supplyCard.getByImg(name);
-						String isbn = supplyCard.getByISBN(name);
-						String edition = supplyCard.getByEdition(name);
-						String cost = String.valueOf(supplyCard.getByCost(name));
-						File imageFile = new File(img);
-			            if (imageFile.exists() && imageFile.canRead()) {
-			                try {
-			                    BufferedImage image = ImageIO.read(imageFile);
-			                    if (image != null && isbn!=null) {
-			                    	//TRUYỀN ĐƯỜNG DẪN TUYỆT ĐỐI (ĐỐI VỚI MÁY MÌNH, CÒN MÁY KHÁC NỄU CHẠY ĐƯỢC THÌ KHỎI SỬA DB)
-			                        lbImageBook.setIcon(new javax.swing.ImageIcon(image));
-			                        txtISBN.setText(isbn);
-			                        txtEdition.setText(edition);
-			                        txtISBN.setEditable(false);
-			                        txtGia.setText(cost);
+        cbSach.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String selectedValue = (String) cbSach.getSelectedItem();
+                if (selectedValue != null) {
+					String img = null, isbn = null, edition = null, cost = null, tacgia = null, theloai = null, nxb = null;
+					try {
+						img = supplyCard.getByImg(selectedValue);
+						isbn = supplyCard.getByISBN(selectedValue);
+						edition = supplyCard.getByEdition(selectedValue);
+						cost = String.valueOf(supplyCard.getByCost(selectedValue));
+						tacgia = author.getByName(isbn);
+						theloai = category.getByName(isbn);
+						nxb = publisher.getByIDPubName(isbn);
+					} catch (SQLException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					} catch (IOException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+					File imageFile = new File(img);
+		            if (imageFile.exists() && imageFile.canRead()) {
+		                try {
+		                    BufferedImage image = ImageIO.read(imageFile);
+		                    if (image != null && isbn!=null) {
+		                    	//TRUYỀN ĐƯỜNG DẪN TUYỆT ĐỐI (ĐỐI VỚI MÁY MÌNH, CÒN MÁY KHÁC NỄU CHẠY ĐƯỢC THÌ KHỎI SỬA DB)
+		                        lbImageBook.setIcon(new javax.swing.ImageIcon(image));
+		                        txtISBN.setText(isbn);
+		                        txtEdition.setText(edition);
+		                        txtGia.setText(cost);
+		                        txtISBN.setEditable(false);
+		                        txtEdition.setEditable(false);
+		                        if(tacgia == null)
+		                        {
+		                        	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tác phẩm này bị thiếu phần tác giả","Thông báo", JOptionPane.INFORMATION_MESSAGE);
+		                        }else {
+		                        	addToComboBoxCheckTg(tacgia);
+				                    cbTacGia.setSelectedItem(tacgia);
+				                    cbTacGia.setEnabled(false);
+		                        }
+		                        if(theloai == null)
+		                        {
+		                        	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tác phẩm này bị thiếu phần thể loại","Thông báo", JOptionPane.INFORMATION_MESSAGE);
+		                        }else {
+		                        	addToComboBoxCheckTl(theloai);
+				                    cbTheLoai.setSelectedItem(theloai);
+				                    cbTheLoai.setEnabled(false);
+		                        }
+ 
+		                        cbNXB.setSelectedItem(nxb);
+		                        cbNXB.setEnabled(false);
+//		                        txtISBN.setEditable(false);
+//		                        lblicon_img.setEnabled(false);
+		                    }else {
+		                    	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Chưa có dữ liệu cho cuốn sách này!","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+		                    	cbTacGia.setEnabled(true);
+		                    	cbTheLoai.setEnabled(true);
+		                    	cbNXB.setEnabled(true);
+		                    }
+		                } catch (IOException e1) {
+		                    System.out.println(e1);
+		                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Không thể đọc tệp ảnh.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		                }
+		            } else {
+		                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tệp ảnh không tồn tại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		            }
+                }
+			}
+		});
+//        txtTenSach.addKeyListener(new KeyListener() {
+//    			
+//    		@Override
+//    		public void keyTyped(KeyEvent e) {
+//    			// TODO Auto-generated method stub
+//    		}
+//    			
+//    		@Override
+//    		public void keyReleased(KeyEvent e) {
+//    			// TODO Auto-generated method stub
+//    				
+//    		}
+//    			
+//    		@Override
+//    		public void keyPressed(KeyEvent e) {
+//    			final String name = txtTenSach.getText();
+//    			// TODO Auto-generated method stub
+//    			try {
+//					if(e.getKeyCode()==KeyEvent.VK_ENTER)
+//					{
+//						String img = supplyCard.getByImg(name);
+//						String isbn = supplyCard.getByISBN(name);
+//						String edition = supplyCard.getByEdition(name);
+//						String cost = String.valueOf(supplyCard.getByCost(name));
+//						File imageFile = new File(img);
+//			            if (imageFile.exists() && imageFile.canRead()) {
+//			                try {
+//			                    BufferedImage image = ImageIO.read(imageFile);
+//			                    if (image != null && isbn!=null) {
+//			                    	//TRUYỀN ĐƯỜNG DẪN TUYỆT ĐỐI (ĐỐI VỚI MÁY MÌNH, CÒN MÁY KHÁC NỄU CHẠY ĐƯỢC THÌ KHỎI SỬA DB)
+//			                        lbImageBook.setIcon(new javax.swing.ImageIcon(image));
+//			                        txtISBN.setText(isbn);
+//			                        txtEdition.setText(edition);
 //			                        txtISBN.setEditable(false);
-//			                        lblicon_img.setEnabled(false);
-			                    } else {
-			                        System.out.println("Không thể đọc hình ảnh.");
-			                        System.out.println("Không thể tìm thấy mã ISBN.");
-			                    }
-			                } catch (IOException e1) {
-			                    System.out.println(e1);
-			                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Không thể đọc tệp ảnh.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-			                }
-			            } else {
-			                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tệp ảnh không tồn tại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-			            }
-			            if(name==null)
-			            {
-			            	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên sách không được bỏ trống", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
-			            }
-			        }
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-//    				JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên sách không đúng hoặc Tên Sách không tồn tại.","Cảnh Báo",JOptionPane.WARNING_MESSAGE);
-					System.out.println(e1);
-				}
-    		}
-    	});       
+//			                        txtGia.setText(cost);
+////			                        txtISBN.setEditable(false);
+////			                        lblicon_img.setEnabled(false);
+//			                    } else {
+//			                        System.out.println("Không thể đọc hình ảnh.");
+//			                        System.out.println("Không thể tìm thấy mã ISBN.");
+//			                    }
+//			                } catch (IOException e1) {
+//			                    System.out.println(e1);
+//			                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Không thể đọc tệp ảnh.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+//			                }
+//			            } else {
+//			                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tệp ảnh không tồn tại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+//			            }
+//			            if(name==null)
+//			            {
+//			            	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên sách không được bỏ trống", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+//			            }
+//			        }
+//				} catch (Exception e1) {
+//					// TODO Auto-generated catch block
+////    				JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên sách không đúng hoặc Tên Sách không tồn tại.","Cảnh Báo",JOptionPane.WARNING_MESSAGE);
+//					System.out.println(e1);
+//				}
+//    		}
+//    	});       
         
         txtGia.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 229, 229)));
         txtGia.setFont(new java.awt.Font("SansSerif", 1, 13));
@@ -429,19 +520,22 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         	{
         		if(e.getClickCount()==1 || e.getClickCount()==2)
         		{
-//        			setVisible(false);
         			WareHouseAddReader_Dialog r;
-                    try {
-//                        r = new WareHouseAddReader_Dialog(null, "warehouse" ,rootPaneCheckingEnabled);
-                        r = new WareHouseAddReader_Dialog(null, "warehouse","add", rootPaneCheckingEnabled);
-                        r.setVisible(true);
-                        cbTacGia.addItem(String.valueOf(r.cbTgia.getSelectedItem()));
-                    } catch (ClassNotFoundException | SQLException | IOException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    }
-
-        			
+        			try {
+        			    r = new WareHouseAddReader_Dialog(null,"warehouse", null,rootPaneCheckingEnabled);
+        			    r.setVisible(true);
+        			    
+        			    // Thực hiện kiểm tra xem r đã đóng hay không
+        			    if (r != null && !r.isVisible()) {
+        			        // Dialog đã đóng, thực hiện các thao tác tiếp theo
+        			        if(r.giatri()!=null && r.cbTgia.getSelectedIndex()!=0)
+        			        {
+        			        	addToComboBoxCheckTg(r.giatri());
+        			        }
+        			    }
+        			} catch (ClassNotFoundException | SQLException | IOException e1) {
+        			    e1.printStackTrace();
+        			}
         		}
         	}
 		});
@@ -476,6 +570,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
                         {
                         	cbNXB.addItem(item.getName());
                         }
+                        cbNXB.addItem(r.txtNhaXuatBan.getText());
                     } catch (ClassNotFoundException | SQLException | IOException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
@@ -508,14 +603,22 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         		if(e.getClickCount()==1 || e.getClickCount()==2)
         		{
         			WareHouseAddTypeBook_Dialog r;
-                    try {
-                        r = new WareHouseAddTypeBook_Dialog(null,"warehouse","add",rootPaneCheckingEnabled);
-                        r.setVisible(true);
-                        cbTheLoai.addItem(String.valueOf(r.cbCategory.getSelectedItem()));
-                    } catch (ClassNotFoundException | SQLException | IOException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    }
+        			try {
+        			    r = new WareHouseAddTypeBook_Dialog(null,"warehouse",null, rootPaneCheckingEnabled);
+        			    r.setVisible(true);
+        			    
+        			    // Thực hiện kiểm tra xem r đã đóng hay không
+        			    if (r != null && !r.isVisible()) {
+        			        // Dialog đã đóng, thực hiện các thao tác tiếp theo
+        			        if(r.giatri()!=null && r.cbCategory.getSelectedIndex()!=0)
+        			        {
+        			        	addToComboBoxCheckTl(r.giatri());
+        			        }
+        			    }
+        			} catch (ClassNotFoundException | SQLException | IOException e1) {
+        			    e1.printStackTrace();
+        			}
+
         			
         		}
         	}
@@ -559,6 +662,9 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 						String book = supplyCard.getNameBook(isbn);
 						String edition = supplyCard.getByEditionFromISBN(isbn);
 						String cost = String.valueOf(supplyCard.getByCostFromISBN(isbn));
+						String tacgia = author.getByName(isbn);
+						String theloai = category.getByName(isbn);
+						String nxb = publisher.getByIDPubName(isbn);
 						if(isAlpha(isbn))
 						{
 							JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Nội dung là số không phải là chữ!","Cảnh Báo",JOptionPane.WARNING_MESSAGE);
@@ -572,15 +678,36 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 					                if (image != null && isbn!=null) {
 					                	//TRUYỀN ĐƯỜNG DẪN TUYỆT ĐỐI (ĐỐI VỚI MÁY MÌNH, CÒN MÁY KHÁC NỄU CHẠY ĐƯỢC THÌ KHỎI SỬA DB)
 					                    lbImageBook.setIcon(new javax.swing.ImageIcon(image));
-					                    txtTenSach.setText(book);
+					                    cbSach.setSelectedItem(book);
 					                    txtEdition.setText(edition);
-					                    txtISBN.setEditable(false);
 					                    txtGia.setText(cost);
+					                    txtISBN.setEditable(false);
+					                    txtEdition.setEditable(false);
+					                    if(tacgia == null)
+				                        {
+				                        	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tác phẩm này bị thiếu phần tác giả","Thông báo", JOptionPane.INFORMATION_MESSAGE);
+				                        }else {
+				                        	addToComboBoxCheckTg(tacgia);
+						                    cbTacGia.setSelectedItem(tacgia);
+						                    cbTacGia.setEnabled(false);
+				                        }
+				                        if(theloai == null)
+				                        {
+				                        	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tác phẩm này bị thiếu phần thể loại","Thông báo", JOptionPane.INFORMATION_MESSAGE);
+				                        }else {
+				                        	addToComboBoxCheckTl(theloai);
+						                    cbTheLoai.setSelectedItem(theloai);
+						                    cbTheLoai.setEnabled(false);
+				                        }
+					                    cbNXB.setSelectedItem(nxb);
+					                    cbNXB.setEnabled(false);
 //					                    txtTenSach.setEditable(false);
 //					                    lblicon_img.setEnabled(false);
 					                } else {
-					                    System.out.println("Không thể đọc hình ảnh.");
-					                    System.out.println("Không thể tìm thấy mã ISBN.");
+					                	JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Chưa có dữ liệu cho cuốn sách này!","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+					                    cbTacGia.setEnabled(true);
+					                    cbTheLoai.setEnabled(true);
+					                    cbNXB.setEnabled(true);
 					                }
 					            } catch (IOException e1) {
 					                System.out.println(e1);
@@ -601,102 +728,17 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 					}
 				} catch (HeadlessException e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					System.out.println(e1);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					System.out.println(e1);
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					System.out.println(e1);
 				}
 			}
 		});
-        
-        lblicon_img.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblicon_img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/add.png"))); // NOI18N
-        lblicon_img.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 204, 204)));
-        lblicon_img.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        
-        lblicon_img.addMouseListener(new MouseListener() {
-			
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mousePressed(MouseEvent e) {
-				
-            }
-			
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 1) {
-                    if (whs == null) {
-                        whs = new WareHouseScanner_Dialog();
-                    }
-                    whs.setVisible(true);
-                    txtISBN.setText(whs.txtField.getText());
-                }
-                else {
-                	whs.setVisible(false);
-                	txtISBN.setEditable(false);
-                }
-			}
-		});
-        
-        btnLoadNCCNXB.setText("Load NCC và NXB");
-        btnLoadNCCNXB.setForeground(Color.WHITE);
-        btnLoadNCCNXB.setFont(new Font("SansSerif", Font.BOLD, 14));
-        btnLoadNCCNXB.setColor(new Color(22, 113, 221));
-        btnLoadNCCNXB.setBorderColor(new Color(22, 113, 221));
-        btnLoadNCCNXB.setBackground(new Color(22, 113, 221));
-        
-        btnLoadNCCNXB.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				try {
-					cbNXB.removeAllItems();
-					publisher = new PublisherBUS();
-					List<Publisher> publisherList = publisher.getAllName();
-					for(Publisher item : publisherList)
-					{
-					    cbNXB.addItem(item.getName());
-					}
-					cbNhaCungCap.removeAllItems();
-					spB = new SupplierBUS();
-					List<Supplier> supplierList = spB.getAllName();
-					for(Supplier item : supplierList)
-					{
-						cbNhaCungCap.addItem(item.getSupplier_name());
-					}
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (ClassNotFoundException e1){
-					e1.printStackTrace();
-				}
-		        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Cập Nhật Thành Công!","Thông Báo",JOptionPane.INFORMATION_MESSAGE);
-			}
-		});
+              
         
         javax.swing.GroupLayout panelBorder2Layout = new javax.swing.GroupLayout(panelBorder2);
         panelBorder2Layout.setHorizontalGroup(
@@ -704,113 +746,121 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         		.addGroup(panelBorder2Layout.createSequentialGroup()
         			.addGroup(panelBorder2Layout.createParallelGroup(Alignment.LEADING)
         				.addGroup(panelBorder2Layout.createSequentialGroup()
-        					.addContainerGap()
         					.addGroup(panelBorder2Layout.createParallelGroup(Alignment.LEADING)
         						.addGroup(panelBorder2Layout.createSequentialGroup()
-        							.addComponent(jLabel2)
-        							.addGap(16)
-        							.addComponent(txtSoLuong, GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
-        						.addComponent(btnLuuThongTin, GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
-        						.addGroup(panelBorder2Layout.createSequentialGroup()
-        							.addComponent(jLabel5)
-        							.addGap(26)
-        							.addComponent(cbTheLoai, 0, 84, Short.MAX_VALUE)
-        							.addPreferredGap(ComponentPlacement.RELATED)
-        							.addComponent(lbThemTheLoai, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
-        						.addGroup(panelBorder2Layout.createSequentialGroup()
-        							.addComponent(jLabel4)
-        							.addGap(54)
-        							.addComponent(txtGia, GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
-        						.addGroup(panelBorder2Layout.createSequentialGroup()
-        							.addGroup(panelBorder2Layout.createParallelGroup(Alignment.LEADING)
-        								.addComponent(jLabel8)
-        								.addComponent(jLabel7))
-        							.addGap(18)
+        							.addContainerGap()
         							.addGroup(panelBorder2Layout.createParallelGroup(Alignment.LEADING)
         								.addGroup(panelBorder2Layout.createSequentialGroup()
-        									.addComponent(cbTacGia, 0, 84, Short.MAX_VALUE)
-        									.addPreferredGap(ComponentPlacement.RELATED)
-        									.addComponent(lbThemTacGia, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
-        								.addComponent(txtTenSach, GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)))
+        									.addGroup(panelBorder2Layout.createParallelGroup(Alignment.LEADING)
+        										.addComponent(jLabel2)
+        										.addComponent(jLabel4)
+        										.addComponent(jLabel5))
+        									.addGap(16)
+        									.addGroup(panelBorder2Layout.createParallelGroup(Alignment.LEADING)
+        										.addComponent(txtGia, GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
+        										.addComponent(txtSoLuong, GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
+        										.addGroup(Alignment.TRAILING, panelBorder2Layout.createSequentialGroup()
+        											.addComponent(cbTheLoai, 0, 149, Short.MAX_VALUE)
+        											.addPreferredGap(ComponentPlacement.RELATED)
+        											.addComponent(lbThemTheLoai, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))))
+        								.addGroup(panelBorder2Layout.createSequentialGroup()
+        									.addGroup(panelBorder2Layout.createParallelGroup(Alignment.LEADING)
+        										.addComponent(jLabel6)
+        										.addComponent(jLabel8)
+        										.addComponent(jLabel7))
+        									.addGap(18)
+        									.addGroup(panelBorder2Layout.createParallelGroup(Alignment.LEADING)
+        										.addGroup(panelBorder2Layout.createSequentialGroup()
+        											.addGroup(panelBorder2Layout.createParallelGroup(Alignment.TRAILING, false)
+        												.addComponent(cbTacGia, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        												.addComponent(cbNXB, 0, 149, Short.MAX_VALUE))
+        											.addPreferredGap(ComponentPlacement.RELATED)
+        											.addGroup(panelBorder2Layout.createParallelGroup(Alignment.LEADING)
+        												.addComponent(lbThemTacGia, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+        												.addComponent(lbThemNXB, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)))
+        										.addComponent(cbSach, 0, 188, Short.MAX_VALUE)))))
         						.addGroup(panelBorder2Layout.createSequentialGroup()
-        							.addComponent(jLabel6)
-        							.addGap(46)
-        							.addComponent(cbNXB, 0, 84, Short.MAX_VALUE)
-        							.addPreferredGap(ComponentPlacement.RELATED)
-        							.addComponent(lbThemNXB, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))))
-        				.addGroup(panelBorder2Layout.createSequentialGroup()
-        					.addContainerGap()
-        					.addComponent(jLabel8_1, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
-        					.addGap(18)
-        					.addComponent(txtEdition, GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
-        				.addGroup(panelBorder2Layout.createSequentialGroup()
-        					.addGroup(panelBorder2Layout.createParallelGroup(Alignment.LEADING, false)
+        							.addContainerGap()
+        							.addComponent(jLabel8_1, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
+        							.addGap(18)
+        							.addComponent(txtEdition, GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE))
         						.addGroup(panelBorder2Layout.createSequentialGroup()
         							.addContainerGap()
         							.addComponent(jLabel8_2, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
         							.addGap(18)
-        							.addComponent(txtISBN, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        						.addGroup(panelBorder2Layout.createSequentialGroup()
-        							.addGap(40)
-        							.addComponent(pnImageBook, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+        							.addGroup(panelBorder2Layout.createParallelGroup(Alignment.LEADING)
+        								.addComponent(pnImageBook, GroupLayout.PREFERRED_SIZE, 174, GroupLayout.PREFERRED_SIZE)
+        								.addComponent(txtISBN, GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE))))
         					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(lblicon_img, GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE))
+        					.addGroup(panelBorder2Layout.createParallelGroup(Alignment.TRAILING)
+        						.addComponent(btnXoaTgia, GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+        						.addComponent(btnXoaTL, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+        						.addComponent(btnThemSach, GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)))
         				.addGroup(panelBorder2Layout.createSequentialGroup()
-        					.addContainerGap()
-        					.addComponent(btnLoadNCCNXB, GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)))
+        					.addGap(25)
+        					.addComponent(btnLuuThongTin, GroupLayout.PREFERRED_SIZE, 274, GroupLayout.PREFERRED_SIZE)))
         			.addContainerGap())
         );
         panelBorder2Layout.setVerticalGroup(
         	panelBorder2Layout.createParallelGroup(Alignment.LEADING)
         		.addGroup(panelBorder2Layout.createSequentialGroup()
-        			.addGap(18)
+        			.addGap(14)
         			.addComponent(pnImageBook, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        			.addPreferredGap(ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
-        			.addGroup(panelBorder2Layout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(txtISBN, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(jLabel8_2, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(lblicon_img, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
-        			.addPreferredGap(ComponentPlacement.UNRELATED)
-        			.addGroup(panelBorder2Layout.createParallelGroup(Alignment.TRAILING)
+        			.addGap(18)
+        			.addGroup(panelBorder2Layout.createParallelGroup(Alignment.LEADING)
         				.addGroup(panelBorder2Layout.createSequentialGroup()
+        					.addGap(18)
+        					.addGroup(panelBorder2Layout.createParallelGroup(Alignment.BASELINE)
+        						.addComponent(txtISBN, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+        						.addComponent(jLabel8_2, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE))
+        					.addPreferredGap(ComponentPlacement.UNRELATED)
         					.addGroup(panelBorder2Layout.createParallelGroup(Alignment.BASELINE)
         						.addComponent(txtEdition, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-        						.addComponent(jLabel8_1, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE))
-        					.addPreferredGap(ComponentPlacement.UNRELATED)
-        					.addGroup(panelBorder2Layout.createParallelGroup(Alignment.TRAILING)
-        						.addGroup(panelBorder2Layout.createSequentialGroup()
-        							.addGroup(panelBorder2Layout.createParallelGroup(Alignment.BASELINE)
-        								.addComponent(jLabel8)
-        								.addComponent(txtTenSach, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
-        							.addGap(18)
-        							.addComponent(jLabel7))
-        						.addGroup(panelBorder2Layout.createParallelGroup(Alignment.LEADING)
-        							.addComponent(lbThemTacGia, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-        							.addComponent(cbTacGia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-        					.addGap(18)
-        					.addComponent(jLabel6))
-        				.addGroup(panelBorder2Layout.createParallelGroup(Alignment.LEADING)
-        					.addComponent(lbThemNXB, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-        					.addComponent(cbNXB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-        			.addPreferredGap(ComponentPlacement.RELATED)
+        						.addComponent(jLabel8_1, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)))
+        				.addGroup(panelBorder2Layout.createSequentialGroup()
+        					.addGap(102)
+        					.addGroup(panelBorder2Layout.createParallelGroup(Alignment.BASELINE)
+        						.addComponent(jLabel8)
+        						.addComponent(btnThemSach, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+        						.addComponent(cbSach, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))))
+        			.addPreferredGap(ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
         			.addGroup(panelBorder2Layout.createParallelGroup(Alignment.TRAILING)
-        				.addComponent(jLabel5)
-        				.addGroup(panelBorder2Layout.createParallelGroup(Alignment.LEADING)
-        					.addComponent(lbThemTheLoai, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-        					.addComponent(cbTheLoai, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-        			.addPreferredGap(ComponentPlacement.UNRELATED)
+        				.addGroup(panelBorder2Layout.createSequentialGroup()
+        					.addGap(36)
+        					.addGroup(panelBorder2Layout.createParallelGroup(Alignment.TRAILING)
+        						.addGroup(panelBorder2Layout.createParallelGroup(Alignment.BASELINE)
+        							.addComponent(cbNXB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        							.addComponent(jLabel6))
+        						.addComponent(lbThemNXB, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
+        					.addGap(18)
+        					.addGroup(panelBorder2Layout.createParallelGroup(Alignment.LEADING)
+        						.addComponent(lbThemTheLoai, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+        						.addGroup(Alignment.TRAILING, panelBorder2Layout.createParallelGroup(Alignment.BASELINE)
+        							.addComponent(cbTheLoai, GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+        							.addComponent(jLabel5))))
+        				.addGroup(panelBorder2Layout.createSequentialGroup()
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addComponent(btnXoaTL, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)))
+        			.addGap(13)
         			.addGroup(panelBorder2Layout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(jLabel4)
-        				.addComponent(txtGia, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
-        			.addPreferredGap(ComponentPlacement.UNRELATED)
+        				.addComponent(txtGia, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(jLabel4))
+        			.addGap(18)
         			.addGroup(panelBorder2Layout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(jLabel2)
-        				.addComponent(txtSoLuong, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(btnLoadNCCNXB, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-        			.addPreferredGap(ComponentPlacement.RELATED)
+        				.addComponent(txtSoLuong, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(jLabel2))
+        			.addGap(47)
         			.addComponent(btnLuuThongTin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        			.addGap(16))
+        			.addGap(30))
+        		.addGroup(Alignment.TRAILING, panelBorder2Layout.createSequentialGroup()
+        			.addContainerGap(372, Short.MAX_VALUE)
+        			.addGroup(panelBorder2Layout.createParallelGroup(Alignment.LEADING, false)
+        				.addComponent(btnXoaTgia, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        				.addGroup(Alignment.TRAILING, panelBorder2Layout.createParallelGroup(Alignment.BASELINE)
+        					.addComponent(cbTacGia, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addComponent(jLabel7))
+        				.addComponent(lbThemTacGia, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE))
+        			.addGap(289))
         );
         panelBorder2.setLayout(panelBorder2Layout);
 
@@ -847,7 +897,6 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				edition = txtEdition.getText();
-				tensach = txtTenSach.getText();
 				gia = txtGia.getText();
 				soluong = txtSoLuong.getText();
 				isbn = txtISBN.getText();
@@ -855,7 +904,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 				{
 					JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Vui lòng kiểm tra đầy đủ thông tin.","Cảnh báo",JOptionPane.WARNING_MESSAGE);
 				}
-				else if(isTextFieldEmpty(txtTenSach))
+				else if(isComboBoxEmpty(cbSach))
 				{
 					JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Vui lòng kiểm tra đầy đủ thông tin.","Cảnh báo",JOptionPane.WARNING_MESSAGE);
 				}
@@ -872,6 +921,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 					JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Vui lòng kiểm tra đầy đủ thông tin.","Cảnh báo",JOptionPane.WARNING_MESSAGE);
 				}else{
 					DefaultTableModel model = (DefaultTableModel) tbSachDuocNhap.getModel();
+					tensach = String.valueOf(cbSach.getSelectedItem());
 					tgia = String.valueOf(cbTacGia.getSelectedItem());
 					nxb = String.valueOf(cbNXB.getSelectedItem());
 					theloai = String.valueOf(cbTheLoai.getSelectedItem());
@@ -884,9 +934,13 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 					lbImageBook.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/AddImage.png")));
 					txtISBN.setText("");
 					txtEdition.setText("");
-					txtTenSach.setText("");
 					txtGia.setText("");
 					txtSoLuong.setText("");
+					txtISBN.setEditable(true);
+					txtEdition.setEditable(true);
+					cbTacGia.setEnabled(true);
+					cbTheLoai.setEnabled(true);
+					cbNXB.setEnabled(true);
 				}
 			}
         });
@@ -923,16 +977,16 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 				            model.setValueAt(i + 1, i, 0); // Cập nhật cột "STT" (cột 0)
 				        }
 					}
-					txtTenSach.setEditable(true);
 					txtGia.setEditable(true);
 					txtSoLuong.setEditable(true);
 					txtEdition.setEditable(true);
 					txtISBN.setEditable(true);
 					cbNXB.setEnabled(true);
+					cbSach.setEnabled(true);
 					cbTacGia.setEnabled(true);
 					cbTheLoai.setEnabled(true);
 					cbNhaCungCap.setEnabled(true);
-					txtTenSach.setText("");
+					cbSach.setEnabled(true);
 					txtGia.setText("");
 					txtSoLuong.setText("");
 					txtEdition.setText("");
@@ -946,7 +1000,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				txtTenSach.setEditable(true);
+				cbSach.setEnabled(true);
 				txtGia.setEditable(true);
 				txtSoLuong.setEditable(true);
 				txtEdition.setEditable(true);
@@ -954,6 +1008,10 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 				cbNXB.setEnabled(true);
 				cbTacGia.setEnabled(true);
 				cbTheLoai.setEnabled(true);
+				txtGia.setText("");
+				txtSoLuong.setText("");
+				txtEdition.setText("");
+				txtISBN.setText("");
 			}
 		});
         
@@ -980,7 +1038,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         			if(seclectedRow >= 0)
         			{
         				Object isbn = tbSachDuocNhap.getValueAt(seclectedRow, 1).toString();
-        				Object sach = tbSachDuocNhap.getValueAt(seclectedRow, 2).toString();
+        				Object sach = tbSachDuocNhap.getValueAt(seclectedRow, 2);
         				Object tg = tbSachDuocNhap.getValueAt(seclectedRow, 3);
         				Object ed = tbSachDuocNhap.getValueAt(seclectedRow, 4).toString();
         				Object nhaxuatban = tbSachDuocNhap.getValueAt(seclectedRow, 5);
@@ -993,13 +1051,13 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
     			            txtGia.setEditable(false);
     			            txtSoLuong.setText(String.valueOf(sl));
     			            txtSoLuong.setEditable(false);
-        					txtTenSach.setText(String.valueOf(sach));
-        					txtTenSach.setEditable(false);
         					txtEdition.setText(String.valueOf(ed));
         					txtEdition.setEditable(false);
         					txtISBN.setText(String.valueOf(isbn));
         					txtISBN.setEditable(false);
         					
+        					cbSach.setSelectedItem(sach);
+        					cbSach.setEnabled(false);
         					cbTacGia.setSelectedItem(tg);
         					cbTacGia.setEnabled(false);
         					cbTheLoai.setSelectedItem(tl);
@@ -1041,79 +1099,24 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         	}
 		});
         
-        btnNhapQuaSheet.setForeground(new java.awt.Color(22, 113, 221));
-        btnNhapQuaSheet.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/action-import.png"))); // NOI18N
-        btnNhapQuaSheet.setText("Nhập qua sheet");
-        btnNhapQuaSheet.setToolTipText("");
-        btnNhapQuaSheet.setColorClick(new java.awt.Color(153, 204, 255));
-        btnNhapQuaSheet.setColorOver(new java.awt.Color(102, 204, 255));
-        btnNhapQuaSheet.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        
-        btnNhapQuaSheet.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				boolean hasEmpty = hasEmptyCell(tbSachDuocNhap);
-		        if (hasEmpty) {
-		            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thông tin trong bảng trống, không thể nhập vào sheet","Lỗi",JOptionPane.ERROR_MESSAGE);
-		        } else {
-		        	try {
-		                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		                Random random = new Random();
-		                String randomFileName = "C:\\Users\\Hi\\Documents\\Excel\\SupplyCard_" + dateFormat.format(new Date()) + "_" + random.nextInt(1000) + ".xlsx";
-
-		                File excelFile = new File(randomFileName);
-		                XSSFWorkbook workbook = new XSSFWorkbook();
-		                XSSFSheet sheet = workbook.createSheet(String.valueOf(dateFormat.format(new Date())));
-		                XSSFRow titleRow = sheet.createRow(0);
-		                for(int j = 0; j < tbSachDuocNhap.getColumnCount(); j++)
-		                {
-		                	XSSFCell cell = titleRow.createCell(j);
-		                	cell.setCellValue(tbSachDuocNhap.getColumnName(j));
-		                }
-		                for (int i = 0; i < tbSachDuocNhap.getRowCount(); i++) {
-		                    XSSFRow row = sheet.createRow(i+1);
-		                    for (int j = 0; j < tbSachDuocNhap.getColumnCount(); j++) {
-		                        XSSFCell cell = row.createCell(j);
-		                        cell.setCellValue(tbSachDuocNhap.getValueAt(i, j).toString());
-		                    }
-		                }
-		                FileOutputStream outFile = new FileOutputStream(excelFile);
-		                workbook.write(outFile);
-		                outFile.close();
-		                workbook.close();
-		                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Dữ liệu đã được ghi vào tệp Excel: " + randomFileName);
-		            } catch (Exception ex) {
-		                ex.printStackTrace();
-		            }
-		        }
-			}
-		});
-        
         javax.swing.GroupLayout panelBorder1Layout = new javax.swing.GroupLayout(panelBorder1);
         panelBorder1Layout.setHorizontalGroup(
         	panelBorder1Layout.createParallelGroup(Alignment.TRAILING)
-        		.addGroup(panelBorder1Layout.createSequentialGroup()
+        		.addGroup(Alignment.LEADING, panelBorder1Layout.createSequentialGroup()
         			.addContainerGap()
-        			.addGroup(panelBorder1Layout.createParallelGroup(Alignment.TRAILING)
-        				.addComponent(spTable, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
-        				.addGroup(panelBorder1Layout.createSequentialGroup()
-        					.addComponent(jLabel9)
-        					.addPreferredGap(ComponentPlacement.RELATED, 210, Short.MAX_VALUE)
-        					.addComponent(btnNhapQuaSheet, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+        			.addGroup(panelBorder1Layout.createParallelGroup(Alignment.LEADING)
+        				.addComponent(spTable, GroupLayout.DEFAULT_SIZE, 620, Short.MAX_VALUE)
+        				.addComponent(jLabel9))
         			.addContainerGap())
         );
         panelBorder1Layout.setVerticalGroup(
         	panelBorder1Layout.createParallelGroup(Alignment.LEADING)
         		.addGroup(panelBorder1Layout.createSequentialGroup()
-        			.addGap(8)
-        			.addGroup(panelBorder1Layout.createParallelGroup(Alignment.TRAILING)
-        				.addComponent(btnNhapQuaSheet, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(jLabel9))
+        			.addGap(23)
+        			.addComponent(jLabel9)
         			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(spTable, GroupLayout.PREFERRED_SIZE, 401, GroupLayout.PREFERRED_SIZE)
-        			.addContainerGap(27, Short.MAX_VALUE))
+        			.addComponent(spTable, GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
+        			.addContainerGap())
         );
         panelBorder1.setLayout(panelBorder1Layout);
 
@@ -1143,8 +1146,9 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         		{
         			WareHouseAddNCC_Dialog r;
                     try {
-                        r = new WareHouseAddNCC_Dialog(null,"warehouse" ,null,rootPaneCheckingEnabled);
+                        r = new WareHouseAddNCC_Dialog(null,"warehouse",null ,rootPaneCheckingEnabled);
                         r.setVisible(true);
+                        cbNhaCungCap.addItem(r.txtNhaCungCap.getText());
                     } catch (ClassNotFoundException | SQLException | IOException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
@@ -1152,6 +1156,48 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         			
         		}
         	}
+		});
+        
+        btnThemSach.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				WareHouseAddSach_Dialog r;
+                try {
+                    r = new WareHouseAddSach_Dialog(null,"warehouse",rootPaneCheckingEnabled);
+                    r.setVisible(true);
+                    cbSach.addItem(r.txtTenSach.getText());
+                } catch (ClassNotFoundException | SQLException | IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+			}
+		});
+        
+        btnXoaTgia.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = cbTacGia.getSelectedIndex();
+                if (selectedIndex != -1) {
+                    cbTacGia.removeItemAt(selectedIndex);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Vui lòng chọn một mục để xóa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        });
+        
+        btnXoaTL.addActionListener(new ActionListener() {
+			
+			@Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = cbTheLoai.getSelectedIndex();
+                if (selectedIndex != -1) {
+                    cbTheLoai.removeItemAt(selectedIndex);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Vui lòng chọn một mục để xóa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                }
+            }
 		});
         
         jLabel11.setForeground(new java.awt.Color(51, 51, 51));
@@ -1172,45 +1218,45 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				int rs = JOptionPane.showConfirmDialog(JOptionPane.getRootFrame(), "Bạn có muốn nhập qua sheet không?","Xác nhận",JOptionPane.YES_NO_OPTION);
-				if(rs == JOptionPane.YES_OPTION)
-				{
-					boolean hasEmpty = hasEmptyCell(tbSachDuocNhap);
-			        if (hasEmpty) {
-			            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thông tin trong bảng trống, không thể nhập vào sheet","Lỗi",JOptionPane.ERROR_MESSAGE);
-			        } else {
-			        	try {
-			                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			                Random random = new Random();
-			                String randomFileName = "C:\\Users\\Hi\\Documents\\Excel\\SupplyCard_" + dateFormat.format(new Date()) + "_" + random.nextInt(1000) + ".xlsx";
-
-			                File excelFile = new File(randomFileName);
-			                XSSFWorkbook workbook = new XSSFWorkbook();
-			                XSSFSheet sheet = workbook.createSheet(String.valueOf(dateFormat.format(new Date())));
-			                XSSFRow titleRow = sheet.createRow(0);
-			                for(int j = 0; j < tbSachDuocNhap.getColumnCount(); j++)
-			                {
-			                	XSSFCell cell = titleRow.createCell(j);
-			                	cell.setCellValue(tbSachDuocNhap.getColumnName(j));
-			                }
-			                for (int i = 0; i < tbSachDuocNhap.getRowCount(); i++) {
-			                    XSSFRow row = sheet.createRow(i+1);
-			                    for (int j = 0; j < tbSachDuocNhap.getColumnCount(); j++) {
-			                        XSSFCell cell = row.createCell(j);
-			                        cell.setCellValue(tbSachDuocNhap.getValueAt(i, j).toString());
-			                    }
-			                }
-			                FileOutputStream outFile = new FileOutputStream(excelFile);
-			                workbook.write(outFile);
-			                outFile.close();
-			                workbook.close();
-			                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Dữ liệu đã được ghi vào tệp Excel: " + randomFileName);
-			            } catch (Exception ex) {
-			                ex.printStackTrace();
-			            }
-			        }
-				}
-				else {
+//				int rs = JOptionPane.showConfirmDialog(JOptionPane.getRootFrame(), "Bạn có muốn nhập qua sheet không?","Xác nhận",JOptionPane.YES_NO_OPTION);
+//				if(rs == JOptionPane.YES_OPTION)
+//				{
+//					boolean hasEmpty = hasEmptyCell(tbSachDuocNhap);
+//			        if (hasEmpty) {
+//			            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thông tin trong bảng trống, không thể nhập vào sheet","Lỗi",JOptionPane.ERROR_MESSAGE);
+//			        } else {
+//			        	try {
+//			                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//			                Random random = new Random();
+//			                String randomFileName = "C:\\Users\\Hi\\Documents\\Excel\\SupplyCard_" + dateFormat.format(new Date()) + "_" + random.nextInt(1000) + ".xlsx";
+//
+//			                File excelFile = new File(randomFileName);
+//			                XSSFWorkbook workbook = new XSSFWorkbook();
+//			                XSSFSheet sheet = workbook.createSheet(String.valueOf(dateFormat.format(new Date())));
+//			                XSSFRow titleRow = sheet.createRow(0);
+//			                for(int j = 0; j < tbSachDuocNhap.getColumnCount(); j++)
+//			                {
+//			                	XSSFCell cell = titleRow.createCell(j);
+//			                	cell.setCellValue(tbSachDuocNhap.getColumnName(j));
+//			                }
+//			                for (int i = 0; i < tbSachDuocNhap.getRowCount(); i++) {
+//			                    XSSFRow row = sheet.createRow(i+1);
+//			                    for (int j = 0; j < tbSachDuocNhap.getColumnCount(); j++) {
+//			                        XSSFCell cell = row.createCell(j);
+//			                        cell.setCellValue(tbSachDuocNhap.getValueAt(i, j).toString());
+//			                    }
+//			                }
+//			                FileOutputStream outFile = new FileOutputStream(excelFile);
+//			                workbook.write(outFile);
+//			                outFile.close();
+//			                workbook.close();
+//			                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Dữ liệu đã được ghi vào tệp Excel: " + randomFileName);
+//			            } catch (Exception ex) {
+//			                ex.printStackTrace();
+//			            }
+//			        }
+//				}
+//				else {
 				    // LƯU DỮ LIỆU VÀO DATABASE
 		            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		            Date currentDate = new Date();
@@ -1264,9 +1310,6 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 						    if (bookID == 0) {
 						      // TRƯỜNG HỢP SÁCH MỚI
 						    	
-						    	//Thêm Tên Sách mới
-						      sach.setTenSach(tensach);
-						      bB.saveInfo(sach);
 						      	//Thêm vào cp_book
 						      k.setIsbn(isbn);
 						      k.setBookID(idBook);
@@ -1312,6 +1355,12 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 					    tbSachDuocNhap.setRowCount(0);
 					    tongchi = 0;
 					    txtTongChi.setText(tongchi+"đ");
+					    cbTacGia.removeAllItems();
+					    cbTheLoai.removeAllItems();
+					    txtGia.setText("");
+						txtSoLuong.setText("");
+						txtEdition.setText("");
+						txtISBN.setText("");
 					} catch (ClassNotFoundException | SQLException | IOException | NumberFormatException e1) {
 						 boolean hasEmpty = hasEmptyCell(tbSachDuocNhap);
 						 if(hasEmpty)
@@ -1323,7 +1372,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
 						 }
 					}
 				}
-			}
+//			}
 		});
         
         javax.swing.GroupLayout panelBorder_Basic1Layout = new javax.swing.GroupLayout(panelBorder_Basic1);
@@ -1331,32 +1380,35 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         	panelBorder_Basic1Layout.createParallelGroup(Alignment.TRAILING)
         		.addGroup(panelBorder_Basic1Layout.createSequentialGroup()
         			.addContainerGap()
-        			.addComponent(panelBorder2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(panelBorder2, GroupLayout.PREFERRED_SIZE, 330, Short.MAX_VALUE)
+        			.addGap(18)
         			.addGroup(panelBorder_Basic1Layout.createParallelGroup(Alignment.LEADING)
-        				.addGroup(panelBorder_Basic1Layout.createSequentialGroup()
-        					.addGroup(panelBorder_Basic1Layout.createParallelGroup(Alignment.LEADING)
-        						.addComponent(cbNhaCungCap, GroupLayout.PREFERRED_SIZE, 151, GroupLayout.PREFERRED_SIZE)
-        						.addComponent(jLabel10))
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(lbThemNhaCungCap, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
-        				.addGroup(panelBorder_Basic1Layout.createSequentialGroup()
-        					.addGroup(panelBorder_Basic1Layout.createParallelGroup(Alignment.LEADING)
-        						.addComponent(txtTongChi)
-        						.addComponent(jLabel11))
-        					.addGap(346)
-        					.addComponent(btnXacNhan, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
-        				.addComponent(panelBorder1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-        			.addContainerGap())
+        				.addComponent(panelBorder1, GroupLayout.PREFERRED_SIZE, 640, GroupLayout.PREFERRED_SIZE)
+        				.addGroup(panelBorder_Basic1Layout.createParallelGroup(Alignment.TRAILING, false)
+        					.addGroup(panelBorder_Basic1Layout.createSequentialGroup()
+        						.addGroup(panelBorder_Basic1Layout.createParallelGroup(Alignment.LEADING)
+        							.addComponent(cbNhaCungCap, GroupLayout.PREFERRED_SIZE, 151, GroupLayout.PREFERRED_SIZE)
+        							.addComponent(jLabel10))
+        						.addPreferredGap(ComponentPlacement.RELATED)
+        						.addComponent(lbThemNhaCungCap, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+        						.addGap(461))
+        					.addGroup(panelBorder_Basic1Layout.createSequentialGroup()
+        						.addGroup(panelBorder_Basic1Layout.createParallelGroup(Alignment.LEADING)
+        							.addComponent(txtTongChi)
+        							.addComponent(jLabel11))
+        						.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        						.addComponent(btnXacNhan, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+        						.addGap(26))))
+        			.addGap(11))
         );
         panelBorder_Basic1Layout.setVerticalGroup(
         	panelBorder_Basic1Layout.createParallelGroup(Alignment.TRAILING)
         		.addGroup(panelBorder_Basic1Layout.createSequentialGroup()
         			.addGap(20)
         			.addGroup(panelBorder_Basic1Layout.createParallelGroup(Alignment.TRAILING)
-        				.addComponent(panelBorder2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)
+        				.addComponent(panelBorder2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE)
         				.addGroup(panelBorder_Basic1Layout.createSequentialGroup()
-        					.addComponent(panelBorder1, GroupLayout.PREFERRED_SIZE, 461, GroupLayout.PREFERRED_SIZE)
+        					.addComponent(panelBorder1, GroupLayout.PREFERRED_SIZE, 545, GroupLayout.PREFERRED_SIZE)
         					.addPreferredGap(ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
         					.addGroup(panelBorder_Basic1Layout.createParallelGroup(Alignment.TRAILING)
         						.addGroup(panelBorder_Basic1Layout.createSequentialGroup()
@@ -1382,36 +1434,34 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         jLabel3.setText("Đơn nhập");
 
         javax.swing.GroupLayout panelBorder_Statistic_Blue1Layout = new javax.swing.GroupLayout(panelBorder_Statistic_Blue1);
-        panelBorder_Statistic_Blue1.setLayout(panelBorder_Statistic_Blue1Layout);
         panelBorder_Statistic_Blue1Layout.setHorizontalGroup(
-            panelBorder_Statistic_Blue1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBorder_Statistic_Blue1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelBorder_Statistic_Blue1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 728, Short.MAX_VALUE)
-                    .addComponent(panelBorder_Basic1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+        	panelBorder_Statistic_Blue1Layout.createParallelGroup(Alignment.TRAILING)
+        		.addGroup(panelBorder_Statistic_Blue1Layout.createSequentialGroup()
+        			.addContainerGap()
+        			.addGroup(panelBorder_Statistic_Blue1Layout.createParallelGroup(Alignment.TRAILING)
+        				.addComponent(panelBorder_Basic1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 1009, Short.MAX_VALUE)
+        				.addComponent(jLabel3, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 1009, Short.MAX_VALUE))
+        			.addContainerGap())
         );
         panelBorder_Statistic_Blue1Layout.setVerticalGroup(
-            panelBorder_Statistic_Blue1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBorder_Statistic_Blue1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelBorder_Basic1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+        	panelBorder_Statistic_Blue1Layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(panelBorder_Statistic_Blue1Layout.createSequentialGroup()
+        			.addContainerGap()
+        			.addComponent(jLabel3, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(panelBorder_Basic1, GroupLayout.PREFERRED_SIZE, 621, Short.MAX_VALUE)
+        			.addContainerGap())
         );
+        panelBorder_Statistic_Blue1.setLayout(panelBorder_Statistic_Blue1Layout);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         layout.setHorizontalGroup(
         	layout.createParallelGroup(Alignment.LEADING)
-        		.addComponent(panelBorder_Statistic_Blue1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        		.addComponent(panelBorder_Statistic_Blue1, GroupLayout.DEFAULT_SIZE, 1029, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
         	layout.createParallelGroup(Alignment.LEADING)
-        		.addGroup(layout.createSequentialGroup()
-        			.addComponent(panelBorder_Statistic_Blue1, GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
-        			.addContainerGap())
+        		.addComponent(panelBorder_Statistic_Blue1, GroupLayout.DEFAULT_SIZE, 805, Short.MAX_VALUE)
         );
         getContentPane().setLayout(layout);
 
@@ -1431,9 +1481,57 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
     private boolean isComboBoxEmpty(JComboBox<?> comboBox) {
         return comboBox.getSelectedItem() == null;
     }
+    public void addToComboBoxCheckTg(String value) {
+        boolean isDuplicate = false;
+
+        for (int i = 0; i < cbTacGia.getItemCount(); i++) {
+            String item = cbTacGia.getItemAt(i);
+            if (item.equals(value)) {
+                isDuplicate = true;
+                break;
+            }
+        }
+
+        if (!isDuplicate) {
+            cbTacGia.addItem(value);
+        }
+    }
+    public void addToComboBoxCheckTl(String value) {
+        boolean isDuplicate = false;
+
+        for (int i = 0; i < cbTheLoai.getItemCount(); i++) {
+            String item = cbTheLoai.getItemAt(i);
+            if (item.equals(value)) {
+                isDuplicate = true;
+                break;
+            }
+        }
+
+        if (!isDuplicate) {
+            cbTheLoai.addItem(value);
+        }
+    }
     public void addToComboBox(String value) {
         cbTacGia.addItem(value);
     }
+//    public boolean addComboBox(String value) {
+//        boolean isDuplicate = false;
+//
+//        for (int i = 0; i < cbTacGia.getItemCount(); i++) {
+//            String item = cbTacGia.getItemAt(i);
+//            if (item.equals(value)) {
+//                isDuplicate = true;
+//                break;
+//            }
+//        }
+//
+//        if (!isDuplicate) {
+//            cbTacGia.addItem(value);
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
     public static boolean hasEmptyCell(JTable table) {
     	DefaultTableModel model = (DefaultTableModel) table.getModel();
         int rowCount = model.getRowCount();
@@ -1511,13 +1609,15 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
     
     // Variables declaration - do not modify                     
     private MyDesign.MyButton btnLuuThongTin;
-    private MyDesign.MyButton btnNhapQuaSheet;
-    protected MyDesign.MyButton btnLoadNCCNXB;
+    private List<String> valueList;
+    private JButton btnXoaTgia = new JButton("-");
+    private JButton btnXoaTL = new JButton("-");
     protected MyDesign.MyButton btnXacNhan;
-    protected javax.swing.JComboBox<String> cbNXB;
+    public javax.swing.JComboBox<String> cbNXB;
     protected javax.swing.JComboBox<String> cbNhaCungCap;
     protected javax.swing.JComboBox<String> cbTacGia;
     protected javax.swing.JComboBox<String> cbTheLoai;
+    protected javax.swing.JComboBox<String> cbSach;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
@@ -1535,7 +1635,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
     protected javax.swing.JLabel lbThemNhaCungCap;
     protected javax.swing.JLabel lbThemTacGia;
     protected javax.swing.JLabel lbThemTheLoai;
-    protected javax.swing.JLabel lblicon_img;
+    protected javax.swing.JLabel lbThemSach;
     private MyDesign.PanelBorder panelBorder1;
     private MyDesign.PanelBorder panelBorder2;
     private MyDesign.PanelBorder_Basic panelBorder_Basic1;
@@ -1545,7 +1645,6 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
     private MyDesign.MyTable tbSachDuocNhap;
     protected MyDesign.MyTextField_Basic txtGia;
     protected MyDesign.MyTextField_Basic txtSoLuong;
-    protected MyDesign.MyTextField_Basic txtTenSach;
     private javax.swing.JLabel txtTongChi;
     protected AuthorBUS author;
     private PublisherBUS publisher;
@@ -1569,4 +1668,6 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
     protected BookBUS bB = new BookBUS();
     protected SupplierBUS spB = new SupplierBUS();
     protected WareHouseScanner_Dialog whs;
+    protected WareHouseAddReader_Dialog whr;
+    protected JButton btnThemSach = new JButton("+");;
 }

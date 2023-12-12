@@ -83,41 +83,6 @@ public class SupplyCardDAO {
         return id;
     }
 
-    public void saveProvider(SupplyCard sc) {
-        String query = "INSERT INTO supply_card (provider) VALUES (?)";
-        try {
-            connectDB.connect();
-            Connection connection = connectDB.getConnection();
-            if (connection != null) {
-                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                    preparedStatement.setInt(1, sc.getProvider());
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    public String getByNameProvider(String name) {
-        String status = null;
-        String query = "SELECT providerID FROM supply_Card WHERE provider COLLATE Latin1_General_CI_AI = ?";
-
-        try {
-            Connection connection = connectDB.getConnection();
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                preparedStatement.setString(1, name);
-                try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    if (resultSet.next()) {
-                        status = resultSet.getString("providerID");
-                    }
-                }
-            } 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } 
-        return status;
-    }
 	public void saveInfo(SupplyCard supplyCard) {
         String query = "INSERT INTO supply_card (supDate, providerID, staffID, feePaid) VALUES (?, ?, 1004, ?)";
         try {

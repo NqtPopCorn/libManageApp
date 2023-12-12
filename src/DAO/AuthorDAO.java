@@ -32,6 +32,25 @@ public class AuthorDAO {
             }
     }
 
+    public String getByName(String isbn) throws SQLException {
+        String status = null;
+        String query = "SELECT author.name FROM author INNER JOIN book_author ON author.id = book_author.authorID WHERE book_author.ISBN COLLATE Latin1_General_BIN = ? COLLATE Latin1_General_BIN";
+        connectDB.connect();
+        try {
+            Connection connection = connectDB.getConnection();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, isbn);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        status = resultSet.getString("name");
+                    }
+                }
+            } 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        return status;
+    }
     public String getByNameAuthor(String name) throws SQLException {
         String status = null;
         String query = "SELECT name FROM author WHERE name COLLATE Latin1_General_CI_AI = ?";

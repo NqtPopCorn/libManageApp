@@ -34,10 +34,6 @@ public class RolePermissionDAO {
     public ArrayList<RolePermission> getList() {
         return list;
     }
-
-    public RolePermission getRolePermission() {
-        return (RolePermission) rolePermission;
-    }
     
     public ArrayList<RolePermission> read() throws IOException, ClassNotFoundException, SQLException{
         String context = this.getClass().getName();

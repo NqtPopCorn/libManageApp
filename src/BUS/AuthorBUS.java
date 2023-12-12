@@ -38,8 +38,13 @@ public class AuthorBUS {
             return ad.getByNameAuthor(name);
     }
     public List<Author> getAllName() throws SQLException{
-    return ad.getAllName();
-}
+        return ad.getAllName();
+    }
+    public String getByName(String isbn) throws SQLException, IOException
+    {
+    		ad = new AuthorDAO(connectDB);
+    		return ad.getByName(isbn);
+    }
     public void saveInfo(Author a) throws SQLException, IOException
     {
             ad = new AuthorDAO(connectDB);

@@ -215,7 +215,15 @@ public class WareHouseAddReader_Dialog extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+    public String giatri()
+    {
+    	 String selectedValue = (String) cbTgia.getSelectedItem();
+         // Kiểm tra nếu selectedValue không phải là null và không phải giá trị mặc định
+         if (selectedValue != null && cbTgia.getSelectedIndex() > 0) {
+             whdialog.addToComboBoxCheckTl(selectedValue);
+         }
+         return selectedValue;
+    }
     /**
      * @param args the command line arguments
      */

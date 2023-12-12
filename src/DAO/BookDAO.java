@@ -5,13 +5,16 @@
 package DAO;
 import connection.ConnectDB;
 import DTO.entities.Book1;
+import DTO.entities.Publisher;
 import DTO.entities.Book;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 /**
  *
  * @author ADMIN
@@ -21,6 +24,17 @@ public class BookDAO extends ConnectDB {
     ConnectDB connectDB;
     public BookDAO() throws ClassNotFoundException, SQLException, IOException {
         connectDB = new ConnectDB();
+    }
+    public BookDAO(ConnectDB connectDB) throws ClassNotFoundException, SQLException, IOException{
+        try {
+                this.connectDB = new ConnectDB();
+        } catch (ClassNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+        } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+        }
     }
     public ArrayList<Book1> getAll() throws ClassNotFoundException, SQLException, IOException {
         ArrayList<Book1> result = new ArrayList<>();
@@ -88,6 +102,66 @@ public class BookDAO extends ConnectDB {
         }
     }
      
+    public List<Book> getAllName() throws SQLException {
+        List<Book> list = new ArrayList<>();
+        String query = "SELECT name FROM book";
+        connectDB.connect();    
+        try (Connection connection = connectDB.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                Book b = new Book();
+                b.setName(resultSet.getString("name"));
+                list.add(b);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+    
+    public List<Book> getAllBook() throws SQLException {
+        List<Book> list = new ArrayList<>();
+        String query = "SELECT * FROM book";
+        connectDB.connect();    
+        try (Connection connection = connectDB.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                Book b = new Book();
+                b.setId(resultSet.getInt("id"));
+                b.setName(resultSet.getString("name"));
+                b.setStatus(resultSet.getBoolean("isActive"));
+                list.add(b);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+    
+    public String getByNameBook(String name) {
+        String status = null;
+        String query = "SELECT name FROM book WHERE name COLLATE Latin1_General_CI_AI = ?";
+
+        try {
+            connectDB.connect();
+            Connection connection = connectDB.getConnection();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, name);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        status = resultSet.getString("name");
+                    }
+                }
+            } 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        return status;
+    }
     
     public void saveInfo(Book1 b) throws ClassNotFoundException, IOException {
         String query = "INSERT INTO book (name) VALUES (?)";
@@ -105,4 +179,21 @@ public class BookDAO extends ConnectDB {
             e.printStackTrace();
         }
     }
+    public void saveInfo(Book b) throws ClassNotFoundException, IOException {
+        String query = "INSERT INTO book (name) VALUES (?)";
+        try {
+            connectDB.connect();
+            if(connectDB.conn!=null)
+            {
+            	try (PreparedStatement preparedStatement = connectDB.conn.prepareStatement(query)) {
+                    preparedStatement.setString(1, b.getName());
+                    preparedStatement.executeUpdate();
+                }
+            }
+            connectDB.disconnect();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
 }

@@ -37,6 +37,11 @@ public class CategoryBUS {
     public List<Category> getAll() throws SQLException{
         return cdao.getAll();
     }
+    public String getByName(String isbn) throws SQLException, IOException
+    {
+    	cdao = new CategoryDAO(connectDB);
+    	return cdao.getByName(isbn);
+    }
     public void saveInfo(Category c) throws SQLException, IOException, ClassNotFoundException
     {
             cdao = new CategoryDAO(connectDB);
