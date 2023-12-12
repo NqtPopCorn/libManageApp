@@ -295,8 +295,8 @@ public class WarehouseDAO {
     }
 
 
-    public void saveInfo(Warehouse kho) throws SQLException {
-        String query = "INSERT INTO cp_book (ISBN, bookID, borrowNum, storeNum, edition, publisherID, Cost, img) VALUES (?,?,0,?,?,?,?,NULL)";
+public void saveInfo(Warehouse kho) throws SQLException {
+        String query = "INSERT INTO cp_book (ISBN, bookID, borrowNum, storeNum, edition, publisherID, Cost, img) VALUES (?,?,0,?,?,?,?,?)";
         try {
             connectDB.connect();
             Connection connection = connectDB.getConnection();
@@ -308,6 +308,7 @@ public class WarehouseDAO {
                     preparedStatement.setString(4, kho.getEdition());
                     preparedStatement.setInt(5, kho.getPublisherID());
                     preparedStatement.setLong(6, kho.getCost());
+                    preparedStatement.setString(7, kho.getImg());
                     preparedStatement.executeUpdate();
                 }
             } else {
@@ -320,7 +321,6 @@ public class WarehouseDAO {
         }
         connectDB.disconnect();
     }
-
 
     public int getByIDBook() throws SQLException {
         int id = 0;
