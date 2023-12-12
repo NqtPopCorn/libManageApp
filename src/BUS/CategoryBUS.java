@@ -13,6 +13,7 @@ import connection.ConnectDB;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -68,6 +69,11 @@ public class CategoryBUS {
         cdao.deleteByName(name);
         return true;
     }
+    
+    public Vector<String> getCategoryByISBN(String ISBN){
+        return cdao.getCategoryByISBN(ISBN);
+    }
+    
     public void disconnect() {
             cdao.disconnect();
     }

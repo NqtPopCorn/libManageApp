@@ -94,14 +94,14 @@ public class HomePage extends javax.swing.JFrame {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } 
-                else if (index == 5 && homePageBUS.hasPerAccess(user.getRoleID(), 6)) {
+                else if (index == 6 && homePageBUS.hasPerAccess(user.getRoleID(), 6)) {
                     try {
                         setForm(new Reader_GUI(user));
                     } catch (Exception ex) {
                         Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } 
-                else if (index == 6 && homePageBUS.hasPerAccess(user.getRoleID(), 8)) {
+                else if (index == 5 && homePageBUS.hasPerAccess(user.getRoleID(), 8)) {
                     try {
                         setForm(new Book_GUI(user));
                     } catch (SQLException ex) {

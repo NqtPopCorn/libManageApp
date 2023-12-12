@@ -17,6 +17,7 @@ public class Book1 {
     private int storeNum;
     private int borrowNum;
     private String publisher;
+    private String version;
     private Vector<String> author=new Vector();
     private long Cost;
     private String img;
@@ -30,6 +31,18 @@ public class Book1 {
         this.Cost = Cost;
         this.img = img;
     }
+    
+    public Book1(String ISBN, String tenSach,String version, int storeNum,int borrowNum, String publisher, long Cost, String img) {
+        this.ISBN = ISBN;
+        this.tenSach = tenSach;
+        this.version = version;
+        this.storeNum = storeNum;
+        this.borrowNum=borrowNum;
+        this.publisher = publisher;
+        this.Cost = Cost;
+        this.img = img;
+    }
+    
      public int getBorrowNum() {
         return borrowNum;
     }
@@ -95,6 +108,13 @@ public class Book1 {
         this.publisher = publisher;
     }
 
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
     public long getCost() {
         return Cost;

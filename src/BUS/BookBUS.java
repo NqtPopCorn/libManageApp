@@ -35,6 +35,17 @@ public class BookBUS {
         listAll=bookDAO.getAll();
         return listAll;
     }
+    
+    public ArrayList<Book1> getAllIncludeVersion() throws ClassNotFoundException, SQLException, IOException                   //Sua lai cai nay
+    {   
+        return bookDAO.getAllIncludeVersion();
+    }
+    
+    public ArrayList<Book1> allOutSearch(String fStr) throws ClassNotFoundException, SQLException, IOException                   //Sua lai cai nay
+    {   
+        return bookDAO.allOutSearch(fStr);
+    }
+    
     public Book1 getBookByISBN(String ISBN) throws ClassNotFoundException, SQLException, IOException            //Them cai nay roi xoa cai nay ben DAO DI
     {
        for (Book1 x :listAll)
@@ -118,4 +129,11 @@ public class BookBUS {
      {
          bookDAO.updateStoreNumBooks(ISBN, storeNum, borrowNum);
      }
+    public String delBook(String ISBN){
+        if(bookDAO.delBook(ISBN)){
+            return "Xoá sách thành công";
+        }else{
+            return "Xoá sách không thành công";
+        }
+    }
 }

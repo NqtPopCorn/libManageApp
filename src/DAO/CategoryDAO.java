@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 /**
  *
@@ -122,6 +123,29 @@ public class CategoryDAO {
             e.printStackTrace();
         }
     }
+    
+    public Vector<String> getCategoryByISBN(String ISBN) {
+        Vector<String> cateList=new Vector<>();
+        String query = "select name from book_category join category on book_category.categoryID=category.id where ISBN=?";
+        try {
+        	connectDB.connect();
+            Connection connection = connectDB.getConnection();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, ISBN);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        cateList.add(resultSet.getString("name"));
+                    }
+                }
+            } 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally{
+            disconnect();
+        }
+        return cateList;
+    }
+    
     public int getByCategoryID(String name) {
         int id = 0;
         String query = "SELECT id FROM category WHERE name LIKE ?";

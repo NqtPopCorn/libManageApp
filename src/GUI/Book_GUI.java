@@ -5,6 +5,7 @@
 package GUI;
 
 import BUS.AccountBUS;
+import BUS.BookBUS;
 import BUS.RolePermissionBUS;
 import MyDesign.ScrollBar;
 import java.awt.Color;
@@ -17,10 +18,13 @@ import javax.swing.JScrollPane;
 import BUS.StaffBUS;
 import DTO.entities.Staff;
 import DTO.entities.Account;
+import DTO.entities.Book1;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 
 /**
  *
@@ -28,10 +32,12 @@ import java.util.logging.Logger;
  */
 public class Book_GUI extends javax.swing.JPanel {
     private StaffBUS staffBUS;
+    private BookBUS bookBUS=new BookBUS();
     int userID;
     String roleID;
     private Account userLogin;
     private RolePermissionBUS rolePermissionBUS;
+    ArrayList<Book1> bookList = new ArrayList<>();
     /**
      * Creates new form Staff_GUI
      */
@@ -50,7 +56,7 @@ public class Book_GUI extends javax.swing.JPanel {
         JPanel p = new JPanel();
         p.setBackground(Color.WHITE);
         spTable.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
-        
+        upData();
     }
     
    
@@ -85,7 +91,7 @@ public class Book_GUI extends javax.swing.JPanel {
 
             },
             new String [] {
-                "STT", "Mã sách", "Tên sách", "Tác giả", "Phiên bản", "Số lương"
+                "STT", "Mã sách", "Tên sách", "Nhà xuất bản", "Phiên bản", "Số lương"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -180,15 +186,64 @@ public class Book_GUI extends javax.swing.JPanel {
 
     private void tbSachMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbSachMouseClicked
        if (evt.getClickCount() == 2 && rolePermissionBUS.hasPerView(roleID, 7)) {
-           
+           int row = tbSach.getSelectedRow();
+            if (row >= 0) {
+                try{
+                    BookInfo_Dialog bookDia=new BookInfo_Dialog(new java.awt.Frame(),true,tbSach,bookList.get(row));
+                    bookDia.setVisible(true);
+                }catch(Exception ex){
+                    Logger.getLogger(Book_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            }
         }
     }//GEN-LAST:event_tbSachMouseClicked
 
     private void txtTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTimKiemActionPerformed
-        
+        String val=txtTimKiem.getText().trim();
+            try {
+                bookList=bookBUS.allOutSearch(val);
+                if(bookList.size()==0){
+                    JOptionPane.showMessageDialog(null,"Không tìm thấy sách");
+                }else{
+                    tbSach.setRowCount(0);
+                    for(int i=0;i<bookList.size();i++){
+                    Book1 book=bookList.get(i);
+                    String id=book.getISBN();
+                    String name=book.getTenSach();
+                    String pulisher=book.getPublisher();
+                    String version=book.getVersion();
+                    int num=book.getStoreNum();
+                    Object row[] = {i+1,id,name,pulisher,version,num};
+                    tbSach.addRow(row);
+                    }
+                }
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Book_GUI.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(Book_GUI.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Book_GUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }//GEN-LAST:event_txtTimKiemActionPerformed
 
-
+    public void upData(){
+        try {
+            bookList = bookBUS.getAllIncludeVersion();
+            for(int i=0;i<bookList.size();i++){
+            Book1 book=bookList.get(i);
+            String id=book.getISBN();
+            String name=book.getTenSach();
+            String pulisher=book.getPublisher();
+            String version=book.getVersion();
+            int num=book.getStoreNum();
+            Object row[] = {i+1,id,name,pulisher,version,num};
+            tbSach.addRow(row);
+        }
+        } catch (IOException | ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(Book_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel8;
