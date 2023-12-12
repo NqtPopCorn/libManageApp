@@ -110,7 +110,7 @@ public class StaffDAO {
         connectDB.connect();
         if(connectDB.conn!=null){
             try{
-            	String sql="select * from staff where tel=?";
+            	String sql="select * from staff where tel=? and isActive=1";
             	PreparedStatement preparedStatement= connectDB.conn.prepareStatement(sql);
                 preparedStatement.setString(1, tel);
                 ResultSet rs=preparedStatement.executeQuery();
@@ -131,7 +131,7 @@ public class StaffDAO {
         connectDB.connect();
         if(connectDB.conn!=null){
             try{
-            	String sql="select * from staff where tel=? and id!=?";
+            	String sql="select * from staff where tel=? and id!=? and isActive=1";
             	PreparedStatement preparedStatement= connectDB.conn.prepareStatement(sql);
                 preparedStatement.setString(1, tel);
                 preparedStatement.setInt(2, id);
