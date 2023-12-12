@@ -146,7 +146,6 @@ public class StaffRole_Dialog extends javax.swing.JDialog {
         jLabel8.setText("Tên chức vụ");
 
         txtTenChucVu.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 229, 229)));
-        txtTenChucVu.setText("Thủ kho");
 
         jLabel9.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel9.setText("Người tạo");

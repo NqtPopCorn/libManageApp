@@ -114,21 +114,22 @@ public class Admin_GUI extends javax.swing.JPanel {
         txtTenChucVu.setEnabled(false);
         permissionsModel.setRowCount(0);
         if(roleID.equals("AD")){
-            btnCapNhat.setEnabled(false);
-            btnXoaChucVu.setEnabled(false);
+            btnCapNhat.setVisible(false);
+            btnXoaChucVu.setVisible(false);
         }
         else{
-            btnCapNhat.setEnabled(true);
-            btnXoaChucVu.setEnabled(true);
+            btnCapNhat.setVisible(true);
+            btnXoaChucVu.setVisible(true);
         }
-        
         int stt = 1;
         int permissionID;
         String permissionName;
         for (Permission permission : listPermisson){
             permissionID = permission.getPermissionID();
             permissionName = permission.getPermissionName();
-            if(permissionID == 9 && roleID.equals("AD")){
+            if(permissionName.equals("Quản Lý Kho"))
+                permissionName = "Quản Lý Phiếu Nhập";
+            if(permissionID == 9 ){
                 continue;
             }
             listPer  = rolePermissionBUS.hasPermission(permissionID,listRolePer);

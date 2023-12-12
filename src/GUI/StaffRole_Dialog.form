@@ -199,7 +199,6 @@
                         </LineBorder>
                       </Border>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Th&#x1ee7; kho"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel9">

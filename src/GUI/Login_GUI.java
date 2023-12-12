@@ -5,8 +5,10 @@
 package GUI;
 
 import BUS.AccountBUS;
+import BUS.RoleBUS;
 import DTO.entities.Account;
 import DTO.entities.Person;
+import DTO.entities.Role;
 import java.awt.Color;
 import MyDesign.Login;
 import java.io.IOException;
@@ -24,9 +26,12 @@ import javax.swing.JOptionPane;
  */
 public class Login_GUI extends javax.swing.JFrame {
     private AccountBUS userBUS;
+    private RoleBUS roleBUS;
     private Account user;
     
-    private ArrayList<Person> accList;
+    private ArrayList<Person> accList;    
+    private ArrayList<Role> roles;
+
     private String username = "";
     private String pwd = "";
     /**
@@ -35,7 +40,9 @@ public class Login_GUI extends javax.swing.JFrame {
     public Login_GUI() throws ClassNotFoundException, SQLException, IOException{
         this.user = new Account();
         this.userBUS = new AccountBUS();
+        this.roleBUS = new RoleBUS();
         accList = userBUS.getList();
+        roles = roleBUS.getList();
         initComponents();
         setBackground(new Color(0,0,0,0));
     }
@@ -154,6 +161,8 @@ public class Login_GUI extends javax.swing.JFrame {
         }
         boolean checkUsername = false;        
         boolean checkPwd = false;
+        boolean checkRole = false;
+        String roleLogin = "";
         String checkPwdHash;
         for(Person per : accList){
             Account acc = (Account) per;
@@ -161,12 +170,22 @@ public class Login_GUI extends javax.swing.JFrame {
                 checkUsername = true;
                 try {
                     checkPwdHash = Account.hashPassword(pwd);
-                    if(acc.getPwd().equals(checkPwdHash))
+                    if(acc.getPwd().equals(checkPwdHash)){
                         checkPwd = true;
+                        roleLogin = acc.getRoleID();
+                    }
+                        
                 } catch (NoSuchAlgorithmException ex) {
                     Logger.getLogger(Login_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }  
+            }
+        }
+        if(checkUsername == true && checkPwd == true){
+            for(Role role : roles){
+                if(role.getRoleID().equals(roleLogin) && role.getIsDeleted() == 1){
+                    checkRole = true;
+                    break;
                 }
-                
             }
         }
         if (checkUsername == false) {
@@ -177,6 +196,11 @@ public class Login_GUI extends javax.swing.JFrame {
         if (checkPwd == false) {
             // Mật khẩu không được để trống
             JOptionPane.showMessageDialog(this, "Mật khẩu không đúng", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (checkPwd == false) {
+            // Mật khẩu không được để trống
+            JOptionPane.showMessageDialog(this, "Bạn không quyền đăng nhập vào ứng dụng", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
         user = new Account();
