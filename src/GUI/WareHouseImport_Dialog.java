@@ -469,7 +469,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         		{
         			WareHouseAddNXB_Dialog r;
                     try {
-                        r = new WareHouseAddNXB_Dialog(null,"warehouse","add", rootPaneCheckingEnabled);
+                        r = new WareHouseAddNXB_Dialog(null,"warehouse",null, rootPaneCheckingEnabled);
                         r.setVisible(true);
                         cbNXB.removeAllItems();
                         for(Publisher item : publisherList)
@@ -1143,7 +1143,7 @@ public class WareHouseImport_Dialog extends javax.swing.JDialog {
         		{
         			WareHouseAddNCC_Dialog r;
                     try {
-                        r = new WareHouseAddNCC_Dialog(null,"warehouse" ,"add",rootPaneCheckingEnabled);
+                        r = new WareHouseAddNCC_Dialog(null,"warehouse" ,null,rootPaneCheckingEnabled);
                         r.setVisible(true);
                     } catch (ClassNotFoundException | SQLException | IOException e1) {
                         // TODO Auto-generated catch block

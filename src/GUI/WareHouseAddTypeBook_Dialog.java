@@ -82,7 +82,7 @@ public class WareHouseAddTypeBook_Dialog extends javax.swing.JDialog {
             public void actionPerformed(ActionEvent e) {
             	WareHouseAddNewTypeBook_Dialog r;
                 try {
-                    r = new WareHouseAddNewTypeBook_Dialog(null, nameFrame, rootPaneCheckingEnabled);
+                    r = new WareHouseAddNewTypeBook_Dialog(null, nameFrame,null, rootPaneCheckingEnabled);
                     r.setVisible(true);
                 } catch (ClassNotFoundException | SQLException | IOException e1) {
                     // TODO Auto-generated catch block

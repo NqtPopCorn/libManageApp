@@ -14,6 +14,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import BUS.PublisherBUS;
+import DTO.entities.Account;
 import DTO.entities.Category;
 import DTO.entities.Publisher;
 import java.util.logging.Level;
@@ -26,17 +27,17 @@ import java.util.logging.Logger;
 public class WareHouseAddNXB_Dialog extends javax.swing.JDialog {
     static String nameFrame;
     static String action;
+    static Account user;
     /**
      * Creates new form WareHouseAddReader_Dialog
      */
-    public WareHouseAddNXB_Dialog(java.awt.Frame parent, String nameFrame,String action,boolean modal) throws SQLException, IOException, ClassNotFoundException {
+    public WareHouseAddNXB_Dialog(java.awt.Frame parent, String nameFrame,Account user,boolean modal) throws SQLException, IOException, ClassNotFoundException {
         super(parent, modal);
         WareHouseAddNXB_Dialog.nameFrame = nameFrame;        
-        WareHouseAddNXB_Dialog.action = action;
+        WareHouseAddNXB_Dialog.user = user;
 
         initComponents();
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -78,10 +79,9 @@ public class WareHouseAddNXB_Dialog extends javax.swing.JDialog {
                     	Publisher p = new Publisher();
                         p.setName(txtNhaXuatBan.getText());
                         if (nameFrame == "more_gui"){
-                            System.out.print("More_GUI");
                             More_GUI gui;
                             try {
-                                gui = new More_GUI();
+                                gui = new More_GUI(user);
                                 if(pub.getByNamePub(p.getName())!=null)
                                 {
                                     JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên NXB đã tồn tại!","Thông báo",JOptionPane.WARNING_MESSAGE);

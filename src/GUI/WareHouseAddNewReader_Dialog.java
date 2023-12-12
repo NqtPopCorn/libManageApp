@@ -14,6 +14,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import BUS.AuthorBUS;
+import DTO.entities.Account;
 import DTO.entities.Author;
 import DTO.entities.Supplier;
 
@@ -27,16 +28,17 @@ import java.util.logging.Logger;
  */
 public class WareHouseAddNewReader_Dialog extends javax.swing.JDialog {
     String nameFrame;
-    String action;
+    Account user;
     /**
      * Creates new form WareHouseAddReader_Dialog
      * @throws IOException
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public WareHouseAddNewReader_Dialog(java.awt.Frame parent,String nameFrame,boolean modal) throws ClassNotFoundException, SQLException, IOException {
+    public WareHouseAddNewReader_Dialog(java.awt.Frame parent,String nameFrame,Account user,boolean modal) throws ClassNotFoundException, SQLException, IOException {
         super(parent,nameFrame, modal);
         this.nameFrame = nameFrame;
+        this.user= user;
         setLocationRelativeTo(null);
         initComponents();
     }
@@ -84,7 +86,7 @@ public class WareHouseAddNewReader_Dialog extends javax.swing.JDialog {
                         System.out.print("More_GUI");
                         More_GUI gui;
                         try {
-                            gui = new More_GUI();
+                            gui = new More_GUI(user);
                             if(au.getByNameAuthor(a.getName())!=null)
                             {
                                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên Tác Giả đã tồn tại!","Thông báo",JOptionPane.WARNING_MESSAGE);
@@ -242,7 +244,7 @@ public class WareHouseAddNewReader_Dialog extends javax.swing.JDialog {
             public void run() {
                 WareHouseAddNewReader_Dialog dialog;
                 try {
-                    dialog = new WareHouseAddNewReader_Dialog(new javax.swing.JFrame(), null ,true);
+                    dialog = new WareHouseAddNewReader_Dialog(new javax.swing.JFrame(), null,null ,true);
                     dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                         @Override
                         public void windowClosing(java.awt.event.WindowEvent e) {

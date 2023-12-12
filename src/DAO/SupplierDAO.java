@@ -71,6 +71,7 @@ public class SupplierDAO {
             	Supplier a = new Supplier();
                 a.setSupplier_id(resultSet.getInt(1));
                 a.setSupplier_name(resultSet.getString(2));
+                a.setSupplier_status(resultSet.getInt(3));
                 list.add(a);
             }
         } catch (SQLException e) {
@@ -96,7 +97,7 @@ public class SupplierDAO {
         }
     }
     public  void deleteByName (String name){
-        String query = "UPDATE supplier SET isActive = 1 WHERE name = ?";
+        String query = "UPDATE supplier SET isActive = 0 WHERE name = ?";
         try{
             connectDB.connect();
             if(connectDB.conn != null){

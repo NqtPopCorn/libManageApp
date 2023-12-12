@@ -14,6 +14,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import BUS.CategoryBUS;
+import DTO.entities.Account;
 import DTO.entities.Author;
 import DTO.entities.Category;
 import java.util.logging.Level;
@@ -25,15 +26,17 @@ import java.util.logging.Logger;
  */
 public class WareHouseAddNewTypeBook_Dialog extends javax.swing.JDialog {
     static String nameFrame;
+    static Account user;
     /**
      * Creates new form WareHouseAddReader_Dialog
      * @throws IOException
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public WareHouseAddNewTypeBook_Dialog(java.awt.Frame parent,String nameFrame ,boolean modal) throws ClassNotFoundException, SQLException, IOException {
+    public WareHouseAddNewTypeBook_Dialog(java.awt.Frame parent,String nameFrame,Account user ,boolean modal) throws ClassNotFoundException, SQLException, IOException {
         super(parent,nameFrame ,modal);
         WareHouseAddNewTypeBook_Dialog.nameFrame = nameFrame;
+        WareHouseAddNewTypeBook_Dialog.user=user;
         setLocationRelativeTo(null);
         initComponents();
     }
@@ -82,7 +85,7 @@ public class WareHouseAddNewTypeBook_Dialog extends javax.swing.JDialog {
                             System.out.print("More_GUI");
                             More_GUI gui;
                             try {
-                                gui = new More_GUI();
+                                gui = new More_GUI(WareHouseAddNewTypeBook_Dialog.user);
                                 try {
                                     if(cate.getByNameCategory(c.getName())!=null)
                                     {
@@ -249,7 +252,7 @@ public class WareHouseAddNewTypeBook_Dialog extends javax.swing.JDialog {
             public void run() {
                 WareHouseAddNewTypeBook_Dialog dialog;
                 try {
-                    dialog = new WareHouseAddNewTypeBook_Dialog(new javax.swing.JFrame(), nameFrame, true);
+                    dialog = new WareHouseAddNewTypeBook_Dialog(new javax.swing.JFrame(), nameFrame,null, true);
                     dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
