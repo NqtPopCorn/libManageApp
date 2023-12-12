@@ -349,9 +349,14 @@ public class StaffRole_Dialog extends javax.swing.JDialog {
                 listRole = roleBUS.getList();
                 // Kiểm tra xem ID có trùng lặp không
                 boolean isDuplicateID = false;
+                boolean isDuplicateName = false;
                 for (Role role : listRole) {
                     if (role.getRoleID().equals(ID)) {
                         isDuplicateID = true;
+                        break;
+                    }
+                    if(role.getRoleName().equals(newRoleName)){
+                        isDuplicateName = true;
                         break;
                     }
                 }
@@ -366,12 +371,17 @@ public class StaffRole_Dialog extends javax.swing.JDialog {
                         }
                     }
                 }
-                newRole = new Role(ID, newRoleName,1);
-                roleBUS.addBrandNewRole(newRole);
-                rolePermissionBUS.savePermissions(dataList, ID);
-                this.setVisible(false);
-                if(cbChucVu!=null){
-                    addRole(user.getRoleID());
+                if(isDuplicateName){
+                    JOptionPane.showMessageDialog(this,"Tên chức vụ trùng lặp", "Thông báo lỗi", JOptionPane.INFORMATION_MESSAGE);
+                }
+                else{
+                    newRole = new Role(ID, newRoleName,1);
+                    roleBUS.addBrandNewRole(newRole);
+                    rolePermissionBUS.savePermissions(dataList, ID);
+                    this.setVisible(false);
+                    if(cbChucVu!=null){
+                        addRole(user.getRoleID());
+                    }
                 }
             }
         } catch (ClassNotFoundException ex) {
