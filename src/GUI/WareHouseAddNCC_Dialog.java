@@ -129,22 +129,9 @@ public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
                                 }
                                 else {
                                     pub.saveInfo(p);
+                                    String value = txtNhaCungCap.getText();
+                                    whid.addToComboBox(value);
                                     JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
-                                    List<Supplier> publisherList = pub.getAllName();
-                                    whid.cbNhaCungCap.removeAllItems();
-                                    whid.cbNXB.removeAllItems();
-                                    for(Supplier item : publisherList)
-                                    {
-                                        if(item.getSupplier_status() == 1)
-                                            whid.cbNXB.addItem(item.getSupplier_name());
-                                    }
-                                    for(Supplier item : publisherList)
-                                    {
-                                        if(item.getSupplier_status() == 1)
-                                            whid.cbNhaCungCap.addItem(item.getSupplier_name());
-                                    }
-                                    hide();
-                                    whid.setVisible(true);
                                 }
                             } catch (ClassNotFoundException e1) {
                                 // TODO Auto-generated catch block

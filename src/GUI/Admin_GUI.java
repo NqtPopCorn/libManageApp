@@ -129,7 +129,7 @@ public class Admin_GUI extends javax.swing.JPanel {
             permissionName = permission.getPermissionName();
             if(permissionName.equals("Quản Lý Kho"))
                 permissionName = "Quản Lý Phiếu Nhập";
-            if(permissionID == 9 ){
+            if(permissionID == 10 ){
                 continue;
             }
             listPer  = rolePermissionBUS.hasPermission(permissionID,listRolePer);

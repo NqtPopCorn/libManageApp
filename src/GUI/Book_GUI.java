@@ -185,7 +185,7 @@ public class Book_GUI extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tbSachMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbSachMouseClicked
-       if (evt.getClickCount() == 2 && rolePermissionBUS.hasPerView(roleID, 7)) {
+       if (evt.getClickCount() == 2 && rolePermissionBUS.hasPerView(roleID, 5)) {
            int row = tbSach.getSelectedRow();
             if (row >= 0) {
                 try{

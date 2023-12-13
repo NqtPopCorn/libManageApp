@@ -50,7 +50,7 @@ public class StaffDAO {
     	connectDB.connect();
         if(connectDB.conn!=null){
             try{
-            	String sql="select roles.name from roles where roles.id!='AD'";
+            	String sql="select roles.name from roles where roles.id!='AD' and isActive = 1";
                 Statement stmt = connectDB.conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 while(rs.next()){
@@ -70,7 +70,7 @@ public class StaffDAO {
     	connectDB.connect();
         if(connectDB.conn!=null){
             try{
-            	String sql="select roles.name from roles";
+            	String sql="select roles.name from roles Where isActive = 1";
                 Statement stmt = connectDB.conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 while(rs.next()){
@@ -90,7 +90,7 @@ public class StaffDAO {
     	connectDB.connect();
         if(connectDB.conn!=null){
             try{
-            	String sql="select roles.name from roles where roles.id!='AD' AND roles.id!='QL'";
+            	String sql="select roles.name from roles where roles.id!='AD' AND roles.id!='QL' and isActive = 1";
                 Statement stmt = connectDB.conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 while(rs.next()){

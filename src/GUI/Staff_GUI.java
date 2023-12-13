@@ -59,7 +59,7 @@ public class Staff_GUI extends javax.swing.JPanel {
         JPanel p = new JPanel();
         p.setBackground(Color.WHITE);
         spTable.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
-        if(rolePermissionBUS.hasPerCreate(roleID, 7))
+        if(rolePermissionBUS.hasPerCreate(roleID, 8))
             btnNhanVienMoi.setEnabled(true);
         else  btnNhanVienMoi.setEnabled(false);
         

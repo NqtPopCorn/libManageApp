@@ -5,6 +5,7 @@
 package GUI;
 
 import BUS.ReaderBUS;
+import BUS.RolePermissionBUS;
 import BUS.StatisticsBUS;
 import DTO.entities.*;
 
@@ -14,6 +15,8 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -32,14 +35,18 @@ public class Statistic_GUI extends javax.swing.JPanel {
     private int yearSTT;
     private int quarterSTT;
     private int monthSTT;
+    private Account user;
+    private RolePermissionBUS rolePermissionBUS;
     DefaultTableModel tableModel;
     private  DecimalFormat decimalFormat = new DecimalFormat("#,###");
     /**
      * Creates new form statistic_GUI
      */
-    public Statistic_GUI() {
+    public Statistic_GUI(Account user) throws ClassNotFoundException, SQLException, IOException {
         initComponents();
-        // add row table    
+        // add row table   
+        this.user = user;
+        this.rolePermissionBUS = new RolePermissionBUS();
         try {
             sBus = new StatisticsBUS();
             ShowAll();
@@ -52,6 +59,10 @@ public class Statistic_GUI extends javax.swing.JPanel {
         JPanel p = new JPanel();
         p.setBackground(Color.WHITE);
         spTable.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
+        if(rolePermissionBUS.hasPerEdit(this.user.getRoleID(), 1)){
+            cbThoiGian.setEnabled(true);       
+        }
+        else cbThoiGian.setEnabled(false);
     }
     
     private void ShowAll(){

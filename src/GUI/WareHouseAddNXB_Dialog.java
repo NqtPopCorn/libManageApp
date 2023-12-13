@@ -121,16 +121,10 @@ public class WareHouseAddNXB_Dialog extends javax.swing.JDialog {
                                     
                                 }
                                 else {
-                                    pub.saveInfo(p);
+                                   pub.saveInfo(p);
+                                    String value = txtNhaXuatBan.getText();
+                                    whid.addToComboBox(value);
                                     JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
-                                    List<Publisher> publisherList = pub.getAllName();
-                                    whid.cbNXB.removeAllItems();
-                                    for(Publisher item : publisherList)
-                                    {
-                                        whid.cbNXB.addItem(item.getName());
-                                    }
-                                    hide();
-                                    whid.setVisible(true);
                                 }
                             } catch (ClassNotFoundException e1) {
                                 // TODO Auto-generated catch block

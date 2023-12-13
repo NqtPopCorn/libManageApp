@@ -82,7 +82,7 @@ public class Borrow_GUI extends javax.swing.JPanel {
         spTable2.getViewport().setBackground(Color.WHITE);
         p.setBackground(Color.WHITE);
         spTable2.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
-        if(rolePermissionBUS.hasPerEdit(user.getRoleID(), 2)){
+        if(rolePermissionBUS.hasPerEdit(user.getRoleID(), 3)){
             btnChoMuon.setEnabled(true);
             btnThem.setEnabled(true);
             btnTruSoLuong.setEnabled(true);
@@ -92,7 +92,7 @@ public class Borrow_GUI extends javax.swing.JPanel {
             btnThem.setEnabled(false);
             btnTruSoLuong.setEnabled(false);
         }
-        if(rolePermissionBUS.hasPerView(user.getRoleID(), 2))
+        if(rolePermissionBUS.hasPerView(user.getRoleID(), 3))
             btnThemDocGia.setEnabled(true);
         else btnThemDocGia.setEnabled(false);
     }

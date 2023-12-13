@@ -56,7 +56,7 @@ public class StaffAdd_Dialog extends javax.swing.JDialog {
         }
         initComponents();
         addRole(user.getRoleID());
-        if(rolePermissionBUS.hasPerCreate(roleID, 9))
+        if(rolePermissionBUS.hasPerCreate(roleID, 10))
             lbChucVu.setEnabled(true);
         else lbChucVu.setEnabled(false);
     }
@@ -435,13 +435,17 @@ public class StaffAdd_Dialog extends javax.swing.JDialog {
 
     private void lbChucVuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbChucVuMouseClicked
         try {
-            StaffRole_Dialog srd = new StaffRole_Dialog(this.user,cbChucVu,new javax.swing.JFrame(), true);
+            if(roleID.equals("AD")){
+                StaffRole_Dialog srd = new StaffRole_Dialog(this.user,cbChucVu,new javax.swing.JFrame(), true);
             srd.setVisible(true);
             srd.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent windowEvent) {
                 }
             });
+            }else{
+                JOptionPane.showMessageDialog(null,"Bạn không có quyền tạo chức vụ mới");
+            }   
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Admin_GUI.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {

@@ -131,6 +131,7 @@ public class WareHouseAddTypeBook_Dialog extends javax.swing.JDialog {
 						cbCategory.removeAllItems();
 		    			try {
 		    				List<Category> categoryList = cate.getAll();
+						cbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Thể loại" }));
 		    				for(Category item : categoryList)
 		    			    {
 		    			      cbCategory.addItem(item.getName());
