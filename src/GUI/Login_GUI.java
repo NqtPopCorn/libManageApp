@@ -68,8 +68,11 @@ public class Login_GUI extends javax.swing.JFrame {
 
         panel.setOpaque(false);
 
+        txtUserName.setText("manage");
+        txtUserName.setToolTipText("");
         txtUserName.setHint("User Name");
 
+        txtPassword.setText("1234567890a");
         txtPassword.setHint("Password");
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
