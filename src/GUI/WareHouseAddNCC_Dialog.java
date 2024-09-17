@@ -4,44 +4,18 @@
  */
 package GUI;
 
-import java.awt.HeadlessException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
-
-import javax.swing.JOptionPane;
-
-import BUS.PublisherBUS;
-import BUS.SupplierBUS;
-import BUS.SupplyCardBUS;
-import DTO.entities.Account;
-import DTO.entities.Supplier;
-import DTO.entities.SupplyCard;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author QUANG DIEN
  */
 public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
-    static String nameFrame;
-    static Account user;
+
     /**
      * Creates new form WareHouseAddReader_Dialog
      */
-    public WareHouseAddNCC_Dialog(java.awt.Frame parent,String nameFrame,Account user, boolean modal) throws SQLException, IOException, ClassNotFoundException {
-        super(parent,nameFrame ,modal);
-        WareHouseAddNCC_Dialog.nameFrame = nameFrame;        
-        WareHouseAddNCC_Dialog.user = user;
-
-        try {
-            initComponents();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(WareHouseAddNCC_Dialog.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public WareHouseAddNCC_Dialog(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
+        initComponents();
     }
 
     /**
@@ -51,7 +25,7 @@ public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() throws SQLException, IOException, ClassNotFoundException{
+    private void initComponents() {
 
         panelBorder_Statistic_Blue1 = new MyDesign.PanelBorder_Statistic_Blue();
         panelBorder_Basic1 = new MyDesign.PanelBorder_Basic();
@@ -74,84 +48,7 @@ public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
         btnThemNhaCungCap.setBorderColor(new java.awt.Color(22, 113, 221));
         btnThemNhaCungCap.setColor(new java.awt.Color(22, 113, 221));
         btnThemNhaCungCap.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        
-        btnThemNhaCungCap.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (txtNhaCungCap.getText().equals("")) {
-                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Vui lòng điền đầy đủ thông tin.", "Cảnh Báo", JOptionPane.WARNING_MESSAGE);
-                } else {
-                    try {
-                    	Supplier p = new Supplier();
-                        p.setSupplier_name(txtNhaCungCap.getText());
-                        if (nameFrame == "more_gui"){
-                            More_GUI gui;
-                            try {
-                                gui = new More_GUI(WareHouseAddNCC_Dialog.user);
-                                if(pub.getByNameAuthor(p.getSupplier_name())!=null)
-                                {
-                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên NCC đã tồn tại!","Thông báo",JOptionPane.WARNING_MESSAGE);
-                                }
-                                else {
-                                    pub.saveInfo(p);
-                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);                                
-                                    List<Supplier> publisherList = pub.getAllName();
-                                    int stt = 1;
-                                    gui.suppliersModel.setRowCount(0);
-                                    for(Supplier item : publisherList)
-                                    {
-                                        if(item.getSupplier_status() == 1)
-                                            gui.suppliersModel.addRow(new Object[]{stt++,item.getSupplier_name()});
-                                    }
-                                    hide();
-                                    gui.setVisible(true);
-                                    
-                                }
-                            } catch (SQLException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            } catch (IOException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }catch (ClassNotFoundException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }
-                    }
-                        else{
-                            WareHouseImport_Dialog whid;
-                            try {
-                                whid = new WareHouseImport_Dialog(null, rootPaneCheckingEnabled);
-                                if(pub.getByNameAuthor(p.getSupplier_name())!=null)
-                                {
-                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên NCC đã tồn tại!","Thông báo",JOptionPane.WARNING_MESSAGE);
-                                    
-                                }
-                                else {
-                                    pub.saveInfo(p);
-                                    String value = txtNhaCungCap.getText();
-                                    whid.addToComboBox(value);
-                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
-                                }
-                            } catch (ClassNotFoundException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            } catch (SQLException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            } catch (IOException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }
-                        }
-                    } catch (HeadlessException e1) {
-                        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Lỗi Thêm NXB.", "ERROR", JOptionPane.ERROR_MESSAGE);
-                        System.out.println(e1);
-                    }
-                }
-            }
-        });
-        
+
         javax.swing.GroupLayout panelBorder_Basic1Layout = new javax.swing.GroupLayout(panelBorder_Basic1);
         panelBorder_Basic1.setLayout(panelBorder_Basic1Layout);
         panelBorder_Basic1Layout.setHorizontalGroup(
@@ -222,7 +119,59 @@ public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
-        
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(WareHouseAddNCC_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(WareHouseAddNCC_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(WareHouseAddNCC_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(WareHouseAddNCC_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the dialog */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                WareHouseAddNCC_Dialog dialog = new WareHouseAddNCC_Dialog(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private MyDesign.MyButton btnThemNhaCungCap;
@@ -230,8 +179,6 @@ public class WareHouseAddNCC_Dialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel8;
     private MyDesign.PanelBorder_Basic panelBorder_Basic1;
     private MyDesign.PanelBorder_Statistic_Blue panelBorder_Statistic_Blue1;
-    MyDesign.MyTextField_Basic txtNhaCungCap;
-    private SupplyCardBUS scb = new SupplyCardBUS();
-    private SupplierBUS pub = new SupplierBUS();
+    private MyDesign.MyTextField_Basic txtNhaCungCap;
     // End of variables declaration//GEN-END:variables
 }

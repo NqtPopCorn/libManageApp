@@ -152,9 +152,6 @@
                   <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                 </Property>
               </Properties>
-              <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tbLichSuNhapHangMouseClicked"/>
-              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -299,6 +296,9 @@
               <Font name="SansSerif" size="12" style="1"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNhapSachActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

@@ -4,40 +4,20 @@
  */
 package GUI;
 
-import java.awt.HeadlessException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
-
-import javax.swing.JOptionPane;
-
-import BUS.PublisherBUS;
-import DTO.entities.Account;
-import DTO.entities.Category;
-import DTO.entities.Publisher;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author QUANG DIEN
  */
 public class WareHouseAddNXB_Dialog extends javax.swing.JDialog {
-    static String nameFrame;
-    static String action;
-    static Account user;
+
     /**
      * Creates new form WareHouseAddReader_Dialog
      */
-    public WareHouseAddNXB_Dialog(java.awt.Frame parent, String nameFrame,Account user,boolean modal) throws SQLException, IOException, ClassNotFoundException {
+    public WareHouseAddNXB_Dialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        WareHouseAddNXB_Dialog.nameFrame = nameFrame;        
-        WareHouseAddNXB_Dialog.user = user;
-
         initComponents();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -45,7 +25,7 @@ public class WareHouseAddNXB_Dialog extends javax.swing.JDialog {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()throws SQLException, IOException, ClassNotFoundException {
+    private void initComponents() {
 
         panelBorder_Statistic_Blue1 = new MyDesign.PanelBorder_Statistic_Blue();
         panelBorder_Basic1 = new MyDesign.PanelBorder_Basic();
@@ -68,85 +48,7 @@ public class WareHouseAddNXB_Dialog extends javax.swing.JDialog {
         btnThemNhaXuatBan.setBorderColor(new java.awt.Color(22, 113, 221));
         btnThemNhaXuatBan.setColor(new java.awt.Color(22, 113, 221));
         btnThemNhaXuatBan.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        
-        btnThemNhaXuatBan.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (txtNhaXuatBan.getText().equals("")) {
-                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Vui lòng điền đầy đủ thông tin.", "Cảnh Báo", JOptionPane.WARNING_MESSAGE);
-                } else {
-                    try {
-                    	Publisher p = new Publisher();
-                        p.setName(txtNhaXuatBan.getText());
-                        if (nameFrame == "more_gui"){
-                            More_GUI gui;
-                            try {
-                                gui = new More_GUI(user);
-                                if(pub.getByNamePub(p.getName())!=null)
-                                {
-                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên NXB đã tồn tại!","Thông báo",JOptionPane.WARNING_MESSAGE);
-                                }
-                                else {
-                                    pub.saveInfo(p);
-                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);                                
-                                    List<Publisher> publishers = pub.getAllName();
-                                    gui.publishersModel.setRowCount(0);
-                                    int stt = 1;
-                                    for(Publisher item : publishers)
-                                    {
-                                        if(item.isStatus() == 1)
-                                            gui.publishersModel.addRow(new Object[]{stt++,item.getName()});
-                                    }
-                                    hide();
-                                    gui.setVisible(true);
-                                    
-                                }
-                            } catch (SQLException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            } catch (IOException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }catch (ClassNotFoundException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }
-                        } else{
-                            WareHouseImport_Dialog whid;
-                            try {
-                                whid = new WareHouseImport_Dialog(null, rootPaneCheckingEnabled);
-                                if(pub.getByNamePub(p.getName())!=null)
-                                {
-                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Tên NXB đã tồn tại!","Thông báo",JOptionPane.WARNING_MESSAGE);
-                                    
-                                }
-                                else {
-                                   pub.saveInfo(p);
-                                    String value = txtNhaXuatBan.getText();
-                                    whid.addToComboBox(value);
-                                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Thêm Thành Công!", "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
-                                }
-                            } catch (ClassNotFoundException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            } catch (SQLException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            } catch (IOException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }
-                        }
-                        
-                    } catch (HeadlessException e1) {
-                        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Lỗi Thêm NXB.", "ERROR", JOptionPane.ERROR_MESSAGE);
-                        System.out.println(e1);
-                    }
-                }
-            }
-        });
 
-        
         javax.swing.GroupLayout panelBorder_Basic1Layout = new javax.swing.GroupLayout(panelBorder_Basic1);
         panelBorder_Basic1.setLayout(panelBorder_Basic1Layout);
         panelBorder_Basic1Layout.setHorizontalGroup(
@@ -217,7 +119,51 @@ public class WareHouseAddNXB_Dialog extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
-    
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(WareHouseAddNXB_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(WareHouseAddNXB_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(WareHouseAddNXB_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(WareHouseAddNXB_Dialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the dialog */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                WareHouseAddNXB_Dialog dialog = new WareHouseAddNXB_Dialog(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private MyDesign.MyButton btnThemNhaXuatBan;
@@ -225,7 +171,6 @@ public class WareHouseAddNXB_Dialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel8;
     private MyDesign.PanelBorder_Basic panelBorder_Basic1;
     private MyDesign.PanelBorder_Statistic_Blue panelBorder_Statistic_Blue1;
-    MyDesign.MyTextField_Basic txtNhaXuatBan;
-    private PublisherBUS pub = new PublisherBUS();
+    private MyDesign.MyTextField_Basic txtNhaXuatBan;
     // End of variables declaration//GEN-END:variables
 }

@@ -427,75 +427,75 @@ public class More_GUI extends javax.swing.JPanel {
     
 //    Group add
     private void lbThemTacGiaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbThemTacGiaMouseClicked
-       if(evt.getClickCount()==1 || evt.getClickCount()==2)
-        {
-            setVisible(false);
-            WareHouseAddNewReader_Dialog r;
-           try { 
-               r = new WareHouseAddNewReader_Dialog(null,"more_gui",this.user, true);
-               r.setVisible(true);
-           } catch (SQLException ex) {
-               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
-           } catch (IOException ex) {
-               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
-           } catch (ClassNotFoundException ex) {
-               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
-           }
-        }
+//       if(evt.getClickCount()==1 || evt.getClickCount()==2)
+//        {
+//            setVisible(false);
+//            WareHouseAddNewReader_Dialog r;
+//           try { 
+//               r = new WareHouseAddNewReader_Dialog(null,"more_gui",this.user, true);
+//               r.setVisible(true);
+//           } catch (SQLException ex) {
+//               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
+//           } catch (IOException ex) {
+//               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
+//           } catch (ClassNotFoundException ex) {
+//               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
+//           }
+//        }
     }//GEN-LAST:event_lbThemTacGiaMouseClicked
 
     private void lbThemTheLoaiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbThemTheLoaiMouseClicked
-        if(evt.getClickCount()==1 || evt.getClickCount()==2)
-        {
-            setVisible(false);
-            WareHouseAddNewTypeBook_Dialog r;
-           try { 
-               r = new WareHouseAddNewTypeBook_Dialog(null,"more_gui",this.user, true);
-               r.setVisible(true);
-           } catch (SQLException ex) {
-               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
-           } catch (IOException ex) {
-               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
-           } catch (ClassNotFoundException ex) {
-               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
-           }
-        }
+//        if(evt.getClickCount()==1 || evt.getClickCount()==2)
+//        {
+//            setVisible(false);
+//            WareHouseAddNewTypeBook_Dialog r;
+//           try { 
+//               r = new WareHouseAddNewTypeBook_Dialog(null,"more_gui",this.user, true);
+//               r.setVisible(true);
+//           } catch (SQLException ex) {
+//               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
+//           } catch (IOException ex) {
+//               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
+//           } catch (ClassNotFoundException ex) {
+//               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
+//           }
+//        }
     }//GEN-LAST:event_lbThemTheLoaiMouseClicked
 
     private void lbThemNCCMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbThemNCCMouseClicked
-        if(evt.getClickCount()==1 || evt.getClickCount()==2)
-        {
-            setVisible(false);
-            WareHouseAddNCC_Dialog r;
-           try { 
-               r = new WareHouseAddNCC_Dialog(null,"more_gui",this.user, true);
-               r.setVisible(true);
-           } catch (SQLException ex) {
-               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
-           } catch (IOException ex) {
-               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
-           } catch (ClassNotFoundException ex) {
-               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
-           }
-        }
+//        if(evt.getClickCount()==1 || evt.getClickCount()==2)
+//        {
+//            setVisible(false);
+//            WareHouseAddNCC_Dialog r;
+//           try { 
+//               r = new WareHouseAddNCC_Dialog(null,"more_gui",this.user, true);
+//               r.setVisible(true);
+//           } catch (SQLException ex) {
+//               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
+//           } catch (IOException ex) {
+//               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
+//           } catch (ClassNotFoundException ex) {
+//               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
+//           }
+//        }
     }//GEN-LAST:event_lbThemNCCMouseClicked
 
     private void lbThemNXBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbThemNXBMouseClicked
-        if(evt.getClickCount()==1 || evt.getClickCount()==2)
-        {
-            setVisible(false);
-            WareHouseAddNXB_Dialog r;
-           try { 
-               r = new WareHouseAddNXB_Dialog(null,"more_gui",this.user, true);
-               r.setVisible(true);
-           } catch (SQLException ex) {
-               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
-           } catch (IOException ex) {
-               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
-           } catch (ClassNotFoundException ex) {
-               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
-           }
-        }
+//        if(evt.getClickCount()==1 || evt.getClickCount()==2)
+//        {
+//            setVisible(false);
+//            WareHouseAddNXB_Dialog r;
+//           try { 
+//               r = new WareHouseAddNXB_Dialog(null,"more_gui",this.user, true);
+//               r.setVisible(true);
+//           } catch (SQLException ex) {
+//               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
+//           } catch (IOException ex) {
+//               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
+//           } catch (ClassNotFoundException ex) {
+//               Logger.getLogger(More_GUI.class.getName()).log(Level.SEVERE, null, ex);
+//           }
+//        }
     }//GEN-LAST:event_lbThemNXBMouseClicked
 
 //    Group detele

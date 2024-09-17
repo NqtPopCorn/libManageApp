@@ -187,7 +187,6 @@ public class HomePage extends javax.swing.JFrame {
         panelBorder1 = new MyDesign.PanelBorder();
         PanelHead = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        myButton1 = new MyDesign.MyButton();
         Menu = new GUI.Menu();
         mainPanel = new MyDesign.PanelBorder_Basic();
 
@@ -205,14 +204,6 @@ public class HomePage extends javax.swing.JFrame {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/logo.png"))); // NOI18N
         jLabel2.setText("Library");
 
-        myButton1.setForeground(new java.awt.Color(22, 113, 221));
-        myButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/nav-warehouse.png"))); // NOI18N
-        myButton1.setText("Nhập sách");
-        myButton1.setToolTipText("");
-        myButton1.setColorClick(new java.awt.Color(153, 204, 255));
-        myButton1.setColorOver(new java.awt.Color(102, 204, 255));
-        myButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-
         javax.swing.GroupLayout PanelHeadLayout = new javax.swing.GroupLayout(PanelHead);
         PanelHead.setLayout(PanelHeadLayout);
         PanelHeadLayout.setHorizontalGroup(
@@ -220,17 +211,13 @@ public class HomePage extends javax.swing.JFrame {
             .addGroup(PanelHeadLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 629, Short.MAX_VALUE)
-                .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
+                .addContainerGap(764, Short.MAX_VALUE))
         );
         PanelHeadLayout.setVerticalGroup(
             PanelHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelHeadLayout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addGroup(PanelHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                .addGap(15, 15, 15)
+                .addComponent(jLabel2)
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
@@ -354,7 +341,6 @@ public class HomePage extends javax.swing.JFrame {
     private javax.swing.JPanel PanelHead;
     private javax.swing.JLabel jLabel2;
     private MyDesign.PanelBorder_Basic mainPanel;
-    private MyDesign.MyButton myButton1;
     private MyDesign.PanelBorder panelBorder1;
     // End of variables declaration//GEN-END:variables
 }
